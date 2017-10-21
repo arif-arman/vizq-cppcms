@@ -1,0 +1,497 @@
+18:56:46 **** Incremental Build of configuration Debug for project vizq-cppcms ****
+make all 
+Building file: ../codebase/rtree/rtree.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"codebase/rtree/rtree.d" -MT"codebase/rtree/rtree.o" -o "codebase/rtree/rtree.o" "../codebase/rtree/rtree.cpp"
+../codebase/rtree/rtree.cpp:5885:0: warning: "MAX" redefined
+ #define MAX(a,b) ((a)>(b)?(a):(b))
+ ^
+In file included from ../codebase/rtree/rtree.h:9:0,
+                 from ../codebase/rtree/rtree.cpp:9:
+../codebase/rtree/../func/gendef.h:37:0: note: this is the location of the previous definition
+ #define MAX(a, b) a > b? a : b  
+ ^
+../codebase/rtree/rtree.cpp:5886:0: warning: "MIN" redefined
+ #define MIN(a,b) ((a)<(b)?(a):(b))
+ ^
+In file included from ../codebase/rtree/rtree.h:9:0,
+                 from ../codebase/rtree/rtree.cpp:9:
+../codebase/rtree/../func/gendef.h:36:0: note: this is the location of the previous definition
+ #define MIN(a, b) a < b ? a : b  
+ ^
+In file included from ../codebase/rtree/rtree.cpp:9:0:
+../codebase/rtree/rtree.h:108:22: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double r = rand() % 255;
+                      ^
+../codebase/rtree/rtree.h:109:22: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double g = rand() % 255;
+                      ^
+../codebase/rtree/rtree.h:110:22: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double b = rand() % 255;
+                      ^
+../codebase/rtree/rtree.h: In member function ‘void polygon::draw(int, double)’:
+../codebase/rtree/rtree.h:120:10: warning: variable ‘x1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+          ^
+../codebase/rtree/rtree.h:120:18: warning: variable ‘y1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+                  ^
+../codebase/rtree/rtree.h:120:26: warning: variable ‘z1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+                          ^
+../codebase/rtree/rtree.h: In member function ‘void VisibleRegion3D::draw(double)’:
+../codebase/rtree/rtree.h:156:10: warning: variable ‘x1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+          ^
+../codebase/rtree/rtree.h:156:18: warning: variable ‘y1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+                  ^
+../codebase/rtree/rtree.h:156:26: warning: variable ‘z1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+                          ^
+../codebase/rtree/rtree.h: At global scope:
+../codebase/rtree/rtree.h:263:22: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double r = rand() % 255, g = rand() % 255, b = rand() % 255;
+                      ^
+../codebase/rtree/rtree.h:263:40: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double r = rand() % 255, g = rand() % 255, b = rand() % 255;
+                                        ^
+../codebase/rtree/rtree.h:263:58: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double r = rand() % 255, g = rand() % 255, b = rand() % 255;
+                                                          ^
+../codebase/rtree/rtree.h: In member function ‘void QueryPoint3D::print()’:
+../codebase/rtree/rtree.h:284:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int j = 0; j < visiblePlanes.size(); ++j) {
+                     ^
+../codebase/rtree/rtree.h:306:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     for (int k = 0; k < it->sides.size(); ++k) {
+                       ^
+../codebase/rtree/rtree.cpp: In constructor ‘RTree::RTree(char*, char*, int, Cache*, int)’:
+../codebase/rtree/rtree.cpp:140:45: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+   error("Cannot open R-Tree text file", TRUE);
+                                             ^
+../codebase/rtree/rtree.cpp: In member function ‘bool RTree::delete_entry(Entry*)’:
+../codebase/rtree/rtree.cpp:260:64: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+   error("RTree::delete_entry--The root has been deleted\n",true);
+                                                                ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::insert(Entry*)’:
+../codebase/rtree/rtree.cpp:315:9: warning: deleting object of polymorphic class type ‘Entry’ which has non-virtual destructor might cause undefined behaviour [-Wdelete-non-virtual-dtor]
+  delete d;  //we follow the convention that the entry will be deleted when insertion finishes
+         ^
+../codebase/rtree/rtree.cpp:336:70: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+          error("RTree::insert: inconsistent list re_data_cands", TRUE);
+                                                                      ^
+../codebase/rtree/rtree.cpp: In member function ‘int RTree::update_rslt(Entry*, float, Entry*, float*, int)’:
+../codebase/rtree/rtree.cpp:436:38: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  error("Error in update_rslt\n", true);
+                                      ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::BFNN(float*, int, Entry*)’:
+../codebase/rtree/rtree.cpp:540:60: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+       error("testing... leaf entries found in heap\n", true);
+                                                            ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::Rect_kNNQ(Rectangle1, float, int, Pointlocation*, int*)’:
+../codebase/rtree/rtree.cpp:767:64: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+       error("Rect_kNNQ:DataPoint maximum Limit exceeded\n",TRUE);
+                                                                ^
+../codebase/rtree/rtree.cpp:707:6: warning: unused variable ‘io’ [-Wunused-variable]
+  int io=0;
+      ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::TPNN_TP(float*, int, Entry*, Entry*, float)’:
+../codebase/rtree/rtree.cpp:895:44: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+   error("tpheap is not initialized\n", true);
+                                            ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::private_kGNN_sum(Rectangle1*, int, int, Pointlocation*, int*)’:
+../codebase/rtree/rtree.cpp:1172:65: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+        error("Rect_kNNQ:DataPoint maximum Limit exceeded\n",TRUE);
+                                                                 ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::private_kGNN_max(Rectangle1*, int, int, Pointlocation*, int*)’:
+../codebase/rtree/rtree.cpp:1325:65: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+        error("Rect_kNNQ:DataPoint maximum Limit exceeded\n",TRUE);
+                                                                 ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::consensus_kGNN(Rectangle1*, int, int, int, int, SG (*)[32], Pointlocation*, int*)’:
+../codebase/rtree/rtree.cpp:1551:65: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+        error("Rect_kNNQ:DataPoint maximum Limit exceeded\n",TRUE);
+                                                                 ^
+../codebase/rtree/rtree.cpp:1367:9: warning: variable ‘maxdist’ set but not used [-Wunused-but-set-variable]
+  double maxdist[kMAX];
+         ^
+../codebase/rtree/rtree.cpp: In function ‘double angle_between_2_lines(double, double, double, double, double, double, double, double)’:
+../codebase/rtree/rtree.cpp:1788:6: warning: variable ‘flag1’ set but not used [-Wunused-but-set-variable]
+  int flag1=0; int flag2=0;
+      ^
+../codebase/rtree/rtree.cpp:1788:19: warning: variable ‘flag2’ set but not used [-Wunused-but-set-variable]
+  int flag1=0; int flag2=0;
+                   ^
+../codebase/rtree/rtree.cpp: In member function ‘bool QueryPoint::IsInVisibleRegion(Rectangle2)’:
+../codebase/rtree/rtree.cpp:1957:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for ( itr = 0; itr < VisibleRegion.size(); itr++ )
+                     ^
+../codebase/rtree/rtree.cpp: In member function ‘void QueryPoint::update_visibliliyRegion(Rectangle2, Rectangle2)’:
+../codebase/rtree/rtree.cpp:2096:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for ( itr = 0 ; itr < VisibleRegion.size(); itr++ )
+                      ^
+../codebase/rtree/rtree.cpp:2079:16: warning: variable ‘target_p1’ set but not used [-Wunused-but-set-variable]
+  Pointlocation target_p1 = target.upper_left;
+                ^
+../codebase/rtree/rtree.cpp:2082:16: warning: variable ‘target_p4’ set but not used [-Wunused-but-set-variable]
+  Pointlocation target_p4 = target.lower_right;
+                ^
+../codebase/rtree/rtree.cpp: In member function ‘bool polygon::operator==(polygon)’:
+../codebase/rtree/rtree.cpp:2495:15: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for(int i=0;i<poly.sides.size();i++)
+               ^
+../codebase/rtree/rtree.cpp:2498:17: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int j=0; j<sides.size();j++)
+                 ^
+../codebase/rtree/rtree.cpp:2502:11: warning: statement has no effect [-Wunused-value]
+     found == true; break;
+           ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::MOV(QueryPoint*, int, Rectangle2, int, QueryPoint*, int&, int&)’:
+../codebase/rtree/rtree.cpp:2710:16: warning: variable ‘nd_1’ set but not used [-Wunused-but-set-variable]
+     Rectangle1 nd_1; 
+                ^
+../codebase/rtree/rtree.cpp:2809:16: warning: variable ‘p’ set but not used [-Wunused-but-set-variable]
+     Rectangle1 p;
+                ^
+../codebase/rtree/rtree.cpp:2655:6: warning: unused variable ‘k_position’ [-Wunused-variable]
+  int k_position=0;
+      ^
+../codebase/rtree/rtree.cpp:2656:6: warning: unused variable ‘k_original’ [-Wunused-variable]
+  int k_original=k;
+      ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::Alternate_approach(QueryPoint*, int, Rectangle2, int, QueryPoint*, int&, int&)’:
+../codebase/rtree/rtree.cpp:2906:6: warning: unused variable ‘k_position’ [-Wunused-variable]
+  int k_position=0;
+      ^
+../codebase/rtree/rtree.cpp:2907:6: warning: unused variable ‘k_original’ [-Wunused-variable]
+  int k_original=k;
+      ^
+../codebase/rtree/rtree.cpp:2911:8: warning: unused variable ‘j’ [-Wunused-variable]
+  int i,j;
+        ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::MOV_obs(QueryPoint*, int, Rectangle2, int, QueryPoint*, int&, int&)’:
+../codebase/rtree/rtree.cpp:3129:31: warning: variable ‘nd_1’ set but not used [-Wunused-but-set-variable]
+     Rectangle2 nd; Rectangle1 nd_1; 
+                               ^
+../codebase/rtree/rtree.cpp:3220:16: warning: variable ‘p’ set but not used [-Wunused-but-set-variable]
+     Rectangle1 p;
+                ^
+../codebase/rtree/rtree.cpp:3083:6: warning: unused variable ‘k_position’ [-Wunused-variable]
+  int k_position=0;
+      ^
+../codebase/rtree/rtree.cpp:3084:6: warning: unused variable ‘k_original’ [-Wunused-variable]
+  int k_original=k;
+      ^
+../codebase/rtree/rtree.cpp: In function ‘float PolygonArea(polygon)’:
+../codebase/rtree/rtree.cpp:3646:15: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for(int i=0;i<poly.sides.size();i++)
+               ^
+../codebase/rtree/rtree.cpp: In function ‘polygon polyRectUnion(polygon, Rectangle3D, polygon&)’:
+../codebase/rtree/rtree.cpp:3960:15: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for(int i=0;i<poly.sides.size();i++)polyin.push_back(poly.sides[i]);
+               ^
+../codebase/rtree/rtree.cpp: In function ‘bool shadow(Point3D, Box2, Rectangle3D, Rectangle3D&)’:
+../codebase/rtree/rtree.cpp:4087:6: warning: unused variable ‘count’ [-Wunused-variable]
+  int count =0;
+      ^
+../codebase/rtree/rtree.cpp: In function ‘bool isPolyIntesectsWithRect(polygon, Rectangle3D)’:
+../codebase/rtree/rtree.cpp:4204:18: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for(int i = 0; i< poly.sides.size();i++)
+                  ^
+../codebase/rtree/rtree.cpp:4234:11: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  if(count == poly.sides.size()) return false; //if all sides of the poly are outside rect boundary, they don't intersect
+           ^
+../codebase/rtree/rtree.cpp: In function ‘bool isPointInsidePlanarShape(Point3D, std::vector<line>)’:
+../codebase/rtree/rtree.cpp:4242:15: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for(int i=0;i<shape.size();i++)
+               ^
+../codebase/rtree/rtree.cpp: In member function ‘bool QueryPoint3D::IsInsideVisibleRegion(Box2, Box2)’:
+../codebase/rtree/rtree.cpp:4543:15: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for(int i=0;i<visiblePlanes.size();i++)
+               ^
+../codebase/rtree/rtree.cpp: In member function ‘void QueryPoint3D::update_visibilityRegion(Box2, Box2)’:
+../codebase/rtree/rtree.cpp:4710:24: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+      for (int j = 0; j < itr->sides.size(); ++j) {
+                        ^
+../codebase/rtree/rtree.cpp:4726:44: warning: narrowing conversion of ‘itr.std::_List_iterator<_Tp>::operator-><polygon>()->polygon::sides.std::vector<_Tp, _Alloc>::size<line, std::allocator<line> >()’ from ‘std::vector<line>::size_type {aka long unsigned int}’ to ‘int’ inside { } is ill-formed in C++11 [-Wnarrowing]
+      gpc_vertex_list tv = { itr->sides.size(), v};
+                                            ^
+../codebase/rtree/rtree.cpp:4729:24: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+      for (int m = 0; m < itr->sides.size();++m) {
+                        ^
+../codebase/rtree/rtree.cpp:4756:18: warning: extended initializer lists only available with -std=c++11 or -std=gnu++11
+      tv = { 4, v };
+                  ^
+../codebase/rtree/rtree.cpp:4756:9: warning: extended initializer lists only available with -std=c++11 or -std=gnu++11
+      tv = { 4, v };
+         ^
+../codebase/rtree/rtree.cpp:4620:7: warning: variable ‘outside’ set but not used [-Wunused-but-set-variable]
+  bool outside =false; 
+       ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::MOV3D(QueryPoint3D*, int, Box2, int, QueryPoint3D*, int&, int&, Point3D*)’:
+../codebase/rtree/rtree.cpp:4885:6: warning: unused variable ‘k_position’ [-Wunused-variable]
+  int k_position=0;
+      ^
+../codebase/rtree/rtree.cpp:4886:6: warning: unused variable ‘k_original’ [-Wunused-variable]
+  int k_original=k;
+      ^
+../codebase/rtree/rtree.cpp:4915:8: warning: unused variable ‘leftx’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+        ^
+../codebase/rtree/rtree.cpp:4915:15: warning: unused variable ‘topy’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+               ^
+../codebase/rtree/rtree.cpp:4915:21: warning: unused variable ‘rightx’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+                     ^
+../codebase/rtree/rtree.cpp:4915:29: warning: unused variable ‘lowy’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+                             ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::Alternate_approach3D(QueryPoint3D*, int, Box2, int, QueryPoint3D*, int&, int&, Point3D*)’:
+../codebase/rtree/rtree.cpp:5208:8: warning: unused variable ‘size1’ [-Wunused-variable]
+    int size1=qp_priority_queue.size();
+        ^
+../codebase/rtree/rtree.cpp:5327:10: warning: unused variable ‘flag’ [-Wunused-variable]
+      int flag = 0;
+          ^
+../codebase/rtree/rtree.cpp:5167:6: warning: unused variable ‘k_position’ [-Wunused-variable]
+  int k_position=0;
+      ^
+../codebase/rtree/rtree.cpp:5168:6: warning: unused variable ‘k_original’ [-Wunused-variable]
+  int k_original=k;
+      ^
+../codebase/rtree/rtree.cpp:5172:8: warning: unused variable ‘j’ [-Wunused-variable]
+  int i,j;
+        ^
+../codebase/rtree/rtree.cpp:5191:8: warning: unused variable ‘leftx’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+        ^
+../codebase/rtree/rtree.cpp:5191:15: warning: unused variable ‘topy’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+               ^
+../codebase/rtree/rtree.cpp:5191:21: warning: unused variable ‘rightx’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+                     ^
+../codebase/rtree/rtree.cpp:5191:29: warning: unused variable ‘lowy’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+                             ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::MOV_obs3D(std::vector<QueryPoint3D>&, int, Box2, int, std::vector<QueryPoint3D>&, int&, int&, Point3D*)’:
+../codebase/rtree/rtree.cpp:5366:6: warning: unused variable ‘k_position’ [-Wunused-variable]
+  int k_position=0;
+      ^
+../codebase/rtree/rtree.cpp:5367:6: warning: unused variable ‘k_original’ [-Wunused-variable]
+  int k_original=k;
+      ^
+../codebase/rtree/rtree.cpp:5397:8: warning: unused variable ‘leftx’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+        ^
+../codebase/rtree/rtree.cpp:5397:15: warning: unused variable ‘topy’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+               ^
+../codebase/rtree/rtree.cpp:5397:21: warning: unused variable ‘rightx’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+                     ^
+../codebase/rtree/rtree.cpp:5397:29: warning: unused variable ‘lowy’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+                             ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::naiveMOV3D(QueryPoint3D*, int, Box2, int, QueryPoint3D*, int&, int&, Point3D*)’:
+../codebase/rtree/rtree.cpp:5610:6: warning: unused variable ‘k_position’ [-Wunused-variable]
+  int k_position=0;
+      ^
+../codebase/rtree/rtree.cpp:5611:6: warning: unused variable ‘k_original’ [-Wunused-variable]
+  int k_original=k;
+      ^
+../codebase/rtree/rtree.cpp:5640:8: warning: unused variable ‘leftx’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+        ^
+../codebase/rtree/rtree.cpp:5640:15: warning: unused variable ‘topy’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+               ^
+../codebase/rtree/rtree.cpp:5640:21: warning: unused variable ‘rightx’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+                     ^
+../codebase/rtree/rtree.cpp:5640:29: warning: unused variable ‘lowy’ [-Wunused-variable]
+  float leftx, topy, rightx, lowy;
+                             ^
+../codebase/rtree/rtree.cpp: In member function ‘bool Polygon::polyInter(Polygon&)’:
+../codebase/rtree/rtree.cpp:6247:7: warning: unused variable ‘N’ [-Wunused-variable]
+   int N=SZ(poly.P);
+       ^
+../codebase/rtree/rtree.cpp: In function ‘Polygon update(Polygon&, myRectangle&)’:
+../codebase/rtree/rtree.cpp:6393:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         for( j=0;j<p.P.size();j++ )
+                   ^
+../codebase/rtree/rtree.cpp:6395:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+             for( k=0;k<p.P.size();k++ )
+                       ^
+../codebase/rtree/rtree.cpp:6399:18: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+             if( k!=p.P.size() )continue;
+                  ^
+../codebase/rtree/rtree.cpp:6417:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         for( j=0;j<p.P.size();j++ )
+                   ^
+../codebase/rtree/rtree.cpp:6419:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+             for( k=0;k<p.P.size();k++ )
+                       ^
+../codebase/rtree/rtree.cpp:6423:18: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+             if( k!=p.P.size() )continue;
+                  ^
+../codebase/rtree/rtree.cpp: In function ‘void gpc_print(gpc_polygon*)’:
+../codebase/rtree/rtree.cpp:6489:48: warning: format ‘%lf’ expects argument of type ‘double’, but argument 2 has type ‘gpc_vertex’ [-Wformat=]
+    printf("%.2lf %.2lf\n",p->contour->vertex[j]);
+                                                ^
+../codebase/rtree/rtree.cpp:6489:48: warning: format ‘%lf’ expects a matching ‘double’ argument [-Wformat=]
+../codebase/rtree/rtree.cpp: In function ‘void update_g(gpc_polygon&, myRectangle&)’:
+../codebase/rtree/rtree.cpp:6526:13: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for( j=0;j<p.P.size();j++ )
+             ^
+../codebase/rtree/rtree.cpp: In member function ‘void RTree::rtreeVcmAlgo1(char*)’:
+../codebase/rtree/rtree.cpp:6733:10: warning: name lookup of ‘k’ changed
+     for( k=0;k<pu.size();k++ )
+          ^
+../codebase/rtree/rtree.cpp:6656:16: warning:   matches this ‘k’ under ISO standard rules
+  int tot=0,i,j,k;
+                ^
+../codebase/rtree/rtree.cpp:6729:14: warning:   matches this ‘k’ under old rules
+     for (int k = 0; k < global_gp.contour[j].num_vertices; k++)
+              ^
+../codebase/rtree/rtree.cpp:6639:13: warning: unused variable ‘gv’ [-Wunused-variable]
+  gpc_vertex gv;
+             ^
+../codebase/rtree/rtree.cpp:6640:18: warning: unused variable ‘gvl’ [-Wunused-variable]
+  gpc_vertex_list gvl;
+                  ^
+../codebase/rtree/rtree.cpp: In function ‘bool IsPointInsideTriangle(Pointlocation, Pointlocation, Pointlocation, Pointlocation)’:
+../codebase/rtree/rtree.cpp:1854:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../codebase/rtree/rtree.cpp: In member function ‘bool QueryPoint3D::IsInsideVisibleRegion(Box2, Box2)’:
+../codebase/rtree/rtree.cpp:4613:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+Finished building: ../codebase/rtree/rtree.cpp
+ 
+Building file: ../codebase/mvq.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"codebase/mvq.d" -MT"codebase/mvq.o" -o "codebase/mvq.o" "../codebase/mvq.cpp"
+In file included from ../codebase/mvq.cpp:22:0:
+../codebase/./rtree/rtree.h:108:22: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double r = rand() % 255;
+                      ^
+../codebase/./rtree/rtree.h:109:22: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double g = rand() % 255;
+                      ^
+../codebase/./rtree/rtree.h:110:22: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double b = rand() % 255;
+                      ^
+../codebase/./rtree/rtree.h: In member function ‘void polygon::draw(int, double)’:
+../codebase/./rtree/rtree.h:120:10: warning: variable ‘x1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+          ^
+../codebase/./rtree/rtree.h:120:18: warning: variable ‘y1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+                  ^
+../codebase/./rtree/rtree.h:120:26: warning: variable ‘z1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+                          ^
+../codebase/./rtree/rtree.h: In member function ‘void VisibleRegion3D::draw(double)’:
+../codebase/./rtree/rtree.h:156:10: warning: variable ‘x1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+          ^
+../codebase/./rtree/rtree.h:156:18: warning: variable ‘y1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+                  ^
+../codebase/./rtree/rtree.h:156:26: warning: variable ‘z1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+                          ^
+../codebase/./rtree/rtree.h: At global scope:
+../codebase/./rtree/rtree.h:263:22: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double r = rand() % 255, g = rand() % 255, b = rand() % 255;
+                      ^
+../codebase/./rtree/rtree.h:263:40: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double r = rand() % 255, g = rand() % 255, b = rand() % 255;
+                                        ^
+../codebase/./rtree/rtree.h:263:58: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double r = rand() % 255, g = rand() % 255, b = rand() % 255;
+                                                          ^
+../codebase/./rtree/rtree.h: In member function ‘void QueryPoint3D::print()’:
+../codebase/./rtree/rtree.h:284:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int j = 0; j < visiblePlanes.size(); ++j) {
+                     ^
+../codebase/./rtree/rtree.h:306:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     for (int k = 0; k < it->sides.size(); ++k) {
+                       ^
+In file included from ../codebase/mvq.cpp:33:0:
+../codebase/mvq.h: At global scope:
+../codebase/mvq.h:57:25: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  int numOfQueryPoints = 0;
+                         ^
+../codebase/mvq.h:59:18: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool dbLoaded = false;
+                  ^
+../codebase/mvq.h:60:18: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool qpLoaded = false;
+                  ^
+../codebase/mvq.h:62:11: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  int vr = 0;
+           ^
+../codebase/mvq.h:64:23: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool showObstacles = true;
+                       ^
+../codebase/mvq.h:66:21: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool isTargetSet = false, mvqGenerated = false;
+                     ^
+../codebase/mvq.h:66:43: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool isTargetSet = false, mvqGenerated = false;
+                                           ^
+../codebase/mvq.cpp: In member function ‘bool MVQ::Mov_exp3D(int, std::vector<QueryPoint3D>&, Point3D*)’:
+../codebase/mvq.cpp:187:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int j = 0; j < queryPoints[i].visiblePlanes.size(); ++j) {
+                      ^
+../codebase/mvq.cpp:209:24: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+      for (int k = 0; k < it->sides.size(); ++k) {
+                        ^
+../codebase/mvq.cpp:92:9: warning: variable ‘avg’ set but not used [-Wunused-but-set-variable]
+   float avg = 0.0;
+         ^
+../codebase/mvq.cpp:93:9: warning: unused variable ‘overallAvgTime’ [-Wunused-variable]
+   float overallAvgTime = 0.0;
+         ^
+../codebase/mvq.cpp:94:9: warning: unused variable ‘overallAvgPage’ [-Wunused-variable]
+   float overallAvgPage = 0.0;
+         ^
+../codebase/mvq.cpp:95:9: warning: unused variable ‘overallAvgObstacle’ [-Wunused-variable]
+   float overallAvgObstacle = 0.0;
+         ^
+../codebase/mvq.cpp: In member function ‘void MVQ::loadQueryPoints()’:
+../codebase/mvq.cpp:270:44: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+   error("Cannot open query text file", TRUE);
+                                            ^
+../codebase/mvq.cpp:254:8: warning: unused variable ‘fpDataSetSize’ [-Wunused-variable]
+  FILE *fpDataSetSize;
+        ^
+../codebase/mvq.cpp: In member function ‘void MVQ::buildTree(char*, char*, char*)’:
+../codebase/mvq.cpp:354:6: warning: unused variable ‘blocksize’ [-Wunused-variable]
+  int blocksize = 1024;
+      ^
+../codebase/mvq.cpp:359:7: warning: unused variable ‘OUTFILE’ [-Wunused-variable]
+  char OUTFILE[200] = "";
+       ^
+../codebase/mvq.cpp: In member function ‘void MVQ::createRtreeFromData(char*)’:
+../codebase/mvq.cpp:379:17: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char *Inpath = ""; // for linux codebase
+                 ^
+../codebase/mvq.cpp: In member function ‘void MVQ::setup()’:
+../codebase/mvq.cpp:419:15: warning: unused variable ‘discard’ [-Wunused-variable]
+  int cnt = 0, discard = 0;
+               ^
+Finished building: ../codebase/mvq.cpp
+ 
+Building target: vizq-cppcms
+Invoking: GCC C++ Linker
+g++  -o "vizq-cppcms"  ./codebase/rtree/distance.o ./codebase/rtree/entry.o ./codebase/rtree/rtnode.o ./codebase/rtree/rtree.o ./codebase/rtree/rtree_cmd.o  ./codebase/linlist/linlist.o  ./codebase/his/histogram.o  ./codebase/heap/heap.o  ./codebase/gpc/gpc.o  ./codebase/func/functions.o  ./codebase/blockfile/blk_file.o ./codebase/blockfile/cache.o  ./codebase/mian.o ./codebase/monotone.o ./codebase/mvq.o ./codebase/prevSource.o ./codebase/tinyfiledialogs.o ./codebase/vcm.o ./codebase/vector3.o   
+Finished building target: vizq-cppcms
+ 
+
+18:56:51 Build Finished (took 4s.974ms)
+
