@@ -3410,23 +3410,23 @@ string VCM::run2(int dir) {
 		//ofstream out;
 
 		//out.open("vcm_output.txt");
-		out << "ndisteseg: " << NDISTESEG << endl;
-		out << "maxseg: " << MAXSEG << endl;
-		out << "totp: " << targetPoints.size() << endl;
-		for (int curSeg = 1; curSeg < NDISTESEG; curSeg++) {
-			out << "curseg;;" << endl;
-			out << "dim: " << getDim(dir, curSeg) << endl;
-			out << "segdist: " << segDist[curSeg] << endl;
-			for (int i = 0; i < MAXSEG; ++i) {
-				for (int j = 0; j < MAXSEG; ++j) {
-					out << vcmArray[dir][curSeg][i][j] << " ";
-					//printf("%d ", vcmArray[dir][curSeg][i][j]);
-				}
-				//printf("\n");
-				out << endl;
-			}
-			out << ";;curseg" << endl;
-		}
+//		out << "ndisteseg: " << NDISTESEG << endl;
+//		out << "maxseg: " << MAXSEG << endl;
+//		out << "totp: " << targetPoints.size() << endl;
+//		for (int curSeg = 1; curSeg < NDISTESEG; curSeg++) {
+//			out << "curseg;;" << endl;
+//			out << "dim: " << getDim(dir, curSeg) << endl;
+//			out << "segdist: " << segDist[curSeg] << endl;
+//			for (int i = 0; i < MAXSEG; ++i) {
+//				for (int j = 0; j < MAXSEG; ++j) {
+//					out << vcmArray[dir][curSeg][i][j] << " ";
+//					//printf("%d ", vcmArray[dir][curSeg][i][j]);
+//				}
+//				//printf("\n");
+//				out << endl;
+//			}
+//			out << ";;curseg" << endl;
+//		}
 		//out.close();
 
 
@@ -3446,8 +3446,8 @@ string VCM::run2(int dir) {
 //	fprintf(logfp, "avg discarded %lf   avg reduced obstacle size %lf   avg time %lf\n", (double)totDiscard / (double)testCase, (double)totCnt / (double)testCase, totTime / (double)testCase);
 //	fclose(logfp);
 //	fclose(efile);
-	printf("Exiting VCM");
-	return out.str();
+	printf("Exiting VCM\n");
+	return "";
 }
 ///
 void VCM::debug3()

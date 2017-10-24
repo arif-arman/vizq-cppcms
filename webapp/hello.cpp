@@ -123,11 +123,49 @@ void hello::vcm(string ob, string dir, string targetpos, string text) {
 
     
 
-    string details = v.run2(atoi(dir.c_str()));
+    v.run2(atoi(dir.c_str()));
+
+    //cout << v.targetPoints.size() << endl;
+
+    cppcms::json::value json_obj;
+    int d = atoi(dir.c_str());
+    stringstream out;
+
+    json_obj["0"]["totp"] = v.targetPoints.size();
+    // cout << "here" << endl;
+
+    json_obj["0"]["nseg"] = (v.NDISTESEG);
+    json_obj["0"]["maxseg"] = (MAXSEG);
+
+    stringstream s;
+    stringstream cur;
+    stringstream ind;
+    
+
+    for (int curSeg = 1; curSeg < v.NDISTESEG; curSeg++) {
+        //cout << "Curseg: " << curSeg << endl;
+        cur << curSeg;
+        //printf("%f %f\n", v.getDim(d, curSeg), v.segDist[curSeg]);
+        json_obj[cur.str()]["dim"] = v.getDim(d, curSeg);
+        json_obj[cur.str()]["segdist"] = v.segDist[curSeg];
+        for (int i = 0; i < MAXSEG; ++i) {
+            for (int j = 0; j < MAXSEG; ++j) {
+                s << v.vcmArray[d][curSeg][i][j] << " ";
+                //printf("%d ", vcmArray[dir][curSeg][i][j]);
+            }
+            ind << i;
+            //json_obj[cur.str()][ind.str()] = s.str();
+            json_obj[cur.str()][ind.str()] = s.str();
+            s.str("");
+            ind.str("");
+        }
+        cur.str("");
+        //out << ";;curseg" << endl;
+    }
 
     //cout << v.NDISTESEG << " " << MAXSEG << endl;
 
-    //response().out() << details;
+    response().out() << json_obj;
 
 }
 

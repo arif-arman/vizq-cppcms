@@ -1201,11 +1201,12 @@ function runVCM() {
 		if (text != null) {	
 			var json_obj = JSON.parse(text);
 			vcmArray = json_obj;
-			totp = json_obj['totp'];
-			maxseg = json_obj['maxseg'];
-			nseg = json_obj['nseg'];
+			totp = json_obj['0']['totp'];
+			maxseg = json_obj['0']['maxseg'];
+			nseg = json_obj['0']['nseg'];
 			//console.log(vcmArray);
 			//console.log(json_obj);
+			console.log(nseg + " " + totp);
 			$('#logger').html("VCM generated");
 		}
 		else console.log("test");

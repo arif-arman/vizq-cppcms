@@ -42273,3 +42273,555 @@ Finished building target: vizq-cppcms
 22:43:07 **** Incremental Build of configuration Debug for project vizq-cppcms ****
 make all 
 make: Nothing to be done for 'all'.
+00:22:39 **** Incremental Build of configuration Debug for project vizq-cppcms ****
+make all 
+Building file: ../codebase/vcm.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"codebase/vcm.d" -MT"codebase/vcm.o" -o "codebase/vcm.o" "../codebase/vcm.cpp"
+In file included from ../codebase/vcm.h:30:0,
+                 from ../codebase/vcm.cpp:14:
+../codebase/prevSource.h:16:0: warning: "MAX" redefined
+ #define MAX(a,b) ((a)>(b)?(a):(b))
+ ^
+In file included from ../codebase/./rtree/rtree.h:9:0,
+                 from ../codebase/vcm.h:19,
+                 from ../codebase/vcm.cpp:14:
+../codebase/./rtree/../func/gendef.h:37:0: note: this is the location of the previous definition
+ #define MAX(a, b) a > b? a : b  
+ ^
+In file included from ../codebase/vcm.h:30:0,
+                 from ../codebase/vcm.cpp:14:
+../codebase/prevSource.h:17:0: warning: "MIN" redefined
+ #define MIN(a,b) ((a)<(b)?(a):(b))
+ ^
+In file included from ../codebase/./rtree/rtree.h:9:0,
+                 from ../codebase/vcm.h:19,
+                 from ../codebase/vcm.cpp:14:
+../codebase/./rtree/../func/gendef.h:36:0: note: this is the location of the previous definition
+ #define MIN(a, b) a < b ? a : b  
+ ^
+In file included from ../codebase/vcm.cpp:14:0:
+../codebase/vcm.h:369:49: warning: multi-line comment [-Wcomment]
+  int vcmArray[6][MAXNDISTESEG][MAXSEG][MAXSEG]; //this array will contain the final result\
+                                                 ^
+In file included from ../codebase/vcm.cpp:22:0:
+../codebase/macros.h:22:0: warning: "EPS" redefined
+ #define EPS .000000001
+ ^
+In file included from ../codebase/vcm.h:30:0,
+                 from ../codebase/vcm.cpp:14:
+../codebase/prevSource.h:51:0: note: this is the location of the previous definition
+ #define EPS 1e-10
+ ^
+In file included from ../codebase/vcm.cpp:22:0:
+../codebase/macros.h:23:0: warning: "Z" redefined
+ #define Z(x) (fabs(x)<EPS)
+ ^
+In file included from ../codebase/vcm.h:30:0,
+                 from ../codebase/vcm.cpp:14:
+../codebase/prevSource.h:54:0: note: this is the location of the previous definition
+ #define Z(x) (fabs(x) < EPS)
+ ^
+In file included from ../codebase/vcm.cpp:22:0:
+../codebase/macros.h:24:0: warning: "INF" redefined
+ #define INF 1000000
+ ^
+In file included from ../codebase/vcm.h:30:0,
+                 from ../codebase/vcm.cpp:14:
+../codebase/prevSource.h:50:0: note: this is the location of the previous definition
+ #define INF 1e6
+ ^
+../codebase/vcm.cpp:1638:2: warning: multi-line comment [-Wcomment]
+  // we have to convert a dim*dim rectangle's point in geometric space to\
+  ^
+../codebase/vcm.cpp:1691:2: warning: multi-line comment [-Wcomment]
+  // we have to convert a dim*dim rectangle's point in geometric space to\
+  ^
+../codebase/vcm.cpp:1714:2: warning: multi-line comment [-Wcomment]
+  // (x-x0)/(x0-x1)=(y-y0)/(y0-y1);\
+  ^
+In file included from ../codebase/vcm.h:19:0,
+                 from ../codebase/vcm.cpp:14:
+../codebase/./rtree/rtree.h:108:22: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double r = rand() % 255;
+                      ^
+../codebase/./rtree/rtree.h:109:22: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double g = rand() % 255;
+                      ^
+../codebase/./rtree/rtree.h:110:22: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double b = rand() % 255;
+                      ^
+../codebase/./rtree/rtree.h: In member function ‘void polygon::draw(int, double)’:
+../codebase/./rtree/rtree.h:120:10: warning: variable ‘x1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+          ^
+../codebase/./rtree/rtree.h:120:18: warning: variable ‘y1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+                  ^
+../codebase/./rtree/rtree.h:120:26: warning: variable ‘z1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+                          ^
+../codebase/./rtree/rtree.h: In member function ‘void VisibleRegion3D::draw(double)’:
+../codebase/./rtree/rtree.h:156:10: warning: variable ‘x1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+          ^
+../codebase/./rtree/rtree.h:156:18: warning: variable ‘y1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+                  ^
+../codebase/./rtree/rtree.h:156:26: warning: variable ‘z1’ set but not used [-Wunused-but-set-variable]
+   double x1 = 0, y1 = 0, z1 = 0;
+                          ^
+../codebase/./rtree/rtree.h: At global scope:
+../codebase/./rtree/rtree.h:263:22: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double r = rand() % 255, g = rand() % 255, b = rand() % 255;
+                      ^
+../codebase/./rtree/rtree.h:263:40: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double r = rand() % 255, g = rand() % 255, b = rand() % 255;
+                                        ^
+../codebase/./rtree/rtree.h:263:58: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double r = rand() % 255, g = rand() % 255, b = rand() % 255;
+                                                          ^
+../codebase/./rtree/rtree.h: In member function ‘void QueryPoint3D::print()’:
+../codebase/./rtree/rtree.h:284:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int j = 0; j < visiblePlanes.size(); ++j) {
+                     ^
+../codebase/./rtree/rtree.h:306:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     for (int k = 0; k < it->sides.size(); ++k) {
+                       ^
+In file included from ../codebase/vcm.cpp:14:0:
+../codebase/vcm.h: In member function ‘std::vector<Vector3> polygonAdapter::adapt23(int, double, std::vector<Vector>&)’:
+../codebase/vcm.h:93:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<v.size(); i++)ret.push_back(adapt23(dir, dist, v[i].x, v[i].y));
+                    ^
+../codebase/vcm.h: In member function ‘void polygonAdapter::adapt(std::vector<Vector>&, gpc_polygon&)’:
+../codebase/vcm.h:173:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<b.size(); i++)
+                    ^
+In file included from ../codebase/vcm.cpp:14:0:
+../codebase/vcm.h: At global scope:
+../codebase/vcm.h:309:16: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  string text = "";
+                ^
+../codebase/vcm.h:310:17: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  int fontsize = 10;
+                 ^
+../codebase/vcm.h:311:17: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool textset = false;
+                 ^
+../codebase/vcm.h:317:20: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  int curr_string = 1;
+                    ^
+../codebase/vcm.h:318:20: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  int prev_string = 1;
+                    ^
+../codebase/vcm.h:321:25: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool argContainsText = false;
+                         ^
+../codebase/vcm.h:326:15: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  int totDir = 6;
+               ^
+../codebase/vcm.h:327:13: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  int totp = 4; //(totp+1)^3 points
+             ^
+../codebase/vcm.h:336:21: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool isTargetSet = false;
+                     ^
+../codebase/vcm.h:337:22: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool vcmGenerated = false;
+                      ^
+../codebase/vcm.h:363:19: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  int totDiscard = 0, totCnt = 0;
+                   ^
+../codebase/vcm.h:363:31: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  int totDiscard = 0, totCnt = 0;
+                               ^
+../codebase/vcm.h:364:19: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  double totTime = 0;
+                   ^
+../codebase/vcm.h:366:21: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool showDistRec = 1, showProjPoly = 1, showObstacle = 1, showAll = 1, drawg = 1, showobstacles = 1;
+                     ^
+../codebase/vcm.h:366:39: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool showDistRec = 1, showProjPoly = 1, showObstacle = 1, showAll = 1, drawg = 1, showobstacles = 1;
+                                       ^
+../codebase/vcm.h:366:57: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool showDistRec = 1, showProjPoly = 1, showObstacle = 1, showAll = 1, drawg = 1, showobstacles = 1;
+                                                         ^
+../codebase/vcm.h:366:70: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool showDistRec = 1, showProjPoly = 1, showObstacle = 1, showAll = 1, drawg = 1, showobstacles = 1;
+                                                                      ^
+../codebase/vcm.h:366:81: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool showDistRec = 1, showProjPoly = 1, showObstacle = 1, showAll = 1, drawg = 1, showobstacles = 1;
+                                                                                 ^
+../codebase/vcm.h:366:100: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  bool showDistRec = 1, showProjPoly = 1, showObstacle = 1, showAll = 1, drawg = 1, showobstacles = 1;
+                                                                                                    ^
+../codebase/vcm.h:367:15: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  int showid = 0, curSegId = 0;
+               ^
+../codebase/vcm.h:367:29: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  int showid = 0, curSegId = 0;
+                             ^
+../codebase/vcm.h:377:18: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+  float _angle = -30.0f;
+                  ^
+In file included from ../codebase/vcm.cpp:14:0:
+../codebase/vcm.h:39:15: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+ #define BLANK 0
+               ^
+../codebase/vcm.h:382:22: note: in expansion of macro ‘BLANK’
+  int console_index = BLANK;
+                      ^
+../codebase/vcm.cpp:64:159: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+ "VCM Generated!\nRed: Obstacle not in direction\nGreen: Obstacle at near distance\nYellow: Obstacle out of projection plane\nBlue: Hidden by other obstacles" };
+                                                                                                                                                               ^
+../codebase/vcm.cpp:64:159: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+../codebase/vcm.cpp:64:159: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+../codebase/vcm.cpp:64:159: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+../codebase/vcm.cpp:64:159: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+../codebase/vcm.cpp:64:159: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+../codebase/vcm.cpp:64:159: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+../codebase/vcm.cpp: In member function ‘bool VCM::calcConvexProjectionWrtCube(Plane, Box, Box, gpc_polygon&, int, bool)’:
+../codebase/vcm.cpp:238:6: warning: unused variable ‘i1’ [-Wunused-variable]
+  int i1, j1, k1;
+      ^
+../codebase/vcm.cpp:238:10: warning: unused variable ‘j1’ [-Wunused-variable]
+  int i1, j1, k1;
+          ^
+../codebase/vcm.cpp:238:14: warning: unused variable ‘k1’ [-Wunused-variable]
+  int i1, j1, k1;
+              ^
+../codebase/vcm.cpp:240:7: warning: unused variable ‘ret’ [-Wunused-variable]
+  bool ret = false;
+       ^
+../codebase/vcm.cpp: In member function ‘void VCM::calcProjectionPlanes()’:
+../codebase/vcm.cpp:348:9: warning: unused variable ‘transfactor’ [-Wunused-variable]
+  double transfactor[] = { target.o.x, target.o.x, target.o.y, target.o.y, target.o.z, target.o.z }; // we have to translate the plane centering at cube center
+         ^
+../codebase/vcm.cpp: In member function ‘void VCM::update(int, int)’:
+../codebase/vcm.cpp:369:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<id.size(); i++)
+                   ^
+../codebase/vcm.cpp: In member function ‘void VCM::updateVcm(std::vector<int>&, int, int, int)’:
+../codebase/vcm.cpp:393:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<id.size(); i++)
+                   ^
+../codebase/vcm.cpp: In member function ‘void VCM::reductionInNegX(int)’:
+../codebase/vcm.cpp:418:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i < obstacles.size(); i++) {
+                    ^
+../codebase/vcm.cpp:475:8: warning: unused variable ‘b’ [-Wunused-variable]
+   bool b = calcConvexProjectionWrtCube(projPlane, target, obstacles[u], gProjPoly, dir);
+        ^
+../codebase/vcm.cpp: In member function ‘void VCM::reductionInNegY(int)’:
+../codebase/vcm.cpp:507:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i < obstacles.size(); i++) {
+                    ^
+../codebase/vcm.cpp:564:8: warning: unused variable ‘b’ [-Wunused-variable]
+   bool b = calcConvexProjectionWrtCube(projPlane, target, obstacles[u], gProjPoly, dir);
+        ^
+../codebase/vcm.cpp: In member function ‘void VCM::reductionInNegZ(int)’:
+../codebase/vcm.cpp:594:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i < obstacles.size(); i++) {
+                    ^
+../codebase/vcm.cpp:651:8: warning: unused variable ‘b’ [-Wunused-variable]
+   bool b = calcConvexProjectionWrtCube(projPlane, target, obstacles[u], gProjPoly, dir);
+        ^
+../codebase/vcm.cpp: In member function ‘void VCM::reductionInPosXRtree(int)’:
+../codebase/vcm.cpp:934:90: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘std::vector<Box>::size_type {aka long unsigned int}’ [-Wformat=]
+  printf("dir obstacle size %d, all obstacle size %d\n", dirObstacle[1].size(), All.size());
+                                                                                          ^
+../codebase/vcm.cpp:934:90: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘std::vector<Box>::size_type {aka long unsigned int}’ [-Wformat=]
+../codebase/vcm.cpp: In member function ‘void VCM::reductionInPosX(int)’:
+../codebase/vcm.cpp:953:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<obstacles.size(); i++) {
+                   ^
+../codebase/vcm.cpp: In member function ‘void VCM::reductionInPosY(int)’:
+../codebase/vcm.cpp:1044:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i < obstacles.size(); i++)
+                    ^
+../codebase/vcm.cpp: In member function ‘void VCM::reductionInPosZ(int)’:
+../codebase/vcm.cpp:1136:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i < obstacles.size(); i++) {
+                    ^
+../codebase/vcm.cpp:1183:8: warning: unused variable ‘b’ [-Wunused-variable]
+   bool b = calcConvexProjectionWrtCube(projPlane, target, obstacles[u], gProjPoly, dir);
+        ^
+../codebase/vcm.cpp: In member function ‘void VCM::drawGridX()’:
+../codebase/vcm.cpp:1317:13: warning: unused variable ‘col’ [-Wunused-variable]
+      double col = 255 - 255.0*((double)vcmArray[dir][curSeg][i][j] / tot);
+             ^
+../codebase/vcm.cpp: In member function ‘void VCM::drawGridY()’:
+../codebase/vcm.cpp:1367:13: warning: unused variable ‘col’ [-Wunused-variable]
+      double col = 255 - 255.0*((double)vcmArray[dir][curSeg][i][j] / tot);
+             ^
+../codebase/vcm.cpp: In member function ‘void VCM::drawGridZ()’:
+../codebase/vcm.cpp:1415:13: warning: unused variable ‘col’ [-Wunused-variable]
+      double col = 255 - 255.0*((double)vcmArray[dir][curSeg][i][j] / tot);
+             ^
+../codebase/vcm.cpp: In member function ‘void VCM::debug1()’:
+../codebase/vcm.cpp:1463:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<dirObstacleId[k].size(); i++)
+                    ^
+../codebase/vcm.cpp:1491:48: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  if (showAll && !showObstacle)for (int i = 0; i<obstacles.size(); i++)
+                                                ^
+../codebase/vcm.cpp:1498:6: warning: unused variable ‘dir’ [-Wunused-variable]
+  int dir = 1;
+      ^
+../codebase/vcm.cpp:1525:6: warning: unused variable ‘j’ [-Wunused-variable]
+  int j = showid;
+      ^
+../codebase/vcm.cpp: In member function ‘void VCM::monoPolygonTo2Darray(int, int, std::vector<Vector>)’:
+../codebase/vcm.cpp:1737:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 1; i<mpoly.size(); i++)if (mpoly[i].y<mpoly[low].y)low = i;
+                   ^
+../codebase/vcm.cpp:1738:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 1; i<mpoly.size(); i++)if (mpoly[i].y>mpoly[hi].y)hi = i;
+                   ^
+../codebase/vcm.cpp:1768:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<pq.size(); i++)
+                   ^
+../codebase/vcm.cpp: In member function ‘void VCM::monoPolygonTo2Darray1(int, int, std::vector<Vector>)’:
+../codebase/vcm.cpp:1824:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 1; i<mpoly.size(); i++)if (mpoly[i].y<mpoly[low].y)low = i;
+                   ^
+../codebase/vcm.cpp:1825:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 1; i<mpoly.size(); i++)if (mpoly[i].y>mpoly[hi].y)hi = i;
+                   ^
+../codebase/vcm.cpp:1829:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<mpoly.size(); i++)pq.push_back(mpoly[i]);
+                   ^
+../codebase/vcm.cpp:1854:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 1; i<pq.size(); i++)
+                   ^
+../codebase/vcm.cpp: In member function ‘void VCM::monoPolygonTo2Darray2(int, int, std::vector<Vector>)’:
+../codebase/vcm.cpp:1916:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 1; i<mpoly.size(); i++)if (mpoly[i].y<mpoly[low].y)low = i;
+                   ^
+../codebase/vcm.cpp:1917:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 1; i<mpoly.size(); i++)if (mpoly[i].y>mpoly[hi].y)hi = i;
+                   ^
+../codebase/vcm.cpp:1921:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<mpoly.size(); i++) pq.push_back(mpoly[i]);
+                   ^
+../codebase/vcm.cpp:1946:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 1; i<pq.size(); i++)
+                   ^
+../codebase/vcm.cpp: In member function ‘void VCM::updateVcm1(std::vector<Box>&, int, int, int)’:
+../codebase/vcm.cpp:2071:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<obstacleWrtPoint.size(); i++)
+                   ^
+../codebase/vcm.cpp: In member function ‘void VCM::generateMapInPosX(int, int)’:
+../codebase/vcm.cpp:2141:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<dirObstacle[dir].size(); i++)
+                   ^
+../codebase/vcm.cpp:2173:7: warning: variable ‘boundRect’ set but not used [-Wunused-but-set-variable]
+   Box boundRect = projRect[dir][lastSeg];
+       ^
+../codebase/vcm.cpp:2219:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<vp.size(); i++)
+                    ^
+../codebase/vcm.cpp:2225:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int j = 0; j<temp.size(); j++)monoTonePolys.push_back(temp[j]);
+                     ^
+../codebase/vcm.cpp:2229:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<monoTonePolys.size(); i++)
+                    ^
+../codebase/vcm.cpp: In member function ‘void VCM::generateMapInPosX1(int, int)’:
+../codebase/vcm.cpp:2250:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<obstacleId.size(); i++)
+                   ^
+../codebase/vcm.cpp:2264:30: warning: unused variable ‘p’ [-Wunused-variable]
+   vector< vector<Vector3> > &p = vcmProjPolys[dir][curSeg][tid];
+                              ^
+../codebase/vcm.cpp:2270:7: warning: variable ‘boundRect’ set but not used [-Wunused-but-set-variable]
+   Box boundRect = projRect[dir][curSeg];
+       ^
+../codebase/vcm.cpp:2329:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<vp.size(); i++)
+                    ^
+../codebase/vcm.cpp:2334:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int j = 0; j<temp.size(); j++)monoTonePolys.push_back(temp[j]);
+                     ^
+../codebase/vcm.cpp:2338:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<monoTonePolys.size(); i++)
+                    ^
+../codebase/vcm.cpp: In member function ‘void VCM::generateMapInPosY(int, int)’:
+../codebase/vcm.cpp:2362:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<dirObstacle[dir].size(); i++)
+                   ^
+../codebase/vcm.cpp:2383:7: warning: variable ‘boundRect’ set but not used [-Wunused-but-set-variable]
+   Box boundRect = projRect[dir][lastSeg];
+       ^
+../codebase/vcm.cpp:2431:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<vp.size(); i++)
+                    ^
+../codebase/vcm.cpp:2436:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int j = 0; j<temp.size(); j++)monoTonePolys.push_back(temp[j]);
+                     ^
+../codebase/vcm.cpp:2440:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<monoTonePolys.size(); i++)
+                    ^
+../codebase/vcm.cpp: In member function ‘void VCM::generateMapInPosZ(int, int)’:
+../codebase/vcm.cpp:2461:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<dirObstacle[dir].size(); i++)
+                   ^
+../codebase/vcm.cpp:2488:7: warning: variable ‘boundRect’ set but not used [-Wunused-but-set-variable]
+   Box boundRect = projRect[dir][lastSeg];
+       ^
+../codebase/vcm.cpp:2536:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<vp.size(); i++)
+                    ^
+../codebase/vcm.cpp:2541:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int j = 0; j<temp.size(); j++)monoTonePolys.push_back(temp[j]);
+                     ^
+../codebase/vcm.cpp:2545:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<monoTonePolys.size(); i++)
+                    ^
+../codebase/vcm.cpp: In member function ‘void VCM::generateMapInNegX(int, int)’:
+../codebase/vcm.cpp:2565:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<dirObstacle[dir].size(); i++)
+                   ^
+../codebase/vcm.cpp:2591:7: warning: variable ‘boundRect’ set but not used [-Wunused-but-set-variable]
+   Box boundRect = projRect[dir][lastSeg];
+       ^
+../codebase/vcm.cpp:2639:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<vp.size(); i++)
+                    ^
+../codebase/vcm.cpp:2644:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int j = 0; j<temp.size(); j++)monoTonePolys.push_back(temp[j]);
+                     ^
+../codebase/vcm.cpp:2647:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<monoTonePolys.size(); i++)
+                    ^
+../codebase/vcm.cpp: In member function ‘void VCM::generateMapInNegY(int, int)’:
+../codebase/vcm.cpp:2667:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<dirObstacle[dir].size(); i++)
+                   ^
+../codebase/vcm.cpp:2694:7: warning: variable ‘boundRect’ set but not used [-Wunused-but-set-variable]
+   Box boundRect = projRect[dir][lastSeg];
+       ^
+../codebase/vcm.cpp:2742:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<vp.size(); i++)
+                    ^
+../codebase/vcm.cpp:2747:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int j = 0; j<temp.size(); j++)monoTonePolys.push_back(temp[j]);
+                     ^
+../codebase/vcm.cpp:2750:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<monoTonePolys.size(); i++)
+                    ^
+../codebase/vcm.cpp: In member function ‘void VCM::generateMapInNegZ(int, int)’:
+../codebase/vcm.cpp:2772:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<dirObstacle[dir].size(); i++)
+                   ^
+../codebase/vcm.cpp:2799:7: warning: variable ‘boundRect’ set but not used [-Wunused-but-set-variable]
+   Box boundRect = projRect[dir][lastSeg];
+       ^
+../codebase/vcm.cpp:2847:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<vp.size(); i++)
+                    ^
+../codebase/vcm.cpp:2852:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int j = 0; j<temp.size(); j++)monoTonePolys.push_back(temp[j]);
+                     ^
+../codebase/vcm.cpp:2855:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i<monoTonePolys.size(); i++)
+                    ^
+../codebase/vcm.cpp: In member function ‘void VCM::buildTree(char*, char*, char*)’:
+../codebase/vcm.cpp:2944:6: warning: unused variable ‘blocksize’ [-Wunused-variable]
+  int blocksize = 1024;
+      ^
+../codebase/vcm.cpp:2949:7: warning: unused variable ‘OUTFILE’ [-Wunused-variable]
+  char OUTFILE[200] = "";
+       ^
+../codebase/vcm.cpp: In member function ‘void VCM::createRtreeFromData(char*)’:
+../codebase/vcm.cpp:2971:17: warning: deprecated conversion from string constant to ‘char*’ [-Wwrite-strings]
+  char *Inpath = "";
+                 ^
+../codebase/vcm.cpp: In member function ‘int VCM::naiveVisibility(Vector3)’:
+../codebase/vcm.cpp:3032:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<targetPoints.size(); i++)
+                   ^
+../codebase/vcm.cpp:3036:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int j = 0; j<obstacles.size(); j++)
+                    ^
+../codebase/vcm.cpp: In member function ‘void VCM::initialize()’:
+../codebase/vcm.cpp:3143:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i < obstacles.size(); ++i) {
+                    ^
+../codebase/vcm.cpp:3156:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int j = 0; j<targetPoints.size(); j++)gpc_free_polygon(&gVcmProjPolys[dir][i][j]);
+                     ^
+../codebase/vcm.cpp:3160:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int j = 0; j<targetPoints.size(); j++)vcmProjPolys[dir][i][j].clear();
+                     ^
+../codebase/vcm.cpp:3147:6: warning: unused variable ‘dir’ [-Wunused-variable]
+  int dir = 1;
+      ^
+../codebase/vcm.cpp: In member function ‘void VCM::setTarget(Box&)’:
+../codebase/vcm.cpp:3218:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i < obstacles.size(); ++i) {
+                    ^
+../codebase/vcm.cpp: In member function ‘void VCM::run(char*)’:
+../codebase/vcm.cpp:3292:46: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘std::vector<Vector3>::size_type {aka long unsigned int}’ [-Wformat=]
+    fprintf(logfp, "%d\n", targetPoints.size());
+                                              ^
+../codebase/vcm.cpp:3293:52: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘std::vector<Vector3>::size_type {aka long unsigned int}’ [-Wformat=]
+    printf("target points %d\n", targetPoints.size());
+                                                    ^
+../codebase/vcm.cpp:3294:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int i = 0; i<targetPoints.size(); i++)
+                     ^
+../codebase/vcm.cpp: In member function ‘std::__cxx11::string VCM::run2(int)’:
+../codebase/vcm.cpp:3384:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int i = 0; i<targetPoints.size(); i++)
+                     ^
+../codebase/vcm.cpp: In member function ‘void VCM::debug3()’:
+../codebase/vcm.cpp:3464:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<lo.size(); i++)
+                   ^
+../codebase/vcm.cpp:3468:11: warning: variable ‘c’ set but not used [-Wunused-but-set-variable]
+   Vector3 c = v0.add(v1).div(2);
+           ^
+../codebase/vcm.cpp: In member function ‘void VCM::debug4()’:
+../codebase/vcm.cpp:3489:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<dirObstacle[1].size(); i++)
+                   ^
+../codebase/vcm.cpp:3491:7: warning: unused variable ‘j’ [-Wunused-variable]
+   int j = i%rColor.size();
+       ^
+../codebase/vcm.cpp:3497:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<All.size(); i++)
+                   ^
+../codebase/vcm.cpp:3527:12: warning: unused variable ‘col’ [-Wunused-variable]
+     double col = 255 - 255.0*((double)vcmArray[dir][curSeg][i][j] / tot);
+            ^
+../codebase/vcm.cpp:3551:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for (int i = 0; i<obstacles.size(); i++)
+                   ^
+../codebase/vcm.cpp:3553:7: warning: unused variable ‘j’ [-Wunused-variable]
+   int j = i%rColor.size();
+       ^
+../codebase/vcm.cpp: In member function ‘void VCM::setup()’:
+../codebase/vcm.cpp:3804:15: warning: unused variable ‘discard’ [-Wunused-variable]
+  int cnt = 0, discard = 0;
+               ^
+In file included from ../codebase/vcm.cpp:14:0:
+../codebase/vcm.h: In member function ‘Vector polygonAdapter::adapt32(int, double, double, double)’:
+../codebase/vcm.h:88:2: warning: control reaches end of non-void function [-Wreturn-type]
+  }
+  ^
+../codebase/vcm.cpp: In member function ‘Vector3 VCM::arrayIndexToPoint(int, int, int, int)’:
+../codebase/vcm.cpp:3600:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+Finished building: ../codebase/vcm.cpp
+ 
+Building target: vizq-cppcms
+Invoking: GCC C++ Linker
+g++  -o "vizq-cppcms"  ./codebase/rtree/distance.o ./codebase/rtree/entry.o ./codebase/rtree/rtnode.o ./codebase/rtree/rtree.o ./codebase/rtree/rtree_cmd.o  ./codebase/linlist/linlist.o  ./codebase/his/histogram.o  ./codebase/heap/heap.o  ./codebase/gpc/gpc.o  ./codebase/func/functions.o  ./codebase/blockfile/blk_file.o ./codebase/blockfile/cache.o  ./codebase/mian.o ./codebase/monotone.o ./codebase/mvq.o ./codebase/prevSource.o ./codebase/tinyfiledialogs.o ./codebase/vcm.o ./codebase/vector3.o   
+Finished building target: vizq-cppcms
+ 
+00:32:04 **** Incremental Build of configuration Debug for project vizq-cppcms ****
+make all 
+make: Nothing to be done for 'all'.
