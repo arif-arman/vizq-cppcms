@@ -1184,13 +1184,20 @@ function runVCM() {
 
 	dir = document.getElementById('axis').value;
 
-	var params = "mode=" + document.getElementById('mode').value;
-	params += "&ob=" + document.getElementById('ob').value;
-	params += "&dir=" + dir;// + document.getElementById('dir').value;
-	params += "&x1=" + target['x1'] + "&y1=" + target['y1'] + "&z1=" + target['z1'] + "&x2=" + target['x2'] + "&y2=" + target['y2'] + "&z2=" + target['z2'];
-	if (mode === "tvcm") params += "&text=" + $('#fontsize').val();
-	else params += "&text=-1";
-	get('/vcm', params, function(text) {
+	var params = $("#ob").val() + "/" + dir + "/";
+	var tpos = target['x1'] + "&" + target['y1'] + "&" + target['z1'] + "&" + target['x2'] + "&" + target['y2'] + "&" + target['z2'] + "/";
+	console.log(tpos);
+	params += tpos;
+	if (mode === "tvcm") params += $('#fontsize').val();
+	else params += "0";
+
+	// var params = "mode=" + document.getElementById('mode').value;
+	// params += "&ob=" + document.getElementById('ob').value;
+	// params += "&dir=" + dir;// + document.getElementById('dir').value;
+	// params += "&x1=" + target['x1'] + "&y1=" + target['y1'] + "&z1=" + target['z1'] + "&x2=" + target['x2'] + "&y2=" + target['y2'] + "&z2=" + target['z2'];
+	// if (mode === "tvcm") params += "&text=" + $('#fontsize').val();
+	// else params += "&text=-1";
+	get('/hello/vcm', params, function(text) {
 		if (text != null) {	
 			var json_obj = JSON.parse(text);
 			vcmArray = json_obj;

@@ -15,6 +15,7 @@
 #include "content.h"
 #include "tinydir.h"
 #include "../vizq-cppcms/codebase/mvq.h"
+#include "../vizq-cppcms/codebase/vcm.h"
 #include "../vizq-cppcms/codebase/rtree/rtree.h"
 
 #define SOME_PAIR(x,y) make_pair(string(x), vector<string>(y))
@@ -25,6 +26,8 @@ using namespace std;
 class hello: public cppcms::application {
     bool upload_success;
     string upload_type;
+    VCM v;
+    
 public:
     hello(cppcms::service &srv): cppcms::application(srv) {
         upload_success = false;
@@ -79,7 +82,7 @@ public:
 
 void hello::vcm(string ob, string dir, string targetpos, string text) {
     cout << "Debug: VCM params" << endl;
-    cout << ob << " " << dir << " " << targetpos << " " << text << endl;
+   
 
     string delim = "&";
     size_t pos = 0;
@@ -98,25 +101,33 @@ void hello::vcm(string ob, string dir, string targetpos, string text) {
         ++c;
     }
     z2 = atof(targetpos.c_str());
-    //cout << x1 << " " << y1 << " " << z1 << " " << x2 << " "  << y2 << " " << z2 << endl;
+    
 
+    //VCM vcm;
+    strcpy(v.f, "./ob/");
+    puts(v.f);
+    strcat(v.f, ob.c_str());
 
-    VCM vcm;
-    strcpy(vcm.f, "./ob/");
-    strcat(vcm.f, ob.c_str());
-
-    vcm.fontsize = atoi(text);
-    if (vcm.fontsize != -1) {
-        vcm.argContainsText = true;
+    v.fontsize = atoi(text.c_str());
+    if (v.fontsize != 0) {
+        v.argContainsText = true;
     }
 
-    vcm.setup();
+    cout << ob << " " << dir << " " << targetpos << " " << text << endl;
+    cout << x1 << " " << y1 << " " << z1 << " " << x2 << " "  << y2 << " " << z2 << endl;
+    cout << v.fontsize << endl;
+
+    v.setup();
     Box b(Vector3(x1, y1, z1), Vector3(x2, y2, z2));
-    vcm.setTarget(b);
+    v.setTarget(b); 
 
-    vcm.run2(atoi(dir));
+    
 
-    response().out() << "Inside VCM";
+    string details = v.run2(atoi(dir.c_str()));
+
+    //cout << v.NDISTESEG << " " << MAXSEG << endl;
+
+    //response().out() << details;
 
 }
 

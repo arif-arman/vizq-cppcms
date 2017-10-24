@@ -9,6 +9,7 @@
 #include <cstring>
 #include <queue>
 #include <cassert>
+#include <sstream>
 
 #include "vcm.h"
 #include "vector3.h"
@@ -36,6 +37,9 @@
 #include "tinyfiledialogs.h"
 
 VCM::VCM() {
+
+	printf("vcm.cpp:: creating vcm object\n");
+
 	fonttodist[8] = 60;
 	fonttodist[10] = 70;
 	fonttodist[12] = 80;
@@ -277,6 +281,7 @@ bool VCM::calcConvexProjectionWrtCube(Plane plane, Box cb, Box tb, gpc_polygon &
 // stores segment distances from T
 void VCM::calcSegmentDistance(int dir)
 {
+	printf("Calculating segment distances for direction: %d\n", dir);
 	segDist.clear();
 	double da = ANGRES;
 	int n = 90.0 / da;
@@ -331,6 +336,8 @@ void VCM::calcSegmentDistance(int dir)
 
 void VCM::calcProjectionPlanes()
 {
+
+	puts("Calculating projection planes");
 	/* creates temp array that holds 6 planes of Target stored as Box */
 	Box btemp[] = { target.bx[0], target.bx[1], target.by[0], target.by[1], target.bz[0], target.bz[1] };
 	for (int i = 0; i<totDir; i++) dirBox[i] = btemp[i];
@@ -1570,6 +1577,7 @@ void VCM::debug1()
 
 void VCM::generateRandCol()
 {
+	puts("Generating random colors");
 	srand(time(NULL));
 	for (int i = 0; i < 30; i++) {
 		double r, g, b;
@@ -1979,6 +1987,7 @@ void VCM::monoPolygonTo2Darray2(int dir, int curSeg, vector<Vector>mpoly)
 
 void VCM::mergeAll(int dir, int curSeg)
 {
+	printf("Merging at dir: %d for segment: %d\n", dir, curSeg);
 	for (int i = 0; i<MAXSEG; i++)
 	{
 		for (int j = 1; j<MAXSEG; j++)
@@ -2855,6 +2864,7 @@ void VCM::generateMapInNegZ(int tid, int dir)
 
 void VCM::generateMap(int tid, int dir)
 {
+	printf("Generating map at dir: %d\n", dir);
 	if (dir == 0)generateMapInNegX(tid, dir);
 	if (dir == 1)generateMapInPosX(tid, dir);
 	if (dir == 2)generateMapInNegY(tid, dir);
@@ -2866,6 +2876,7 @@ void VCM::generateMap(int tid, int dir)
 
 void VCM::reduction(int dir)
 {
+	printf("Reducing obs at dir: %d\n", dir);
 	if (dir == 1)reductionInPosX(1);
 	if (dir == 0)reductionInNegX(0);
 	if (dir == 3)reductionInPosY(3);
@@ -2877,6 +2888,7 @@ void VCM::reduction(int dir)
 // for partial visibility
 void VCM::generateTargetPoints(int dir)
 {
+	printf("Generating target points at dir: %d\n", dir);
 	targetPoints.clear();
 	//(totp+1)*(totp+1) points
 	double delta = target.y[1] - target.y[0];
@@ -2938,7 +2950,10 @@ void VCM::buildTree(char *path, char *DATAFILENAME, char *Outpath)
 
 	r = new RTreeCmdIntrpr();
 
-	//puts(DATAFILE);
+	puts("Datafile:");
+	puts(DATAFILE);
+	puts("Treefile:");
+	puts(TREEFILE);
 
 	r->build_tree(TREEFILE, DATAFILE, b_length, dimension, 0);
 
@@ -2960,12 +2975,15 @@ void VCM::createRtreeFromData(char *f)
 	//char *Inpath = "G:\\VCM3DUpdated\\vcm-3d-updated\\3D\\3D\\";
 	//char *Outpath = "G:\\VCM3DUpdated\\vcm-3d-updated\\3D\\3D\\";
 	//puts(f);
-	char *t = new char[strlen(f) + 1];
-	char *s = t;
-	while (*f != '.' && *f != 0)
-		*t++ = *f++;
-	*t = '\0';
-	char *DATAFILENAME = s;
+//	char *t = new char[strlen(f) + 1];
+//	char *s = t;
+//	while (*f != '.' && *f != 0)
+//		*t++ = *f++;
+//	*t = '\0';
+//	char *DATAFILENAME = s;
+	char DATAFILENAME[200];
+	strcpy(DATAFILENAME, f);
+
 	//puts(s);
 	//int NumOfObstacles = 3;
 
@@ -3180,7 +3198,9 @@ void VCM::initialize()
 void VCM::clearTarget() {
 	if (isTargetSet) {
 		Box b;
-		b.init(Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0));
+		Vector3 z1(0,0,0); Vector3 z2(0,0,0); Vector3 z3(0,0,0);
+		//b.init(Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0));
+		b.init(z1, z2, z3);
 		target = b;
 	}
 }
@@ -3190,13 +3210,19 @@ void VCM::setTarget(Box &b) {
 	translate.x = b.o.x;
 	translate.y = b.o.y;
 	translate.z = b.o.z;
-	target.init(Vector3(b.x[0] - translate.x, b.y[0] - translate.y, b.z[0] - translate.z), Vector3(b.x[1] - translate.x, b.y[1] - translate.y, b.z[1] - translate.z), Origin);
+	//target.init(Vector3(b.x[0] - translate.x, b.y[0] - translate.y, b.z[0] - translate.z), Vector3(b.x[1] - translate.x, b.y[1] - translate.y, b.z[1] - translate.z), Origin);
+	Vector3 tv1(b.x[0] - translate.x, b.y[0] - translate.y, b.z[0] - translate.z);
+	Vector3 tv2(b.x[1] - translate.x, b.y[1] - translate.y, b.z[1] - translate.z);
+	target.init(tv1, tv2, Origin);
 	target.setPlanes();
 	for (int i = 0; i < obstacles.size(); ++i) {
-		obstacles[i].init(Vector3(obstacles[i].x[0] - translate.x, obstacles[i].y[0] - translate.y, obstacles[i].z[0] - translate.z),
-			Vector3(obstacles[i].x[1] - translate.x, obstacles[i].y[1] - translate.y, obstacles[i].z[1] - translate.z),
-			Origin
-			);
+		Vector3 ob1(obstacles[i].x[0] - translate.x, obstacles[i].y[0] - translate.y, obstacles[i].z[0] - translate.z);
+		Vector3 ob2(obstacles[i].x[1] - translate.x, obstacles[i].y[1] - translate.y, obstacles[i].z[1] - translate.z);
+		obstacles[i].init(ob1, ob2, Origin);
+//		obstacles[i].init(Vector3(obstacles[i].x[0] - translate.x, obstacles[i].y[0] - translate.y, obstacles[i].z[0] - translate.z),
+//			Vector3(obstacles[i].x[1] - translate.x, obstacles[i].y[1] - translate.y, obstacles[i].z[1] - translate.z),
+//			Origin
+//			);
 		if (obstacles[i].color.x == 255 && !obstacles[i].color.y && !obstacles[i].color.z) {
 			int r = rand() % rColor.size();
 			obstacles[i].color = Vector3(rColor[r].x, rColor[r].y, rColor[r].z);
@@ -3298,13 +3324,16 @@ void VCM::run(char *f)
 	fclose(efile);
 }
 
-void VCM::run2(int dir) {
+string VCM::run2(int dir) {
 	//initialize();
 	//target.o = Vector3(0, 0, 0);
-	logfp = fopen("log.txt", "w");
-	efile = fopen("efile.txt", "w");
+	//logfp = fopen("log.txt", "w");
+	//efile = fopen("efile.txt", "w");
 
 	//input();	
+
+	printf("Running VCM\n");
+	stringstream out;
 
 	// 
 	//5985
@@ -3350,17 +3379,17 @@ void VCM::run2(int dir) {
 		//reductionInPosY(dir);
 		reduction(dir);
 		{
-			fprintf(logfp, "%d\n", targetPoints.size());
+//			fprintf(logfp, "%d\n", targetPoints.size());
 			//printf("target points %d\n", targetPoints.size());
 			for (int i = 0; i<targetPoints.size(); i++)
 			{
-				fprintf(logfp, "%d ", i);
+				//fprintf(logfp, "%d ", i);
 				//printf("%d ", i);
 				//targetPoints[i].print();	// debug
 				generateMap(i, dir);
 				//break;
 			}
-			fprintf(logfp, "\n");
+//			fprintf(logfp, "\n");
 			//printf("\n");
 
 
@@ -3378,31 +3407,33 @@ void VCM::run2(int dir) {
 				}*/
 			}
 		}
-		ofstream out;
-		out.open("vcm_output.txt");
-		cout << "ndisteseg: " << NDISTESEG << endl;
-		cout << "maxseg: " << MAXSEG << endl;
-		cout << "totp: " << targetPoints.size() << endl;
+		//ofstream out;
+
+		//out.open("vcm_output.txt");
+		out << "ndisteseg: " << NDISTESEG << endl;
+		out << "maxseg: " << MAXSEG << endl;
+		out << "totp: " << targetPoints.size() << endl;
 		for (int curSeg = 1; curSeg < NDISTESEG; curSeg++) {
-			cout << "curseg;;" << endl;
-			cout << "dim: " << getDim(dir, curSeg) << endl;
-			cout << "segdist: " << segDist[curSeg] << endl;
+			out << "curseg;;" << endl;
+			out << "dim: " << getDim(dir, curSeg) << endl;
+			out << "segdist: " << segDist[curSeg] << endl;
 			for (int i = 0; i < MAXSEG; ++i) {
 				for (int j = 0; j < MAXSEG; ++j) {
-					cout << vcmArray[dir][curSeg][i][j] << " ";
+					out << vcmArray[dir][curSeg][i][j] << " ";
 					//printf("%d ", vcmArray[dir][curSeg][i][j]);
 				}
 				//printf("\n");
-				cout << endl;
+				out << endl;
 			}
-			cout << ";;curseg" << endl;
+			out << ";;curseg" << endl;
 		}
-		out.close();
+		//out.close();
+
 
 
 		double timeneeded = (double)(clock() - startTime) / (double)CLOCKS_PER_SEC;
 
-		fprintf(efile, "execution time %lf seconds.\n", timeneeded);
+//		fprintf(efile, "execution time %lf seconds.\n", timeneeded);
 		//printf("test case %d : execution time %lf seconds.\n", it, timeneeded);
 
 		totTime += timeneeded;
@@ -3412,9 +3443,11 @@ void VCM::run2(int dir) {
 	}
 	// after translation complete
 	vcmGenerated = true;
-	fprintf(logfp, "avg discarded %lf   avg reduced obstacle size %lf   avg time %lf\n", (double)totDiscard / (double)testCase, (double)totCnt / (double)testCase, totTime / (double)testCase);
-	fclose(logfp);
-	fclose(efile);
+//	fprintf(logfp, "avg discarded %lf   avg reduced obstacle size %lf   avg time %lf\n", (double)totDiscard / (double)testCase, (double)totCnt / (double)testCase, totTime / (double)testCase);
+//	fclose(logfp);
+//	fclose(efile);
+	printf("Exiting VCM");
+	return out.str();
 }
 ///
 void VCM::debug3()
@@ -3762,7 +3795,7 @@ void VCM::setup() {
 	isTargetSet = false; vcmGenerated = false;
 	obstacles.clear();
 	initialize();
-	//printf("Initializing world ... \n");
+	printf("Initializing VCM world ... \n");
 	createRtreeFromData(f);
 	generateRandCol();
 	//priority_queue< int, vi, decltype(&comparatorForPq) > Q(&comparatorForPq);
@@ -3777,6 +3810,7 @@ void VCM::setup() {
 		Q.pop();
 		for (int e = 0; e<rtn->num_entries; e++)
 		{
+			//printf("Cnt: %d\n", cnt);
 			Entry u = rtn->entries[e];
 			if (rtn->level)
 			{
@@ -3796,6 +3830,7 @@ void VCM::setup() {
 			cnt++;
 		}
 	}
+	printf("Exiting setup\n");
 }
 
 //Computes a scaling value so that the strings

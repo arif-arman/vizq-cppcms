@@ -6033,756 +6033,757 @@ struct myRectangle
         corner[3]=Vector2( corner[0].x,corner[2].y );
 	}
 };
-
-class LineSegment
-{
-public:
-    Vector2 v0;
-    Vector2 v1;
-
-	LineSegment(){}
-    LineSegment(const Vector2& begin, const Vector2& end)
-        : v0(begin), v1(end) {}
-
-    enum IntersectResult { PARALLEL, COINCIDENT, NOT_INTERESECTING, INTERESECTING };
-
-    IntersectResult Intersect(const LineSegment& L, Vector2& I,bool f=0)
-    {
-        double denom = ((L.v1.y - L.v0.y)*(v1.x - v0.x)) -
-                      ((L.v1.x - L.v0.x)*(v1.y - v0.y));
-
-        double nume_a = ((L.v1.x - L.v0.x)*(v0.y - L.v0.y)) -
-                       ((L.v1.y - L.v0.y)*(v0.x - L.v0.x));
-
-        double nume_b = ((v1.x - v0.x)*(v0.y - L.v0.y)) -
-                       ((v1.y - v0.y)*(v0.x - L.v0.x));
-
-        if(denom == 0.0f)
-        {
-            if(nume_a == 0.0f && nume_b == 0.0f)
-            {
-                return COINCIDENT;
-            }
-            return PARALLEL;
-        }
-
-        double ua = nume_a / denom;
-        double ub = nume_b / denom;
-
-        if(ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f)
-        {
-            // Get the intersection point.
-            I.x = v0.x + ua*(v1.x - v0.x);
-            I.y = v0.y + ua*(v1.y - v0.y);
-
-            return INTERESECTING;
-        }
-
-
-
-		if( f )
-		{
-			if(ua >= 0.0f && ub >= 0.0f)
-			{
-				I.x = v0.x + ua*(v1.x - v0.x);
-				I.y = v0.y + ua*(v1.y - v0.y);
-
-				return INTERESECTING;
-			}
-		}
-
-        return NOT_INTERESECTING;
-    }
-};
-
-
-
-bool  isVisible(myRectangle &ob1, myRectangle &ob2,int i1,int j1)
-{
-	int i,j;
-	LineSegment L1,L0=LineSegment( ob1.corner[i1],ob2.corner[j1] );
-	Vector2 I;
-	REP( i,4 )
-	{
-		L1=LineSegment( ob1.corner[i],ob1.corner[(i+1)%4] );
-		if(L0.Intersect( L1,I )==3 )
-		{
-			if( I.equla(ob1.corner[i1]) )continue;
-			return 0;
-		}
-	}
-	
-
-	REP( j,4 )
-	{
-		L1=LineSegment( ob2.corner[j],ob2.corner[(j+1)%4] );
-		if(L0.Intersect( L1,I )==3 )
-		{
-			if( I.equla(ob2.corner[j1]) )continue;
-			return 0;
-		}
-	}
-
-
-	return 1;
-
-}
-
-vector< Vector2 >P;
-
-bool cmpCCW(Vector2 V1,Vector2 V2)
-{
-	int t=Turn(P[0],V1,V2);
-	if(!t)
-	{
-		return (V1-P[0]).mag2()<(V2-P[0]).mag2();
-	}
-	return t>0;
-}
-
-
-
-struct Polygon
-{
-	vector< Vector2 >P;
-	
-	int size(){ return P.size(); }
-	void push( Vector2 v ){ P.push_back(v); return; }
-
-	void sortCCW()
-	{
-
-		int i,id=0,N=SZ(P);
-		
-		for(i=1;i<N;i++)
-		{
-			if(P[i].y==P[id].y)
-			{
-				if(P[i].x<P[id].x)id=i;
-			}
-			if(P[i].y<P[id].y)id=i;
-		}
-
-		swap(P[0],P[id]);
-
-		::P=P;
-
-		sort(ALL(P),cmpCCW);
-	}
-
-
-	void print()
-	{
-		int i;
-
-		REP( i,SZ( P ) )
-		{
-			P[i].print();
-		}
-
-	}
-
-
-	void fprint( FILE *fp )
-	{
-		fprintf( fp,"1\n" );
-		fprintf(fp,"%d\n",SZ( P ));
-		
-		int i;
-
-		REP(i,SZ( P ))
-		{
-			fprintf(fp,"%lf %lf\n",P[ i ].x,P[i].y);
-		}
-
-	}
-
-
-	void clear(){CL(P);}
-
-
-	bool onPolySegment(Vector2 &P0)
-	{
-		int i,n=SZ( P );
-		REP(i,n)
-		{
-			int j=(i+1)%n;
-			if(!Turn(P[i],P[j],P0))//crossp is 0
-			{
-				if((P[i].x-P0.x)*(P[j].x-P0.x)<=0&&(P[i].y-P0.y)*(P[j].y-P0.y)<=0)return true;//P0 is between two points
-			}
-		}
-		return false;
-	}
-
-	bool inPoly( Vector2 &p )
-	{
-		LineSegment L1,L2;
-		L1.v0=p;
-		L1.v1.x=10007;L1.v1.y=p.y;
-		int cn = 0,i,j,n=SZ(P);    // the crossing number counter
-		REP(i,n) {    // edge from V[i] to V[i+1]
-			j=(i+1)%n;
-		   if (((P[i].y <= p.y) && (P[j].y > p.y))    // an upward crossing
-			|| ((P[i].y > p.y) && (P[j].y <= p.y))) { // a downward crossing
-				L2=LineSegment(P[i],P[j]);
-				Vector2 I;
-				if(L1.Intersect(L2,I)==3)++cn;
-			}
-		}
-
-		return (cn&1);
-	}
-
-	bool PointInPoly( Vector2 p )
-	{
-		if( onPolySegment(p) )return true;
-		if( inPoly(p) )return true;
-		return false;
-	}
-
-	bool polyInter( Polygon &poly)
-	{
-
-		int N=SZ(poly.P);
-		int M=SZ(P);
-			
-
-		int i;
-
-		REP(i,M)
-		{
-			if( poly.PointInPoly( P[i]  ) )return true;
-			
-		}
-
-		return false;
-	}
-
-};
-
-
-void getShadowPolygon( myRectangle &tar, myRectangle &ob,Polygon &poly )
-{
-	int i,j;
-	vi v;
-
-	REP(j,4)
-	{
-		REP(i,4)
-		{
-			if( isVisible( tar,ob,i,j ) )
-			{
-				v.pb(j);
-				break;
-			}
-		}
-
-	}
-
-
-	assert(SZ(v)>=2);
-
-
-
-	
-	REP(i,SZ(v))poly.P.push_back( ob.corner[ v[i] ] );
-
-
-	int i1,j1,i2,j2;
-	int k;
-	bool f=0;
-
-	REP( i,4 )
-	{
-		REP(j,4)
-		{
-			REP( k,4 )
-			{
-				if( Turn( tar.corner[i],ob.corner[j],tar.corner[k] )>0 )break;
-			}
-			if( k!=4 )continue;
-
-			REP( k,4 )
-			{
-				if( Turn( tar.corner[i],ob.corner[j],ob.corner[k] )>0 )break;
-			}
-			if( k!=4 )continue;
-
-
-			i1=i;
-			j1=j;
-
-			f=1;
-
-			break;
-
-		}
-		if(f)break;
-	}
-	
-
-	f=0;
-
-	REP( i,4 )
-	{
-		REP(j,4)
-		{
-			REP( k,4 )
-			{
-				if( Turn( tar.corner[i],ob.corner[j],tar.corner[k] )<0 )break;
-			}
-			if( k!=4 )continue;
-
-			REP( k,4 )
-			{
-				if( Turn( tar.corner[i],ob.corner[j],ob.corner[k] )<0 )break;
-			}
-			if( k!=4 )continue;
-
-
-			i2=i;
-			j2=j;
-
-		}
-		if(f)break;
-	}
-	
-
-
-	LineSegment L0=LineSegment(  tar.corner[i1],ob.corner[j1]  );
-	LineSegment L1=LineSegment(  tar.corner[i2],ob.corner[j2]  );
-
-	
-	Vector2 I;
-
-	if( L0.Intersect(  L1,I,1 )==3 )
-	{
-		poly.P.push_back( I );
-	}
-	else
-	{
-		
-		I=ob.corner[j1] + ( ob.corner[j1] - tar.corner[i1]  )*INF;
-		poly.P.push_back( I );
-
-		I=ob.corner[j2] + ( ob.corner[j2] - tar.corner[i2]  )*INF;
-		poly.P.push_back( I );
-	}
-
-
-
-
-	poly.sortCCW();
-	reverse( poly.P.begin() , poly.P.end()  );
-
-
-}
-
-
-
-
-Polygon update( Polygon &p ,myRectangle &tar )
-{
-
-    int i,j,k,i1,i2,f,j1,j2;
-    f=0;
-
-    for( i=0;i<4;i++ )
-    {
-        for( j=0;j<p.P.size();j++ )
-        {
-            for( k=0;k<p.P.size();k++ )
-            {
-                if( Turn( tar.corner[i],p.P[j],p.P[k] )>0 )break;
-            }
-            if( k!=p.P.size() )continue;
-            for( k=0;k<4;k++ )
-            {
-                if( Turn( tar.corner[i],p.P[j],tar.corner[k] )>0 )break;
-            }
-
-            if( k!=4 )continue;
-            i1=j;
-			j1=i;
-            f=1;
-            break;
-        }if(f)break;
-    }
-
-    f=0;
-
-    for( i=0;i<4;i++ )
-    {
-        for( j=0;j<p.P.size();j++ )
-        {
-            for( k=0;k<p.P.size();k++ )
-            {
-                if( Turn( tar.corner[i],p.P[j],p.P[k] )<0 )break;
-            }
-            if( k!=p.P.size() )continue;
-            for( k=0;k<4;k++ )
-            {
-                if( Turn( tar.corner[i],p.P[j],tar.corner[k] )<0 )break;
-            }
-            if( k!=4 )continue;
-            i2=j;
-			j2=i;
-            break;
-        }if( f )break;
-    }
-
-
-
-
-    Polygon ret;
-
-    for( j=i2;j!=i1;j=( j+1 )%p.P.size() )
-    {
-
-        ret.P.push_back( p.P[ j ] );
-
-    }
-	
-	ret.P.push_back( p.P[ j ] );
-
-
-	
-
-	LineSegment L0=LineSegment(  tar.corner[j1],p.P[i1]  );
-	LineSegment L1=LineSegment(  tar.corner[j2],p.P[i2]  );
-
-
-	Vector2 I;
-
-	if( L0.Intersect(  L1,I,1 )==3 )
-	{
-		ret.P.push_back( I );
-	}
-	else
-	{
-
-		I=p.P[i1] + ( p.P[i1] - tar.corner[j1]  )*INF;
-		ret.P.push_back( I );
-
-		I=p.P[i2] + ( p.P[i2] - tar.corner[j2]  )*INF;
-		ret.P.push_back( I );
-	}
-
-
-	
-
-    return ret;
-
-}
-
-void gpc_print( gpc_polygon *p)
-{
-	printf("no of contours  %d\n",p->num_contours);
-
-	for (int i = 0; i < p->num_contours; i++)
-	{
-		printf("no of vertices %d\n",p->contour->num_vertices);
-
-		for (int j = 0; j < p->contour->num_vertices; j++)
-		{
-			printf("%.2lf %.2lf\n",p->contour->vertex[j]);
-		}
-		printf("\n");
-	}
-
-}
-
-
-
-void update_g( gpc_polygon &global,myRectangle &tar )
-{
-	
-	//gpc_print( &global );
-
-	int i,j;	
-	for( i=0;i<global.num_contours;i++ )
-	{
-		Polygon p;
-
-		
-		for( j=0;j<global.contour[i].num_vertices;j++ )
-		{
-			p.P.push_back( Vector2(global.contour[i].vertex[j].x , global.contour[i].vertex[j].y) );
-		}
-
-
-		//p.print();
-
-		p=update( p,tar );
-
-		free(global.contour[i].vertex);
-		
-		global.contour[i].num_vertices=SZ( p.P );
-		global.contour[i].vertex=( gpc_vertex * )malloc( global.contour[i].num_vertices * sizeof( gpc_vertex ) );
-		
-
-
-		for( j=0;j<p.P.size();j++ )
-		{
-			global.contour[ i ].vertex[ j ].x=p.P[j].x;
-			global.contour[ i ].vertex[ j ].y=p.P[j].y;
-		}
-
-	}
-
-
-
-}
-
-double point2seg( Vector2 &P, LineSegment &S)
-{
-    Vector2 v = S.v1 - S.v0;
-    Vector2 w = P - S.v0;
-
-    double c1 = dotp(w,v);
-    if ( c1 <= 0 )
-        return (P-S.v0).mag2();
-
-    double c2 = dotp(v,v);
-    if ( c2 <= c1 )
-        return (P-S.v1).mag2();
-
-    double b = c1 / c2;
-    Vector2 Pb = S.v0 + b * v;
-    return (P-Pb).mag2();
-}
-
-
-
-
-double calcdist(myRectangle &ou,myRectangle &tar )
-{
-	double ret=INF,d;
-	ret*=ret;
-	LineSegment L;
-
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			L.v0=tar.corner[j];
-			L.v1=tar.corner[(j+1)%4];
-			d = point2seg( ou.corner[i],L );
-
-
-			ret=MIN(ret,d);
-		
-
-
-			L.v0=ou.corner[i];
-			L.v1=ou.corner[(i+1)%4];
-			d = point2seg( tar.corner[j],L );
-
-
-			ret=MIN(ret,d);
-		
-
-
-		}
-	}
-
-
-	return sqrt(ret);
-}
-
-map< int,double > dstFromTar;
-
-class comparatorForPq
-{
-	public:
-		bool operator()( int &a,int &b )
-		{
-			return dstFromTar[a]>dstFromTar[b];
-		}
-};
-
-void  RTree:: rtreeVcmAlgo1( char *path )
-{
-	
-	myRectangle tar;
-
-
-	// setting target
-
-	//tar.corner[0] = Vector2( 0,0 );
-	//tar.corner[2] = Vector2( 4.5,.5 );
-
-	char tarfile[100];
-	strcpy( tarfile,path );
-	strcat( tarfile,"target.txt" );
-
-	FILE *fp=fopen("precalc.txt","w");
-
-	freopen( tarfile,"r",stdin );
-
-	tar.corner[0].scan();
-	tar.corner[2].scan();
-
-	tar.build();
-
-	
-
-	CL(dstFromTar);
-
-	vector< myRectangle > Ov;
-
-	
-
-
-	gpc_polygon global_gp,temp;
-	gpc_vertex gv;
-	gpc_vertex_list gvl;
-
-
-
-	
-	vector< myRectangle > vob;
-	
-	
-
-
-	priority_queue< int,vi,comparatorForPq >Q;
-
-	
-	Q.push( root );
-	int v;
-
-	int tot=0,i,j,k;
-
-
-
-	global_gp.num_contours=0;
-
-	while( !Q.empty() )
-	{
-		v=Q.top();
-		Q.pop();
-
-
-
-		RTNode *rtn = new RTNode(this, v);
-		
-		tot++;
-
-		for(  i=0;i<rtn->num_entries;i++ )
-		{
-			Entry u = rtn->entries[i];
-			
-			myRectangle ou;
-
-			ou.corner[0]=Vector2(   min(u.bounces[0],u.bounces[1]),min(u.bounces[2],u.bounces[3]) );
-			ou.corner[2]=Vector2(   max(u.bounces[0],u.bounces[1]),max(u.bounces[2],u.bounces[3]) );
-			
-			ou.build();
-
-			if( tar.corner[0].y > ou.corner[0].y )continue;
-
-			Polygon pu,pv;
-			gpc_polygon gpu;
-
-			getShadowPolygon( tar,ou,pu );
-
-			
-
-			gpu.num_contours=1;
-			gpu.hole=0;
-			gpu.contour= ( gpc_vertex_list *) malloc( gpu.num_contours*sizeof( gpc_vertex_list ) ) ;
-
-
-			gpu.contour[0].num_vertices = pu.size();
-			gpu.contour[0].vertex=( gpc_vertex *)malloc( gpu.contour[0].num_vertices*sizeof( gpc_vertex ) );
-
-
-			for ( j = 0; j < pu.size() ; j++)
-			{
-				gpu.contour[0].vertex[j].x=pu.P[j].x;
-				gpu.contour[0].vertex[j].y=pu.P[j].y;
-			}
-
-
-			
-
-
-
-
-			
-			
-			
-		//	cout<<u.bounces[0]<<" "<<u.bounces[1]<<" "<<u.bounces[2]<<" "<<u.bounces[3]<<endl;
-		//	pu.print();
-			
-
-			//checking is shadow of current MBR is within another shadow polygon
-
-
-			
-
-			for( j=0;j<global_gp.num_contours;j++ )
-			{
-				CL(pv);
-				for (int k = 0; k < global_gp.contour[j].num_vertices; k++)
-				{
-					pv.P.push_back( Vector2( global_gp.contour[j].vertex[k].x , global_gp.contour[j].vertex[k].y  ) );
-				}
-				for( k=0;k<pu.size();k++ )
-				{
-					if( !pv.PointInPoly( pu.P[ k ] ) )break;
-				}
-				if( k==pu.size() )break;
-			}
-
-
-			if( j!=global_gp.num_contours )
-			{
-				//cout<<"discarding..."<<endl;
-				continue;
-			}
-
-
-
-
-			double dst = calcdist( ou,tar );
-
-			dstFromTar[ u.son ]=dst;
-
-
-			// if not a root MBR continue
-			if( rtn->level )
-			{
-				Q.push( u.son );
-				continue;
-			}
-			else
-			{
-				
-	//			ou.corner[0].print();
-//				ou.corner[2].print();
-				//cout<<endl;
-				
-				fprintf(fp,"%.10lf %.10lf %.10lf %.10lf\n", ou.corner[0].x, ou.corner[0].y,ou.corner[2].x,ou.corner[2].y);
-
-			}
-			
-
-			gpc_polygon_clip(GPC_UNION,&gpu,&global_gp,&temp);
-			swap( temp,global_gp );
-			update_g( global_gp,tar );
-
-		}
-		
-		
-			
-	}
-	
-	fclose(fp);
-
-	//gpc_print( &global_gp );
-	return;
-
-}
+/* zitu: commented out as clashes with prevSource */
+//
+//class LineSegment
+//{
+//public:
+//    Vector2 v0;
+//    Vector2 v1;
+//
+//	LineSegment(){}
+//    LineSegment(const Vector2& begin, const Vector2& end)
+//        : v0(begin), v1(end) {}
+//
+//    enum IntersectResult { PARALLEL, COINCIDENT, NOT_INTERESECTING, INTERESECTING };
+//
+//    IntersectResult Intersect(const LineSegment& L, Vector2& I,bool f=0)
+//    {
+//        double denom = ((L.v1.y - L.v0.y)*(v1.x - v0.x)) -
+//                      ((L.v1.x - L.v0.x)*(v1.y - v0.y));
+//
+//        double nume_a = ((L.v1.x - L.v0.x)*(v0.y - L.v0.y)) -
+//                       ((L.v1.y - L.v0.y)*(v0.x - L.v0.x));
+//
+//        double nume_b = ((v1.x - v0.x)*(v0.y - L.v0.y)) -
+//                       ((v1.y - v0.y)*(v0.x - L.v0.x));
+//
+//        if(denom == 0.0f)
+//        {
+//            if(nume_a == 0.0f && nume_b == 0.0f)
+//            {
+//                return COINCIDENT;
+//            }
+//            return PARALLEL;
+//        }
+//
+//        double ua = nume_a / denom;
+//        double ub = nume_b / denom;
+//
+//        if(ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f)
+//        {
+//            // Get the intersection point.
+//            I.x = v0.x + ua*(v1.x - v0.x);
+//            I.y = v0.y + ua*(v1.y - v0.y);
+//
+//            return INTERESECTING;
+//        }
+//
+//
+//
+//		if( f )
+//		{
+//			if(ua >= 0.0f && ub >= 0.0f)
+//			{
+//				I.x = v0.x + ua*(v1.x - v0.x);
+//				I.y = v0.y + ua*(v1.y - v0.y);
+//
+//				return INTERESECTING;
+//			}
+//		}
+//
+//        return NOT_INTERESECTING;
+//    }
+//};
+//
+//
+//
+//bool  isVisible(myRectangle &ob1, myRectangle &ob2,int i1,int j1)
+//{
+//	int i,j;
+//	LineSegment L1,L0=LineSegment( ob1.corner[i1],ob2.corner[j1] );
+//	Vector2 I;
+//	REP( i,4 )
+//	{
+//		L1=LineSegment( ob1.corner[i],ob1.corner[(i+1)%4] );
+//		if(L0.Intersect( L1,I )==3 )
+//		{
+//			if( I.equla(ob1.corner[i1]) )continue;
+//			return 0;
+//		}
+//	}
+//
+//
+//	REP( j,4 )
+//	{
+//		L1=LineSegment( ob2.corner[j],ob2.corner[(j+1)%4] );
+//		if(L0.Intersect( L1,I )==3 )
+//		{
+//			if( I.equla(ob2.corner[j1]) )continue;
+//			return 0;
+//		}
+//	}
+//
+//
+//	return 1;
+//
+//}
+//
+//vector< Vector2 >P;
+//
+//bool cmpCCW(Vector2 V1,Vector2 V2)
+//{
+//	int t=Turn(P[0],V1,V2);
+//	if(!t)
+//	{
+//		return (V1-P[0]).mag2()<(V2-P[0]).mag2();
+//	}
+//	return t>0;
+//}
+//
+//
+//
+//struct Polygon
+//{
+//	vector< Vector2 >P;
+//
+//	int size(){ return P.size(); }
+//	void push( Vector2 v ){ P.push_back(v); return; }
+//
+//	void sortCCW()
+//	{
+//
+//		int i,id=0,N=SZ(P);
+//
+//		for(i=1;i<N;i++)
+//		{
+//			if(P[i].y==P[id].y)
+//			{
+//				if(P[i].x<P[id].x)id=i;
+//			}
+//			if(P[i].y<P[id].y)id=i;
+//		}
+//
+//		swap(P[0],P[id]);
+//
+//		::P=P;
+//
+//		sort(ALL(P),cmpCCW);
+//	}
+//
+//
+//	void print()
+//	{
+//		int i;
+//
+//		REP( i,SZ( P ) )
+//		{
+//			P[i].print();
+//		}
+//
+//	}
+//
+//
+//	void fprint( FILE *fp )
+//	{
+//		fprintf( fp,"1\n" );
+//		fprintf(fp,"%d\n",SZ( P ));
+//
+//		int i;
+//
+//		REP(i,SZ( P ))
+//		{
+//			fprintf(fp,"%lf %lf\n",P[ i ].x,P[i].y);
+//		}
+//
+//	}
+//
+//
+//	void clear(){CL(P);}
+//
+//
+//	bool onPolySegment(Vector2 &P0)
+//	{
+//		int i,n=SZ( P );
+//		REP(i,n)
+//		{
+//			int j=(i+1)%n;
+//			if(!Turn(P[i],P[j],P0))//crossp is 0
+//			{
+//				if((P[i].x-P0.x)*(P[j].x-P0.x)<=0&&(P[i].y-P0.y)*(P[j].y-P0.y)<=0)return true;//P0 is between two points
+//			}
+//		}
+//		return false;
+//	}
+//
+//	bool inPoly( Vector2 &p )
+//	{
+//		LineSegment L1,L2;
+//		L1.v0=p;
+//		L1.v1.x=10007;L1.v1.y=p.y;
+//		int cn = 0,i,j,n=SZ(P);    // the crossing number counter
+//		REP(i,n) {    // edge from V[i] to V[i+1]
+//			j=(i+1)%n;
+//		   if (((P[i].y <= p.y) && (P[j].y > p.y))    // an upward crossing
+//			|| ((P[i].y > p.y) && (P[j].y <= p.y))) { // a downward crossing
+//				L2=LineSegment(P[i],P[j]);
+//				Vector2 I;
+//				if(L1.Intersect(L2,I)==3)++cn;
+//			}
+//		}
+//
+//		return (cn&1);
+//	}
+//
+//	bool PointInPoly( Vector2 p )
+//	{
+//		if( onPolySegment(p) )return true;
+//		if( inPoly(p) )return true;
+//		return false;
+//	}
+//
+//	bool polyInter( Polygon &poly)
+//	{
+//
+//		int N=SZ(poly.P);
+//		int M=SZ(P);
+//
+//
+//		int i;
+//
+//		REP(i,M)
+//		{
+//			if( poly.PointInPoly( P[i]  ) )return true;
+//
+//		}
+//
+//		return false;
+//	}
+//
+//};
+//
+//
+//void getShadowPolygon( myRectangle &tar, myRectangle &ob,Polygon &poly )
+//{
+//	int i,j;
+//	vi v;
+//
+//	REP(j,4)
+//	{
+//		REP(i,4)
+//		{
+//			if( isVisible( tar,ob,i,j ) )
+//			{
+//				v.pb(j);
+//				break;
+//			}
+//		}
+//
+//	}
+//
+//
+//	assert(SZ(v)>=2);
+//
+//
+//
+//
+//	REP(i,SZ(v))poly.P.push_back( ob.corner[ v[i] ] );
+//
+//
+//	int i1,j1,i2,j2;
+//	int k;
+//	bool f=0;
+//
+//	REP( i,4 )
+//	{
+//		REP(j,4)
+//		{
+//			REP( k,4 )
+//			{
+//				if( Turn( tar.corner[i],ob.corner[j],tar.corner[k] )>0 )break;
+//			}
+//			if( k!=4 )continue;
+//
+//			REP( k,4 )
+//			{
+//				if( Turn( tar.corner[i],ob.corner[j],ob.corner[k] )>0 )break;
+//			}
+//			if( k!=4 )continue;
+//
+//
+//			i1=i;
+//			j1=j;
+//
+//			f=1;
+//
+//			break;
+//
+//		}
+//		if(f)break;
+//	}
+//
+//
+//	f=0;
+//
+//	REP( i,4 )
+//	{
+//		REP(j,4)
+//		{
+//			REP( k,4 )
+//			{
+//				if( Turn( tar.corner[i],ob.corner[j],tar.corner[k] )<0 )break;
+//			}
+//			if( k!=4 )continue;
+//
+//			REP( k,4 )
+//			{
+//				if( Turn( tar.corner[i],ob.corner[j],ob.corner[k] )<0 )break;
+//			}
+//			if( k!=4 )continue;
+//
+//
+//			i2=i;
+//			j2=j;
+//
+//		}
+//		if(f)break;
+//	}
+//
+//
+//
+//	LineSegment L0=LineSegment(  tar.corner[i1],ob.corner[j1]  );
+//	LineSegment L1=LineSegment(  tar.corner[i2],ob.corner[j2]  );
+//
+//
+//	Vector2 I;
+//
+//	if( L0.Intersect(  L1,I,1 )==3 )
+//	{
+//		poly.P.push_back( I );
+//	}
+//	else
+//	{
+//
+//		I=ob.corner[j1] + ( ob.corner[j1] - tar.corner[i1]  )*INF;
+//		poly.P.push_back( I );
+//
+//		I=ob.corner[j2] + ( ob.corner[j2] - tar.corner[i2]  )*INF;
+//		poly.P.push_back( I );
+//	}
+//
+//
+//
+//
+//	poly.sortCCW();
+//	reverse( poly.P.begin() , poly.P.end()  );
+//
+//
+//}
+//
+//
+//
+//
+//Polygon update( Polygon &p ,myRectangle &tar )
+//{
+//
+//    int i,j,k,i1,i2,f,j1,j2;
+//    f=0;
+//
+//    for( i=0;i<4;i++ )
+//    {
+//        for( j=0;j<p.P.size();j++ )
+//        {
+//            for( k=0;k<p.P.size();k++ )
+//            {
+//                if( Turn( tar.corner[i],p.P[j],p.P[k] )>0 )break;
+//            }
+//            if( k!=p.P.size() )continue;
+//            for( k=0;k<4;k++ )
+//            {
+//                if( Turn( tar.corner[i],p.P[j],tar.corner[k] )>0 )break;
+//            }
+//
+//            if( k!=4 )continue;
+//            i1=j;
+//			j1=i;
+//            f=1;
+//            break;
+//        }if(f)break;
+//    }
+//
+//    f=0;
+//
+//    for( i=0;i<4;i++ )
+//    {
+//        for( j=0;j<p.P.size();j++ )
+//        {
+//            for( k=0;k<p.P.size();k++ )
+//            {
+//                if( Turn( tar.corner[i],p.P[j],p.P[k] )<0 )break;
+//            }
+//            if( k!=p.P.size() )continue;
+//            for( k=0;k<4;k++ )
+//            {
+//                if( Turn( tar.corner[i],p.P[j],tar.corner[k] )<0 )break;
+//            }
+//            if( k!=4 )continue;
+//            i2=j;
+//			j2=i;
+//            break;
+//        }if( f )break;
+//    }
+//
+//
+//
+//
+//    Polygon ret;
+//
+//    for( j=i2;j!=i1;j=( j+1 )%p.P.size() )
+//    {
+//
+//        ret.P.push_back( p.P[ j ] );
+//
+//    }
+//
+//	ret.P.push_back( p.P[ j ] );
+//
+//
+//
+//
+//	LineSegment L0=LineSegment(  tar.corner[j1],p.P[i1]  );
+//	LineSegment L1=LineSegment(  tar.corner[j2],p.P[i2]  );
+//
+//
+//	Vector2 I;
+//
+//	if( L0.Intersect(  L1,I,1 )==3 )
+//	{
+//		ret.P.push_back( I );
+//	}
+//	else
+//	{
+//
+//		I=p.P[i1] + ( p.P[i1] - tar.corner[j1]  )*INF;
+//		ret.P.push_back( I );
+//
+//		I=p.P[i2] + ( p.P[i2] - tar.corner[j2]  )*INF;
+//		ret.P.push_back( I );
+//	}
+//
+//
+//
+//
+//    return ret;
+//
+//}
+//
+//void gpc_print( gpc_polygon *p)
+//{
+//	printf("no of contours  %d\n",p->num_contours);
+//
+//	for (int i = 0; i < p->num_contours; i++)
+//	{
+//		printf("no of vertices %d\n",p->contour->num_vertices);
+//
+//		for (int j = 0; j < p->contour->num_vertices; j++)
+//		{
+//			printf("%.2lf %.2lf\n",p->contour->vertex[j]);
+//		}
+//		printf("\n");
+//	}
+//
+//}
+//
+//
+//
+//void update_g( gpc_polygon &global,myRectangle &tar )
+//{
+//
+//	//gpc_print( &global );
+//
+//	int i,j;
+//	for( i=0;i<global.num_contours;i++ )
+//	{
+//		Polygon p;
+//
+//
+//		for( j=0;j<global.contour[i].num_vertices;j++ )
+//		{
+//			p.P.push_back( Vector2(global.contour[i].vertex[j].x , global.contour[i].vertex[j].y) );
+//		}
+//
+//
+//		//p.print();
+//
+//		p=update( p,tar );
+//
+//		free(global.contour[i].vertex);
+//
+//		global.contour[i].num_vertices=SZ( p.P );
+//		global.contour[i].vertex=( gpc_vertex * )malloc( global.contour[i].num_vertices * sizeof( gpc_vertex ) );
+//
+//
+//
+//		for( j=0;j<p.P.size();j++ )
+//		{
+//			global.contour[ i ].vertex[ j ].x=p.P[j].x;
+//			global.contour[ i ].vertex[ j ].y=p.P[j].y;
+//		}
+//
+//	}
+//
+//
+//
+//}
+//
+//double point2seg( Vector2 &P, LineSegment &S)
+//{
+//    Vector2 v = S.v1 - S.v0;
+//    Vector2 w = P - S.v0;
+//
+//    double c1 = dotp(w,v);
+//    if ( c1 <= 0 )
+//        return (P-S.v0).mag2();
+//
+//    double c2 = dotp(v,v);
+//    if ( c2 <= c1 )
+//        return (P-S.v1).mag2();
+//
+//    double b = c1 / c2;
+//    Vector2 Pb = S.v0 + b * v;
+//    return (P-Pb).mag2();
+//}
+//
+//
+//
+//
+//double calcdist(myRectangle &ou,myRectangle &tar )
+//{
+//	double ret=INF,d;
+//	ret*=ret;
+//	LineSegment L;
+//
+//	for (int i = 0; i < 4; i++)
+//	{
+//		for (int j = 0; j < 4; j++)
+//		{
+//			L.v0=tar.corner[j];
+//			L.v1=tar.corner[(j+1)%4];
+//			d = point2seg( ou.corner[i],L );
+//
+//
+//			ret=MIN(ret,d);
+//
+//
+//
+//			L.v0=ou.corner[i];
+//			L.v1=ou.corner[(i+1)%4];
+//			d = point2seg( tar.corner[j],L );
+//
+//
+//			ret=MIN(ret,d);
+//
+//
+//
+//		}
+//	}
+//
+//
+//	return sqrt(ret);
+//}
+//
+//map< int,double > dstFromTar;
+//
+//class comparatorForPq
+//{
+//	public:
+//		bool operator()( int &a,int &b )
+//		{
+//			return dstFromTar[a]>dstFromTar[b];
+//		}
+//};
+//
+//void  RTree:: rtreeVcmAlgo1( char *path )
+//{
+//
+//	myRectangle tar;
+//
+//
+//	// setting target
+//
+//	//tar.corner[0] = Vector2( 0,0 );
+//	//tar.corner[2] = Vector2( 4.5,.5 );
+//
+//	char tarfile[100];
+//	strcpy( tarfile,path );
+//	strcat( tarfile,"target.txt" );
+//
+//	FILE *fp=fopen("precalc.txt","w");
+//
+//	freopen( tarfile,"r",stdin );
+//
+//	tar.corner[0].scan();
+//	tar.corner[2].scan();
+//
+//	tar.build();
+//
+//
+//
+//	CL(dstFromTar);
+//
+//	vector< myRectangle > Ov;
+//
+//
+//
+//
+//	gpc_polygon global_gp,temp;
+//	gpc_vertex gv;
+//	gpc_vertex_list gvl;
+//
+//
+//
+//
+//	vector< myRectangle > vob;
+//
+//
+//
+//
+//	priority_queue< int,vi,comparatorForPq >Q;
+//
+//
+//	Q.push( root );
+//	int v;
+//
+//	int tot=0,i,j,k;
+//
+//
+//
+//	global_gp.num_contours=0;
+//
+//	while( !Q.empty() )
+//	{
+//		v=Q.top();
+//		Q.pop();
+//
+//
+//
+//		RTNode *rtn = new RTNode(this, v);
+//
+//		tot++;
+//
+//		for(  i=0;i<rtn->num_entries;i++ )
+//		{
+//			Entry u = rtn->entries[i];
+//
+//			myRectangle ou;
+//
+//			ou.corner[0]=Vector2(   min(u.bounces[0],u.bounces[1]),min(u.bounces[2],u.bounces[3]) );
+//			ou.corner[2]=Vector2(   max(u.bounces[0],u.bounces[1]),max(u.bounces[2],u.bounces[3]) );
+//
+//			ou.build();
+//
+//			if( tar.corner[0].y > ou.corner[0].y )continue;
+//
+//			Polygon pu,pv;
+//			gpc_polygon gpu;
+//
+//			getShadowPolygon( tar,ou,pu );
+//
+//
+//
+//			gpu.num_contours=1;
+//			gpu.hole=0;
+//			gpu.contour= ( gpc_vertex_list *) malloc( gpu.num_contours*sizeof( gpc_vertex_list ) ) ;
+//
+//
+//			gpu.contour[0].num_vertices = pu.size();
+//			gpu.contour[0].vertex=( gpc_vertex *)malloc( gpu.contour[0].num_vertices*sizeof( gpc_vertex ) );
+//
+//
+//			for ( j = 0; j < pu.size() ; j++)
+//			{
+//				gpu.contour[0].vertex[j].x=pu.P[j].x;
+//				gpu.contour[0].vertex[j].y=pu.P[j].y;
+//			}
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//		//	cout<<u.bounces[0]<<" "<<u.bounces[1]<<" "<<u.bounces[2]<<" "<<u.bounces[3]<<endl;
+//		//	pu.print();
+//
+//
+//			//checking is shadow of current MBR is within another shadow polygon
+//
+//
+//
+//
+//			for( j=0;j<global_gp.num_contours;j++ )
+//			{
+//				CL(pv);
+//				for (int k = 0; k < global_gp.contour[j].num_vertices; k++)
+//				{
+//					pv.P.push_back( Vector2( global_gp.contour[j].vertex[k].x , global_gp.contour[j].vertex[k].y  ) );
+//				}
+//				for( k=0;k<pu.size();k++ )
+//				{
+//					if( !pv.PointInPoly( pu.P[ k ] ) )break;
+//				}
+//				if( k==pu.size() )break;
+//			}
+//
+//
+//			if( j!=global_gp.num_contours )
+//			{
+//				//cout<<"discarding..."<<endl;
+//				continue;
+//			}
+//
+//
+//
+//
+//			double dst = calcdist( ou,tar );
+//
+//			dstFromTar[ u.son ]=dst;
+//
+//
+//			// if not a root MBR continue
+//			if( rtn->level )
+//			{
+//				Q.push( u.son );
+//				continue;
+//			}
+//			else
+//			{
+//
+//	//			ou.corner[0].print();
+////				ou.corner[2].print();
+//				//cout<<endl;
+//
+//				fprintf(fp,"%.10lf %.10lf %.10lf %.10lf\n", ou.corner[0].x, ou.corner[0].y,ou.corner[2].x,ou.corner[2].y);
+//
+//			}
+//
+//
+//			gpc_polygon_clip(GPC_UNION,&gpu,&global_gp,&temp);
+//			swap( temp,global_gp );
+//			update_g( global_gp,tar );
+//
+//		}
+//
+//
+//
+//	}
+//
+//	fclose(fp);
+//
+//	//gpc_print( &global_gp );
+//	return;
+//
+//}

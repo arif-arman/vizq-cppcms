@@ -70,21 +70,21 @@ struct Vector{
 };
 bool operator<(Vector a,Vector b);
 // /
-// struct myPolygon
-// {
-// 	vector< Vector >P;
+ struct myPolygon
+ {
+ 	vector< Vector >P;
 	
-// 	int size();
-// 	void push( Vector v );
-// 	void sortCCW();
-// 	void print();
-// 	void fprint( FILE *fp );
-// 	void clear();
-// 	bool onPolySegment(Vector &P0);
-// 	bool inPoly( Vector &p );
-// 	bool PointInPoly( Vector p );
-// 	bool polyInter( myPolygon &poly);
-// };
+ 	int size();
+ 	void push( Vector v );
+ 	void sortCCW();
+ 	void print();
+ 	void fprint( FILE *fp );
+ 	void clear();
+ 	bool onPolySegment(Vector &P0);
+ 	bool inPoly( Vector &p );
+ 	bool PointInPoly( Vector p );
+ 	bool polyInter( myPolygon &poly);
+ };
 
 int Turn(Vector &V0,Vector &V1,Vector &V2);
 Coord dotp(Vector a, Vector b);

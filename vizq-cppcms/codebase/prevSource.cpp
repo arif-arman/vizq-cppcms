@@ -157,127 +157,127 @@ public:
 };
 
 
-// vector< Vector >P;
-// bool cmpCCW(Vector V1,Vector V2)
-// {
-// 	int t=Turn(P[0],V1,V2);
-// 	if(!t)
-// 	{
-// 		return (V1-P[0]).mag2()<(V2-P[0]).mag2();
-// 	}
-// 	return t>0;
-// }
+ vector< Vector >P;
+ bool cmpCCW(Vector V1,Vector V2)
+ {
+ 	int t=Turn(P[0],V1,V2);
+ 	if(!t)
+ 	{
+ 		return (V1-P[0]).mag2()<(V2-P[0]).mag2();
+ 	}
+ 	return t>0;
+ }
 
 
-// void myPolygon:: sortCCW()
-// {
+ void myPolygon:: sortCCW()
+ {
 
-// 	int i,id=0,N=SZ(P);
+ 	int i,id=0,N=SZ(P);
 		
-// 	for(i=1;i<N;i++)
-// 	{
-// 		if(P[i].y==P[id].y)
-// 		{
-// 			if(P[i].x<P[id].x)id=i;
-// 		}
-// 		if(P[i].y<P[id].y)id=i;
-// 	}
+ 	for(i=1;i<N;i++)
+ 	{
+ 		if(P[i].y==P[id].y)
+ 		{
+ 			if(P[i].x<P[id].x)id=i;
+ 		}
+ 		if(P[i].y<P[id].y)id=i;
+ 	}
 
-// 	swap(P[0],P[id]);
+ 	swap(P[0],P[id]);
 
-// 	::P=P;
+ 	::P=P;
 
-// 	sort(ALL(P),cmpCCW);
-// }
-
-
-// void myPolygon:: print()
-// {
-// 	int i;
-
-// 	REP( i,SZ( P ) )
-// 	{
-// 		P[i].print();
-// 	}
-
-// }
+ 	sort(ALL(P),cmpCCW);
+ }
 
 
-// void myPolygon:: fprint( FILE *fp )
-// {
-// 	fprintf( fp,"1\n" );
-// 	fprintf(fp,"%d\n",SZ( P ));
+ void myPolygon:: print()
+ {
+ 	int i;
+
+ 	REP( i,SZ( P ) )
+ 	{
+ 		P[i].print();
+ 	}
+
+ }
+
+
+ void myPolygon:: fprint( FILE *fp )
+ {
+ 	fprintf( fp,"1\n" );
+ 	fprintf(fp,"%d\n",SZ( P ));
 		
-// 	int i;
+ 	int i;
 
-// 	REP(i,SZ( P ))
-// 	{
-// 		fprintf(fp,"%lf %lf\n",P[ i ].x,P[i].y);
-// 	}
+ 	REP(i,SZ( P ))
+ 	{
+ 		fprintf(fp,"%lf %lf\n",P[ i ].x,P[i].y);
+ 	}
 
-// }
-
-
-// void myPolygon::  clear(){CL(P);}
+ }
 
 
-// bool myPolygon:: onPolySegment(Vector &P0)
-// {
-// 	int i,n=SZ( P );
-// 	REP(i,n)
-// 	{
-// 		int j=(i+1)%n;
-// 		if(!Turn(P[i],P[j],P0))//crossp is 0
-// 		{
-// 			if((P[i].x-P0.x)*(P[j].x-P0.x)<=0&&(P[i].y-P0.y)*(P[j].y-P0.y)<=0)return true;//P0 is between two points
-// 		}
-// 	}
-// 	return false;
-// }
+ void myPolygon::  clear(){CL(P);}
 
-// bool myPolygon:: inPoly( Vector &p )
-// {
-// 	LineSegment L1,L2;
-// 	L1.v0=p;
-// 	L1.v1.x=10007;L1.v1.y=p.y;
-// 	int cn = 0,i,j,n=SZ(P);    // the crossing number counter
-// 	REP(i,n) {    // edge from V[i] to V[i+1]
-// 		j=(i+1)%n;
-// 		if (((P[i].y <= p.y) && (P[j].y > p.y))    // an upward crossing
-// 		|| ((P[i].y > p.y) && (P[j].y <= p.y))) { // a downward crossing
-// 			L2=LineSegment(P[i],P[j]);
-// 			Vector I;
-// 			if(L1.Intersect(L2,I)==3)++cn;
-// 		}
-// 	}
 
-// 	return (cn&1);
-// }
+ bool myPolygon:: onPolySegment(Vector &P0)
+ {
+ 	int i,n=SZ( P );
+ 	REP(i,n)
+ 	{
+ 		int j=(i+1)%n;
+ 		if(!Turn(P[i],P[j],P0))//crossp is 0
+ 		{
+ 			if((P[i].x-P0.x)*(P[j].x-P0.x)<=0&&(P[i].y-P0.y)*(P[j].y-P0.y)<=0)return true;//P0 is between two points
+ 		}
+ 	}
+ 	return false;
+ }
 
-// bool myPolygon:: PointInPoly( Vector p )
-// {
-// 	if( onPolySegment(p) )return true;
-// 	if( inPoly(p) )return true;
-// 	return false;
-// }
+ bool myPolygon:: inPoly( Vector &p )
+ {
+ 	LineSegment L1,L2;
+ 	L1.v0=p;
+ 	L1.v1.x=10007;L1.v1.y=p.y;
+ 	int cn = 0,i,j,n=SZ(P);    // the crossing number counter
+ 	REP(i,n) {    // edge from V[i] to V[i+1]
+ 		j=(i+1)%n;
+ 		if (((P[i].y <= p.y) && (P[j].y > p.y))    // an upward crossing
+ 		|| ((P[i].y > p.y) && (P[j].y <= p.y))) { // a downward crossing
+ 			L2=LineSegment(P[i],P[j]);
+ 			Vector I;
+ 			if(L1.Intersect(L2,I)==3)++cn;
+ 		}
+ 	}
 
-// bool myPolygon:: polyInter( myPolygon &poly)
-// {
+ 	return (cn&1);
+ }
+
+ bool myPolygon:: PointInPoly( Vector p )
+ {
+ 	if( onPolySegment(p) )return true;
+ 	if( inPoly(p) )return true;
+ 	return false;
+ }
+
+ bool myPolygon:: polyInter( myPolygon &poly)
+ {
 	
-// 	int N=SZ(poly.P);
-// 	int M=SZ(P);
+ 	int N=SZ(poly.P);
+ 	int M=SZ(P);
 			
 
-// 	int i;
+ 	int i;
 
-// 	REP(i,M)
-// 	{
-// 		if( poly.PointInPoly( P[i]  ) )return true;
+ 	REP(i,M)
+ 	{
+ 		if( poly.PointInPoly( P[i]  ) )return true;
 			
-// 	}
+ 	}
 
-// 	return false;
-// }
+ 	return false;
+ }
 
 
 

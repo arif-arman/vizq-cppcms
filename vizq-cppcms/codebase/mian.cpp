@@ -89,18 +89,20 @@ int main(int argc, char **argv) {
 		}
 
 	} else if (strstr(argv[1], "vcm")) {
-		if (argc < 11) {
+		if (argc < 10) {
 			cout << "Too few arguments" << endl;
 			return 0;
 		}
-		strcpy(vcm.f, argv[2]); // obstacle set
-		double x1 = atoi(argv[4]);
-		double y1 = atoi(argv[5]);
-		double z1 = atoi(argv[6]);
-		double x2 = atoi(argv[7]);
-		double y2 = atoi(argv[8]);
-		double z2 = atoi(argv[9]);
-		vcm.fontsize = atoi(argv[10]);
+		//VCM vcm;
+		strcpy(vcm.f, "../webapp/ob/");
+		strcat(vcm.f, argv[2]); // obstacle set
+		double x1 = atoi(argv[3]);
+		double y1 = atoi(argv[4]);
+		double z1 = atoi(argv[5]);
+		double x2 = atoi(argv[6]);
+		double y2 = atoi(argv[7]);
+		double z2 = atoi(argv[8]);
+		vcm.fontsize = atoi(argv[9]);
 		if (vcm.fontsize != -1)
 			vcm.argContainsText = true;
 		vcm.setup();

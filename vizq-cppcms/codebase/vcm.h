@@ -215,26 +215,26 @@ public:
 
 	bool contains(gpc_polygon &gp1, gpc_polygon &gp2) //if p1 contains p2
 	{
-		cout << "Contains called in VCM.h, we need this method" << endl;
-		// myPolygon p1, p2;
-		// Vector v;
+		//cout << "Contains called in VCM.h, we need this method" << endl;
+		 myPolygon p1, p2;
+		 Vector v;
 
 
-		// for (int k = 0; k<gp1.num_contours; k++)
-		// {
-		// 	p1.clear();
-		// 	int i;
-		// 	for (i = 0; i<gp1.contour[k].num_vertices; i++)p1.P.push_back(Vector(gp1.contour[k].vertex[i].x, gp1.contour[k].vertex[i].y));
-		// 	for (i = 0; i<gp2.contour[0].num_vertices; i++)
-		// 	{
-		// 		v = (Vector(gp2.contour[0].vertex[i].x, gp2.contour[0].vertex[i].y));
-		// 		//	putchar('(');
-		// 		bool b = p1.PointInPoly(v);
-		// 		//	putchar(')');
-		// 		if (!b)break;
-		// 	}
-		// 	if (i == gp2.contour[0].num_vertices)return true;
-		// }
+		 for (int k = 0; k<gp1.num_contours; k++)
+		 {
+		 	p1.clear();
+		 	int i;
+		 	for (i = 0; i<gp1.contour[k].num_vertices; i++)p1.P.push_back(Vector(gp1.contour[k].vertex[i].x, gp1.contour[k].vertex[i].y));
+		 	for (i = 0; i<gp2.contour[0].num_vertices; i++)
+		 	{
+		 		v = (Vector(gp2.contour[0].vertex[i].x, gp2.contour[0].vertex[i].y));
+		 		//	putchar('(');
+		 		bool b = p1.PointInPoly(v);
+		 		//	putchar(')');
+		 		if (!b)break;
+		 	}
+		 	if (i == gp2.contour[0].num_vertices)return true;
+		 }
 
 		return false;
 
@@ -455,7 +455,7 @@ public:
 	void clearTarget();
 	void setTarget(Box &b);
 	void run(char *f);
-	void run2(int dir);
+	string run2(int dir);
 	void debug3();
 	void debug4();
 	double dist(Vector3 a, Vector3 b);

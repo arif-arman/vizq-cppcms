@@ -53,7 +53,7 @@ Vector3::Vector3(const Vector3& vector)
         z = vector.getZ();
 }
 
-void Vector3::set(const Vector3& vector)
+void Vector3::set(Vector3& vector)
 {
         x = vector.getX();
         y = vector.getY();
@@ -114,16 +114,20 @@ Vector3 Vector3::crossProd(Vector3 vector)
         return cross;
 }
 
-const Vector3& Vector3::operator=(const Vector3& vec) const {
-	return Vector3(vec.getX(), vec.getY(), vec.getZ());
+Vector3& Vector3::operator=(const Vector3& vec) {
+	//Vector3 v(vec.getX(), vec.getY(), vec.getZ());
+	this->setX(vec.getX());
+	this->setY(vec.getY());
+	this->setZ(vec.getZ());
+	return *this;
 }
 
-Vector3 Vector3::add(const Vector3& vector) const
+Vector3 Vector3::add(Vector3 vector)
 {
 	return Vector3( x+vector.x , y+vector.y,z+vector.z );
 }
 
-Vector3 Vector3::sub(const Vector3& vector) const
+Vector3 Vector3::sub(Vector3 vector)
 {
 	return Vector3( x-vector.x , y-vector.y,z-vector.z );
 }
@@ -191,7 +195,7 @@ void Vector3::negate()
 
 Plane::Plane(){}
 Plane::Plane( double n1,double n2,double n3,double d0 ){n.x=this->n1=n1,n.y=this->n2=n2,n.z=this->n3=n3,this->d0=d0;}
-Plane::Plane (Vector3 p1,Vector3 p2,Vector3 p3)
+Plane::Plane (Vector3& p1, Vector3& p2, Vector3& p3)
 {
 	Vector3 n=(p3.sub(p1)).crossProd(p2.sub(p1));
 	n1=n.x;
@@ -320,7 +324,7 @@ bool Plane :: rayPlaneIntersction(Vector3 &p0,Vector3 &p1,Vector3 &I)
 //class Box;
 
 
-void Box::init(const Vector3 &v0, const Vector3 &v1, const Vector3 &origin)
+void Box::init(Vector3 &v0, Vector3 &v1, Vector3 &origin)
 {
 
 	v0=v0.sub( origin );
@@ -377,18 +381,20 @@ void Box::init(const Vector3 &v0, const Vector3 &v1, const Vector3 &origin)
 
 }
 
-Box::Box(Vector3 v0,Vector3 v1) // tow corner point
+Box::Box(Vector3 v0, Vector3 v1) // tow corner point
 {
-	init(v0,v1,Vector3(0,0,0));
+	Vector3 zero(0,0,0);
+	init(v0, v1, zero);
 }
 
 
 void Box::scan()
 {
 	Vector3 v0,v1;
+	Vector3 zero(0,0,0);
 	v0.scan();
 	v1.scan();
-	init(v0,v1,Vector3(0,0,0));
+	init(v0,v1,zero);
 	setPlanes();
 }
 

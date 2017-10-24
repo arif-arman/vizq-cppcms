@@ -17,7 +17,7 @@ public:
 	void print();
 	void scan();
 	void fscan(FILE* fp);
-    void set(const Vector3& v);
+    void set(Vector3& v);
     void set(double,double,double);
     void setX(double);
     void setY(double);
@@ -25,16 +25,16 @@ public:
     double getX() const;
     double getY() const;
     double getZ() const;
-    double dotProd(Vector3);
-    Vector3 crossProd(Vector3);
-	Vector3 add(const Vector3& v) const;
-	Vector3 sub(const Vector3& v) const;
+    double dotProd(Vector3 v) ;
+    Vector3 crossProd(Vector3 v);
+	Vector3 add(Vector3 v);
+	Vector3 sub(Vector3 v);
 	Vector3 mul(double scale);
 	Vector3 div(double scale);
     void normalize();            
 	double mag2();
 	bool operator<( const Vector3& v );
-	const Vector3& operator=(const Vector3& v) const;
+	Vector3& operator=(const Vector3& v) ;
 	void negate();
 };
 
@@ -49,7 +49,7 @@ public:
 
 	Plane();
 	Plane( double n1,double n2,double n3,double d0 );
-	Plane (Vector3 p1,Vector3 p2,Vector3 p3);
+	Plane (Vector3& p1, Vector3& p2, Vector3& p3);
 
 	bool caclProjectionOfPoint( Vector3 C, Vector3 P,Vector3& Q  );
 	bool rayPlaneIntersction(Vector3 &u,Vector3 &v,Vector3 &I);
@@ -83,9 +83,9 @@ public:
 	//length of the side
 	double lx,ly,lz;
 	
-	void init(const Vector3 &v0, const Vector3 &v1, const Vector3 &origin);
+	void init(Vector3& v0, Vector3& v1, Vector3& origin);
 
-	Box(Vector3 v0,Vector3 v1);
+	Box(Vector3 v0, Vector3 v1);
 
 
 	void scan();
