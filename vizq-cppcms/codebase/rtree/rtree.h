@@ -11,6 +11,7 @@
 #include <vector>
 #include <list>
 #include <cmath>
+#include <float.h>
 //#include <GL\glut.h>
 
 #include "../gpc/gpc.h"
@@ -80,6 +81,7 @@ public:
 	Point3D p2;
 	Point3D p3;
 	Point3D p4;
+	bool s = false;
 	Rectangle3D(Point3D a, Point3D b, Point3D c, Point3D d) {
 		p1 = a;
 		p2 = b;
@@ -87,6 +89,7 @@ public:
 		p4 = d;
 	}
 	Rectangle3D() {
+
 	}
 };
 

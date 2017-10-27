@@ -404,7 +404,19 @@ void MVQ::createRtreeFromData(char *f)
 }
 
 
+float MVQ::DIST(float *bounces) {
+	float x1 = (bounces[0] + bounces[1])/2;
+	float y1 = (bounces[2] + bounces[3])/2;
+	float z1 = (bounces[4] + bounces[5])/2;
+	float x2 = (T.a.x + T.b.x)/2;
+	float y2 = (T.a.y + T.b.y)/2;
+	float z2 = (T.a.z + T.b.z)/2;
 
+	// debug
+	printf("DIST: %f %f %f %f %f %f\n", x1, y1, z1, x2, y2, z2);
+
+	return sqrt(pow(x1-x2,2) + pow(y1-y2,2) + pow(z1-z2,2));
+}
 
 void MVQ::setup() {
 	if (isTargetSet) clearTarget();
@@ -426,9 +438,14 @@ void MVQ::setup() {
 		for (int e = 0; e<rtn->num_entries; e++)
 		{
 			Entry u = rtn->entries[e];
+			/* debug: zitu */
+			for (int ind = 0; ind<6; ++ind)
+				printf("%f%c", u.bounces[ind], ind == 5 ? '\n' : ' ');
 			if (rtn->level)
 			{
-				dstFromTar[u.son] = u.bounces[0];
+				//dstFromTar[u.son] = u.bounces[0]; // need to update later, wouldn't it only apply for +x?
+				/* debug: zitu */
+				dstFromTar[u.son] = DIST(u.bounces);
 				Q.push(u.son);
 				continue;
 			}

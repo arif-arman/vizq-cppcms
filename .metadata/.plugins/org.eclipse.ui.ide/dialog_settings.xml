@@ -7,4 +7,7 @@
 		<item value="434" key="DIALOG_X_ORIGIN"/>
 		<item value="136" key="DIALOG_Y_ORIGIN"/>
 	</section>
+	<section name="org.eclipse.ui.internal.ide.dialogs.ProjectContentsLocationArea">
+		<item value="/media/zitu/SSD Store/Workspace" key="OUTSIDE_LOCATION"/>
+	</section>
 </section>

@@ -83,6 +83,7 @@ public:
 	void createRtreeFromData(char *f);
 	void buildTree(char *path, char *DATAFILENAME, char *Outpath);
 	void draw_axis();
+	float DIST(float *bounces);
 	// static bool comparatorForPq(int &a, int &b)
 	// {
 	// 	return dstFromTar[a]>dstFromTar[b];

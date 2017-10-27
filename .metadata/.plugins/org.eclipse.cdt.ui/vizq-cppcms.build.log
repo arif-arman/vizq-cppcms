@@ -1,6 +1,6 @@
-00:32:04 **** Incremental Build of configuration Debug for project vizq-cppcms ****
+13:08:21 **** Incremental Build of configuration Debug for project vizq-cppcms ****
 make all 
 make: Nothing to be done for 'all'.
 
-00:32:04 Build Finished (took 123ms)
+13:08:21 Build Finished (took 203ms)
 

@@ -8,4 +8,4 @@ org.eclipse.launchbar.core.descriptorType.default\:TestProject\ Debug/activeLaun
 org.eclipse.launchbar.core.descriptorType.default\:TestProject\ Debug/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
 org.eclipse.launchbar.core.descriptorType.default\:TestProject/activeLaunchMode=debug
 org.eclipse.launchbar.core.descriptorType.default\:vizq-cppcms\ Debug/activeLaunchMode=run
-org.eclipse.launchbar.core.descriptorType.default\:vizq-cppcms/activeLaunchMode=run
+org.eclipse.launchbar.core.descriptorType.default\:vizq-cppcms/activeLaunchMode=debug
