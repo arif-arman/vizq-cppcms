@@ -4539,10 +4539,10 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 				//check if the shadow is totally outside that visiblePlane
 				//if yes then invisible = true
 
+				bool sh = shadow(position, obstacle, visiblePlanes[i].boundary,	shadowOfObs);
+				bool atLeastOneInside = false;
 
-
-				if (shadow(position, obstacle, visiblePlanes[i].boundary,
-						shadowOfObs) == false) {
+				if (sh == false) {
 					vector<line> rect;
 					rect.push_back(line(shadowOfObs.p1, shadowOfObs.p2));
 					rect.push_back(line(shadowOfObs.p2, shadowOfObs.p3));
@@ -4551,24 +4551,75 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 
 					//check if totally obstructed by shadow
 					//Point3D t(6, 5, -5);
-					if (isPointInsidePlanarShape(visiblePlanes[i].boundary.p1,
-							rect)
-							&& isPointInsidePlanarShape(
-									visiblePlanes[i].boundary.p2, rect)
-							&& isPointInsidePlanarShape(
-									visiblePlanes[i].boundary.p3, rect)
-							&& isPointInsidePlanarShape(
-									visiblePlanes[i].boundary.p4, rect))// debug here? don't we need to check all 4 points?
+
+					bool in1 = isPointInsidePlanarShape(visiblePlanes[i].boundary.p1, rect);
+					bool in2 = isPointInsidePlanarShape(visiblePlanes[i].boundary.p2, rect);
+					bool in3 = isPointInsidePlanarShape(visiblePlanes[i].boundary.p3, rect);
+					bool in4 = isPointInsidePlanarShape(visiblePlanes[i].boundary.p4, rect);
+					if (in1 && in2 && in3 && in4)// debug here? don't we need to check all 4 points?
 									//if (isPointInsidePlanarShape(t, rect) == true)
 									{
 						total_visibility -= abs(
 								visiblePlanes[i].partial_visibility);
 						continue;
 					}
+					if (in1 || in2 || in3 || in4) {
+						atLeastOneInside = true;
+						float minx, miny, minz, maxx, maxy, maxz, targetminx, targetminy,
+									targetminz, targetmaxx, targetmaxy, targetmaxz;
 
-					outside = true;
+							targetminx = min4(visiblePlanes[i].boundary.p1.x, visiblePlanes[i].boundary.p2.x, visiblePlanes[i].boundary.p3.x, visiblePlanes[i].boundary.p4.x);
+							targetminy = min4(visiblePlanes[i].boundary.p1.y, visiblePlanes[i].boundary.p2.y, visiblePlanes[i].boundary.p3.y, visiblePlanes[i].boundary.p4.y);
+							targetminz = min4(visiblePlanes[i].boundary.p1.z, visiblePlanes[i].boundary.p2.z, visiblePlanes[i].boundary.p3.z, visiblePlanes[i].boundary.p4.z);
 
-				} else //shadowOfObs is in the visiblePlanes[i]
+							targetmaxx = max4(visiblePlanes[i].boundary.p1.x, visiblePlanes[i].boundary.p2.x, visiblePlanes[i].boundary.p3.x, visiblePlanes[i].boundary.p4.x);
+							targetmaxy = max4(visiblePlanes[i].boundary.p1.y, visiblePlanes[i].boundary.p2.y, visiblePlanes[i].boundary.p3.y, visiblePlanes[i].boundary.p4.y);
+							targetmaxz = max4(visiblePlanes[i].boundary.p1.z, visiblePlanes[i].boundary.p2.z, visiblePlanes[i].boundary.p3.z, visiblePlanes[i].boundary.p4.z);
+
+							minx = min4(shadowOfObs.p1.x, shadowOfObs.p2.x, shadowOfObs.p3.x, shadowOfObs.p4.x);
+							maxx = max4(shadowOfObs.p1.x, shadowOfObs.p2.x, shadowOfObs.p3.x, shadowOfObs.p4.x);
+
+							miny = min4(shadowOfObs.p1.y, shadowOfObs.p2.y, shadowOfObs.p3.y, shadowOfObs.p4.y);
+							maxy = max4(shadowOfObs.p1.y, shadowOfObs.p2.y, shadowOfObs.p3.y, shadowOfObs.p4.y);
+
+							minz = min4(shadowOfObs.p1.z, shadowOfObs.p2.z, shadowOfObs.p3.z, shadowOfObs.p4.z);
+							maxz = max4(shadowOfObs.p1.z, shadowOfObs.p2.z, shadowOfObs.p3.z, shadowOfObs.p4.z);
+
+
+							minx = max(minx, targetminx);
+							maxx = min(maxx, targetmaxx);
+
+							miny = max(miny, targetminy);
+							maxy = min(maxy, targetmaxy);
+
+							minz = max(minz, targetminz);
+							maxz = min(maxz, targetmaxz);
+
+							if (minz == maxz) {	// shadow in xy plane
+								shadowOfObs.p1 = Point3D(minx, miny, minz);
+								shadowOfObs.p2 = Point3D(minx, maxy, maxz);
+								shadowOfObs.p3 = Point3D(maxx, maxy, maxz);
+								shadowOfObs.p4 = Point3D(maxx, miny, minz);
+							} else if (miny == maxy) {	// shadow in zx plane
+								shadowOfObs.p1 = Point3D(minx, miny, minz);
+								shadowOfObs.p2 = Point3D(minx, miny, maxz);
+								shadowOfObs.p3 = Point3D(maxx, maxy, maxz);
+								shadowOfObs.p4 = Point3D(maxx, maxy, minz);
+							} else if (minx == maxx) {
+								shadowOfObs.p1 = Point3D(minx, miny, minz);
+								shadowOfObs.p2 = Point3D(minx, miny, maxz);
+								shadowOfObs.p3 = Point3D(maxx, maxy, maxz);
+								shadowOfObs.p4 = Point3D(maxx, maxy, minz);
+							}
+
+
+
+					}
+					else outside = true;	// completely outside
+
+				}
+				//else //shadowOfObs is in the visiblePlanes[i]
+				if (sh || atLeastOneInside)
 				{
 					intersectsInvisibleR = false;
 					vector<line> rect;
@@ -5400,7 +5451,7 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 
 							affectAmount = obstacleAffectsRegion_val3D(q[j], nd, T);
 
-							if ((edist1 <= 0.0001 && MindistBetweenBox(T, nd) <= 0.0001) || (q[j].IsInsideVisibleRegion(T, nd) == true)) { //q and target are inside that mbr, or mbr is inside the visible region of q
+							if ((edist1 <= 0.0001 && MindistBetweenBox(T, nd) <= 0.0001) || affectAmount > 0) {// || (q[j].IsInsideVisibleRegion(T, nd) == true)) { //q and target are inside that mbr, or mbr is inside the visible region of q
 
 								HeapEntry *h = new HeapEntry();
 								h->key = affectAmount; //sort the obs_heap according to amount of affect
@@ -5503,10 +5554,15 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 
 							//change visibility region of current_best_point
 
-							if (current_best_point.IsInsideVisibleRegion(T,
-									obj))
-								current_best_point.update_visibilityRegion(obj,
-										T);
+//							if (current_best_point.IsInsideVisibleRegion(T,
+//									obj))
+//								current_best_point.update_visibilityRegion(obj,
+//										T);
+							float aff = obstacleAffectsRegion_val3D(current_best_point, obj, T);
+							if (aff > 0) {
+								current_best_point.update_visibilityRegion(obj, T);
+							}
+
 							else {
 								qp_priority_queue.push(current_best_point);
 								again = true;
