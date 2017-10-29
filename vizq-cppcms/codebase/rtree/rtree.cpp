@@ -3534,24 +3534,48 @@ bool intersectionOfLineSeg_Rectangle(Point3D l1, Point3D l2, Point3D a,
 }
 
 float PolygonArea(polygon poly) {
-	Point3D cross;
-	Point3D n;
-	float area = 0;
-
+	// edit zitu
 	if (poly.sides.size() > 1) {
 		if (poly.sides[0].a == poly.sides[0].b)
 			return 0.0;
-		n = unitNormalVector(poly.sides[0].a, poly.sides[0].b);	//polygon's sides are co-planer any side can be taken
+	//	n = unitNormalVector(poly.sides[0].a, poly.sides[0].b);	//polygon's sides are co-planer any side can be taken
 	} else {
 		return 0.0; //no side or just a line
 	}
 
-	for (int i = 0; i < poly.sides.size(); i++) {
-		cross = crossProduct(poly.sides[i].a, poly.sides[i].b);
-		area += dotProductVal(n, cross);
+	Point3D orig = poly.sides[0].a;
+
+	for (int i=1;i<poly.sides.size();++i) {
+		poly.sides[i].a = poly.sides[i].a - orig;
 	}
-	area = (float) area / 2;
-	return abs(area);
+	Point3D cross;
+	float det = 0, area = 0;
+	for (int i=1;i<poly.sides.size()-1;++i) {
+		cross = crossProduct(poly.sides[i].a, poly.sides[i+1].a);
+		det = sqrt(pow(cross.x, 2) + pow(cross.y, 2) + pow(cross.z, 2));
+		area += det;
+	}
+	return abs(area/2);
+
+
+//	Point3D cross;
+//	Point3D n;
+//	float area = 0;
+//
+//	if (poly.sides.size() > 1) {
+//		if (poly.sides[0].a == poly.sides[0].b)
+//			return 0.0;
+//		n = unitNormalVector(poly.sides[0].a, poly.sides[0].b);	//polygon's sides are co-planer any side can be taken
+//	} else {
+//		return 0.0; //no side or just a line
+//	}
+//
+//	for (int i = 0; i < poly.sides.size(); i++) {
+//		cross = crossProduct(poly.sides[i].a, poly.sides[i].b);
+//		area += dotProductVal(n, cross);
+//	}
+//	area = (float) area / 2;
+//	return abs(area);
 }
 
 float QueryPoint3D::init_visibility(Box2 t, Point3D cornerPoints[]) {
@@ -4044,21 +4068,21 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 				maxz = targetmaxz;
 
 				// debug zitu
-				if (minz == maxz) {	// shadow in xy plane
-					shadowOfObs.p1 = Point3D(minx, miny, minz);
-					shadowOfObs.p2 = Point3D(minx, maxy, maxz);
-					shadowOfObs.p3 = Point3D(maxx, maxy, maxz);
-					shadowOfObs.p4 = Point3D(maxx, miny, minz);
-				} else if (miny == maxy) {	// shadow in zx plane
-					shadowOfObs.p1 = Point3D(minx, miny, minz);
-					shadowOfObs.p2 = Point3D(minx, miny, maxz);
-					shadowOfObs.p3 = Point3D(maxx, maxy, maxz);
-					shadowOfObs.p4 = Point3D(maxx, maxy, minz);
-				} else if (minx == maxx) {
-					shadowOfObs.p1 = Point3D(minx, miny, minz);
-					shadowOfObs.p2 = Point3D(minx, miny, maxz);
-					shadowOfObs.p3 = Point3D(maxx, maxy, maxz);
-					shadowOfObs.p4 = Point3D(maxx, maxy, minz);
+				if (targetminz == targetmaxz) {	// shadow in xy plane
+					shadowOfObs.p1 = Point3D(minx, miny, targetminz);
+					shadowOfObs.p2 = Point3D(minx, maxy, targetmaxz);
+					shadowOfObs.p3 = Point3D(maxx, maxy, targetmaxz);
+					shadowOfObs.p4 = Point3D(maxx, miny, targetminz);
+				} else if (targetminy == targetmaxy) {	// shadow in zx plane
+					shadowOfObs.p1 = Point3D(minx, targetminy, minz);
+					shadowOfObs.p2 = Point3D(minx, targetminy, maxz);
+					shadowOfObs.p3 = Point3D(maxx, targetmaxy, maxz);
+					shadowOfObs.p4 = Point3D(maxx, targetmaxy, minz);
+				} else if (targetminx == targetmaxx) {
+					shadowOfObs.p1 = Point3D(targetminx, miny, minz);
+					shadowOfObs.p2 = Point3D(targetminx, miny, maxz);
+					shadowOfObs.p3 = Point3D(targetmaxx, maxy, maxz);
+					shadowOfObs.p4 = Point3D(targetmaxx, maxy, minz);
 				}
 				/*shadowOfObs.p1 = Point3D(minx,miny,minz);
 				 shadowOfObs.p4 = Point3D(maxx,maxy,maxz);
@@ -4069,21 +4093,21 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 
 			else if(minset){
 				// debug zitu
-				if (minz == maxz) {	// shadow in xy plane
-					shadowOfObs.p1 = Point3D(minx, miny, minz);
-					shadowOfObs.p2 = Point3D(minx, maxy, maxz);
-					shadowOfObs.p3 = Point3D(maxx, maxy, maxz);
-					shadowOfObs.p4 = Point3D(maxx, miny, minz);
-				} else if (miny == maxy) {	// shadow in zx plane
-					shadowOfObs.p1 = Point3D(minx, miny, minz);
-					shadowOfObs.p2 = Point3D(minx, miny, maxz);
-					shadowOfObs.p3 = Point3D(maxx, maxy, maxz);
-					shadowOfObs.p4 = Point3D(maxx, maxy, minz);
-				} else if (minx == maxx) {
-					shadowOfObs.p1 = Point3D(minx, miny, minz);
-					shadowOfObs.p2 = Point3D(minx, miny, maxz);
-					shadowOfObs.p3 = Point3D(maxx, maxy, maxz);
-					shadowOfObs.p4 = Point3D(maxx, maxy, minz);
+				if (targetminz == targetmaxz) {	// shadow in xy plane
+					shadowOfObs.p1 = Point3D(minx, miny, targetminz);
+					shadowOfObs.p2 = Point3D(minx, maxy, targetmaxz);
+					shadowOfObs.p3 = Point3D(maxx, maxy, targetmaxz);
+					shadowOfObs.p4 = Point3D(maxx, miny, targetminz);
+				} else if (targetminy == targetmaxy) {	// shadow in zx plane
+					shadowOfObs.p1 = Point3D(minx, targetminy, minz);
+					shadowOfObs.p2 = Point3D(minx, targetminy, maxz);
+					shadowOfObs.p3 = Point3D(maxx, targetmaxy, maxz);
+					shadowOfObs.p4 = Point3D(maxx, targetmaxy, minz);
+				} else if (targetminx == targetmaxx) {
+					shadowOfObs.p1 = Point3D(targetminx, miny, minz);
+					shadowOfObs.p2 = Point3D(targetminx, miny, maxz);
+					shadowOfObs.p3 = Point3D(targetmaxx, maxy, maxz);
+					shadowOfObs.p4 = Point3D(targetmaxx, maxy, minz);
 				}
 				/*shadowOfObs.p1 = Point3D(minx,miny,minz);
 				 shadowOfObs.p4 = Point3D(maxx,maxy,maxz);
@@ -4456,8 +4480,11 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 				//check if the shadow is totally outside that visiblePlane
 				//if yes then invisible = true
 
-				if (shadow(position, obstacle, visiblePlanes[i].boundary,
-						shadowOfObs) == false) {
+				bool sh = shadow(position, obstacle, visiblePlanes[i].boundary,
+						shadowOfObs);
+				bool atleast = false;
+
+				if (sh == false) {
 
 					vector<line> rect;
 					rect.push_back(line(shadowOfObs.p1, shadowOfObs.p2));
@@ -4469,14 +4496,27 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 					if (MindistBetweenBox(T, obstacle) < 0.0001) {
 						return true;
 					}
-					if (isPointInsidePlanarShape(T.a, rect) == true
-							|| isPointInsidePlanarShape(T.b, rect) == true)	// since totally outside hole shadow false
-									{
-						return true;
+//					if (isPointInsidePlanarShape(T.a, rect) == true
+//							|| isPointInsidePlanarShape(T.b, rect) == true)	// since totally outside hole shadow false
+//									{
+//						return true;
+//					}
+					Point3D cornerPoints[8];
+					cornerPoints[0]= T.a;
+					cornerPoints[1] = Point3D(T.b.x,T.a.y,T.a.z);
+					cornerPoints[2] = Point3D(T.b.x,T.b.y,T.a.z);
+					cornerPoints[3] = Point3D(T.a.x,T.b.y,T.a.z);
+					cornerPoints[4] = Point3D(T.a.x,T.a.y,T.b.z);
+					cornerPoints[5] = Point3D(T.b.x,T.a.y,T.b.z);
+					cornerPoints[6] = T.b;
+					cornerPoints[7] = Point3D(T.a.x,T.b.y,T.b.z);
+					for (int ind = 0; ind<8; ++ind) {
+						if (isPointInsidePlanarShape(cornerPoints[ind], rect)) return true;
 					}
 					outside = true;
 					continue;
-				} else {
+				}
+				if (sh || atleast) {
 
 					//else, check for all invisible region of that plane
 					list<polygon> tempInvisible_parts =
@@ -4532,6 +4572,7 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 				Rectangle3D shadowOfObs;
 				bool outside = false;
 				bool intersectsInvisibleR = false;
+				bool becameInvisible = false;
 				//check for all visible planes
 
 				//find the shadow of obstacle in that plane
@@ -4631,10 +4672,11 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 					// check for all invisible region of that plane
 					list<polygon> tempInvisible_parts =
 							visiblePlanes[i].invisible_parts;
+					bool first = true;
 					for (list<polygon>::iterator itr =
 							tempInvisible_parts.begin();
 							itr != tempInvisible_parts.end(); itr++) {
-						polygon innerPolygon, unionPolygon;
+						polygon innerPolygon, unionPolygon, commonPolygon;
 
 						if (isPolyIntesectsWithRect(*itr, shadowOfObs)
 								== false) {
@@ -4705,9 +4747,9 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 							}
 							gpc_vertex_list tv = { itr->sides.size(), v };
 							gpc_add_contour(&existing, &tv, 0);
-							//printf("\nExisting inv. region: plane ID %d\n", visiblePlanes[i].planeId);
+							printf("\nExisting inv. region: plane ID %d\n", visiblePlanes[i].planeId);
 							for (int m = 0; m < itr->sides.size(); ++m) {
-								//printf("%.2f %.2f\n", existing.contour[0].vertex[m].x, existing.contour[0].vertex[m].y);
+								printf("%.2f %.2f\n", existing.contour[0].vertex[m].x, existing.contour[0].vertex[m].y);
 
 							}
 
@@ -4748,9 +4790,9 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 							tv = {4, v};
 							gpc_add_contour(&newShadow, &tv, 0);
 
-							//printf("\nNew shadow: plane ID %d\n", visiblePlanes[i].planeId);
+							printf("\nNew shadow: plane ID %d\n", visiblePlanes[i].planeId);
 							for (int m = 0; m < 4; ++m) {
-								//printf("%.2f %.2f\n", newShadow.contour[0].vertex[m].x, newShadow.contour[0].vertex[m].y);
+								printf("%.2f %.2f\n", newShadow.contour[0].vertex[m].x, newShadow.contour[0].vertex[m].y);
 
 							}
 
@@ -4762,20 +4804,47 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 							gpc_polygon_clip(GPC_UNION, &existing, &newShadow,
 									&un);
 
-							//printf("\nIntersection: plane ID %d\n", visiblePlanes[i].planeId);
+							printf("\nIntersection: plane ID %d\n", visiblePlanes[i].planeId);
 							if (common.contour) {
 								for (int m = 0;
 										m < common.contour[0].num_vertices;
 										++m) {
-									//printf("%.2f %.2f\n", common.contour[0].vertex[m].x, common.contour[0].vertex[m].y);
+									printf("%.2f %.2f\n", common.contour[0].vertex[m].x, common.contour[0].vertex[m].y);
+									line side;
+									int n = (m + 1) % common.contour[0].num_vertices;
+									if (visiblePlanes[i].planeId == 0
+											|| visiblePlanes[i].planeId == 1) {
+										side.a.x = common.contour[0].vertex[m].x;
+										side.a.y = common.contour[0].vertex[m].y;
+										side.a.z = shadowOfObs.p1.z;
+										side.b.x = common.contour[0].vertex[n].x;
+										side.b.y = common.contour[0].vertex[n].y;
+										side.b.z = shadowOfObs.p1.z;
 
+									} else if (visiblePlanes[i].planeId == 2
+											|| visiblePlanes[i].planeId == 3) {
+										side.a.x = shadowOfObs.p1.x;
+										side.a.y = common.contour[0].vertex[m].x;
+										side.a.z = common.contour[0].vertex[m].y;
+										side.b.x = shadowOfObs.p1.x;
+										side.b.y = common.contour[0].vertex[n].x;
+										side.b.z = common.contour[0].vertex[n].y;
+									} else {
+										side.a.x = common.contour[0].vertex[m].x;
+										side.a.y = shadowOfObs.p1.y;
+										side.a.z = common.contour[0].vertex[m].y;
+										side.b.x = common.contour[0].vertex[n].x;
+										side.b.y = shadowOfObs.p1.y;
+										side.b.z = common.contour[0].vertex[n].y;
+									}
+									commonPolygon.sides.push_back(side);
 								}
 							}
 
-							//printf("\nUnion: plane ID %d\n", visiblePlanes[i].planeId);
+							printf("\nUnion: plane ID %d\n", visiblePlanes[i].planeId);
 							for (int m = 0; m < un.contour[0].num_vertices;
 									++m) {
-								//printf("%.2f %.2f\n", un.contour[0].vertex[m].x, un.contour[0].vertex[m].y);
+								printf("%.2f %.2f\n", un.contour[0].vertex[m].x, un.contour[0].vertex[m].y);
 								line side;
 								int n = (m + 1) % un.contour[0].num_vertices;
 								if (visiblePlanes[i].planeId == 0
@@ -4809,22 +4878,35 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 
 							//unionPolygon = polyRectUnion(*itr,shadowOfObs,innerPolygon);
 							unionPolygon.Polyarea = PolygonArea(unionPolygon);
+							commonPolygon.Polyarea = PolygonArea(commonPolygon);
 							//float intersectArea = PolygonArea(innerPolygon);
 							//unionPolygon.Polyarea = (*itr).Polyarea + PolygonArea(polygon(rect)) - intersectArea;
 
-							float newarea = -abs(unionPolygon.Polyarea)
-									+ abs((*itr).Polyarea);
+							float newarea = 0;
+							if (first) {
+								newarea = -abs(unionPolygon.Polyarea) + abs((*itr).Polyarea);
+								first = false;
+							}
+							else {
+								newarea = -abs(commonPolygon.Polyarea);
+							}
 							newarea *= factor[i];
 
 							/*total_visibility -= abs(unionPolygon.Polyarea);
 							 total_visibility += abs((*itr).Polyarea);*/
 
-							total_visibility += newarea;
+							if (total_visibility > 0) total_visibility += newarea;
+
+							if (abs(total_visibility-0) <= 0.0001 || total_visibility < 0) {
+								becameInvisible = true;
+								total_visibility = 0;
+							}
 
 							/*visiblePlanes[i].partial_visibility -= abs(unionPolygon.Polyarea);
 							 visiblePlanes[i].partial_visibility += abs((*itr).Polyarea);*/
 
-							visiblePlanes[i].partial_visibility += newarea;
+							if (visiblePlanes[i].partial_visibility > 0)
+								visiblePlanes[i].partial_visibility += newarea;
 
 							//debug zitu
 							vector<line> tempShadow;
@@ -4854,7 +4936,9 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 							gpc_free_polygon(&common);
 							gpc_free_polygon(&un);
 						}
+						if (becameInvisible) break;
 					}					//end of for
+					if (becameInvisible) continue;
 					if (intersectsInvisibleR == false)//a new invisible region of that visible plane
 							{
 						polygon newRect(rect);
@@ -5377,6 +5461,7 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 				int& obstacle_considered, Point3D cornerPoints[]) {
 			int k_position = 0;
 			int k_original = k;
+			k = num_of_query_points;	// we want to compute for each qp (to avoid early termination for demo)
 			if (k <= 0)
 				return;
 
@@ -5451,7 +5536,7 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 
 							affectAmount = obstacleAffectsRegion_val3D(q[j], nd, T);
 
-							if ((edist1 <= 0.0001 && MindistBetweenBox(T, nd) <= 0.0001) || affectAmount > 0) {// || (q[j].IsInsideVisibleRegion(T, nd) == true)) { //q and target are inside that mbr, or mbr is inside the visible region of q
+							if ((edist1 <= 0.0001 && MindistBetweenBox(T, nd) <= 0.0001) || (q[j].IsInsideVisibleRegion(T, nd) == true)) { //q and target are inside that mbr, or mbr is inside the visible region of q
 
 								HeapEntry *h = new HeapEntry();
 								h->key = affectAmount; //sort the obs_heap according to amount of affect
@@ -5554,14 +5639,14 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 
 							//change visibility region of current_best_point
 
-//							if (current_best_point.IsInsideVisibleRegion(T,
-//									obj))
-//								current_best_point.update_visibilityRegion(obj,
-//										T);
-							float aff = obstacleAffectsRegion_val3D(current_best_point, obj, T);
-							if (aff > 0) {
-								current_best_point.update_visibilityRegion(obj, T);
-							}
+							if (current_best_point.IsInsideVisibleRegion(T,
+									obj))
+								current_best_point.update_visibilityRegion(obj,
+										T);
+//							float aff = obstacleAffectsRegion_val3D(current_best_point, obj, T);
+//							if (aff > 0) {
+//								current_best_point.update_visibilityRegion(obj, T);
+//							}
 
 							else {
 								qp_priority_queue.push(current_best_point);

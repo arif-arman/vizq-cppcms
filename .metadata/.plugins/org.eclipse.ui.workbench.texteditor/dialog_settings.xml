@@ -2,29 +2,31 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="BoxPl" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="det"/>
+			<item value="union"/>
+			<item value="unionpoly"/>
+			<item value="init_vis"/>
+			<item value="target"/>
+			<item value="cornerpoints"/>
+			<item value="IsInsideVisibleRegion"/>
+			<item value="num_of"/>
+			<item value="T"/>
+			<item value="update_vis"/>
 			<item value="Boxpl"/>
 			<item value="reduction"/>
 			<item value="dstF"/>
 			<item value="run2"/>
 			<item value="contains"/>
-			<item value="contain"/>
-			<item value="P"/>
-			<item value="mypol"/>
-			<item value="mypoly"/>
-			<item value="opera"/>
-			<item value="const"/>
-			<item value="add"/>
-			<item value="Box("/>
-			<item value="create"/>
-			<item value="f"/>
 		</list>
 		<list key="replacehistory">
+			<item value="T"/>
+			<item value="visiblePlanes[i].boundary."/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
