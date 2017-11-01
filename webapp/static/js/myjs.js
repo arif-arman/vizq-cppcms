@@ -119,7 +119,7 @@ function init() {
 
 	// Grid
 
-	var size = 1000, step = 10;
+	var size = 5000, step = 10;
 	/*
 	var geometry = new THREE.Geometry();
 
@@ -274,7 +274,9 @@ function vcmDraw(seg) {
 	var z = vcmArray[curseg]['segdist'];
 	//console.log("dim: " + dim);
 	//console.log("segdist: " + z);
-		
+	dim = parseFloat(Math.round(dim * 100) / 100).toFixed(2);
+	z = parseFloat(Math.round(z * 100) / 100).toFixed(2);
+	
 	$('#logger').html('Segment: ' + curseg + '<br>Dimension: ' + dim + '<br>Distance: ' + z);
 
 	var group = new THREE.Group();
@@ -674,8 +676,15 @@ function qpDraw(q) {
 		qpRendered[q].material = materialB.clone();
 		scene.add(qpRendered[q]);
 		scene.add(qpGroupRendered[q]);
+
+		var visamount = querypoints[q]['visibility'];
+		visamount = parseFloat(Math.round(visamount * 100) / 100).toFixed(2);
+		
 		document.getElementById('logger').innerHTML = "Query location picked: (" + qpRendered[q].position.x + ", " + (qpRendered[q].position.y-1.5) + ", " + qpRendered[q].position.z + ")" +
-		"<br>Rank: " + (q+1) + "<br>Visibility measure: " + querypoints[q].visibility ;
+		"<br>Rank: " + (q+1) + "<br>Visibility measure: " + visamount;
+		
+		
+
 	}
 	
 }
@@ -886,7 +895,7 @@ function runMVQ() {
 	// params += "&k=" + k_ans;
 	var params = document.getElementById('ob').value + "/" + document.getElementById('qp').value + 
 					"/" + k_ans;
-	get('/hello/mvq', params, function(text) {
+	get('/vizq/mvq', params, function(text) {
 		if (text != null) {	
 			var json_obj = JSON.parse(text);
 			//console.log(json_obj);
@@ -913,7 +922,11 @@ function runMVQ() {
 			for (var i=0;i<k_ans;i++) {
 				s += '<tr><td>' + (i+1) + '</td>';
 				s += '<td>' + querypoints[i].position + '</td>';
-				s += '<td>' + querypoints[i].visibility + '</td>';
+				var visamount = querypoints[i]['visibility'];
+				visamount = parseFloat(Math.round(visamount * 100) / 100).toFixed(2);
+				console.log(visamount);
+				// s += '<td>' + querypoints[i].visibility + '</td>';
+				s += '<td>' + visamount + '</td>';
 			}
 			s += '</table>';
 			mvqHTML = s;
@@ -947,7 +960,7 @@ function loadQP() {
 	// read_file: type/filepath
 	var fname = document.getElementById('qp').value;
 	var params = "qp/" + fname;
-	get('/hello/read_file', params, function(text) {
+	get('/vizq/read_file', params, function(text) {
 		if (text === null) {
 		}
 		else {
@@ -1059,7 +1072,7 @@ function loadDB() {
 	//params += "&type=ob";
 	var fname = document.getElementById('ob').value;
 	var params = "ob/" + fname;
-	get('http://localhost:8080/hello/read_file', params, function(text) {
+	get('http://localhost:8080/vizq/read_file', params, function(text) {
 		if (text === null) {
 		}
 		else {
@@ -1197,7 +1210,7 @@ function runVCM() {
 	// params += "&x1=" + target['x1'] + "&y1=" + target['y1'] + "&z1=" + target['z1'] + "&x2=" + target['x2'] + "&y2=" + target['y2'] + "&z2=" + target['z2'];
 	// if (mode === "tvcm") params += "&text=" + $('#fontsize').val();
 	// else params += "&text=-1";
-	get('/hello/vcm', params, function(text) {
+	get('/vizq/vcm', params, function(text) {
 		if (text != null) {	
 			var json_obj = JSON.parse(text);
 			vcmArray = json_obj;
@@ -1244,7 +1257,11 @@ function runCMVQ() {
 					qp = id;
 					qpdraw_cmvq(id);
 					var text = "Position: " + json_obj[0]['x'] + " " + json_obj[0]['y'];
-					text += "<br>Visibility: " + json_obj[0]['visibility'];
+					var visamount = json_obj[0]['visibility'];
+					visamount = parseFloat(Math.round(visamount * 100) / 100).toFixed(2);
+					console.log(visamount);
+					//text += "<br>Visibility: " + json_obj[0]['visibility'];
+					text += "<br>Visibility: " + visamount;
 					$('#logger').html(text);
 					drawCMVQTarget(cmvqCurrentTargetPos);
 				}

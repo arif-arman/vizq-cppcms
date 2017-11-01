@@ -4,7 +4,7 @@
         "post" : 8080
     },
     "http" : {
-        "script_names" : [ "/hello", "/testground" ]
+        "script_names" : [ "/vizq", "/testground" ]
     }, 
     "views" : {
         "paths" : ["./templates"],

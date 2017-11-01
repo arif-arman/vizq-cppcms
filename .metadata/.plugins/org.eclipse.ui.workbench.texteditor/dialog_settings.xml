@@ -2,27 +2,27 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="" key="selection"/>
+		<item value="update" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="update"/>
+			<item value="init_vis"/>
+			<item value="newarea"/>
+			<item value="init"/>
+			<item value="update_vis"/>
+			<item value="init_v"/>
+			<item value="edist"/>
+			<item value="fonttodist"/>
+			<item value="font"/>
+			<item value="ndis"/>
+			<item value="180"/>
 			<item value="det"/>
 			<item value="union"/>
 			<item value="unionpoly"/>
-			<item value="init_vis"/>
 			<item value="target"/>
-			<item value="cornerpoints"/>
-			<item value="IsInsideVisibleRegion"/>
-			<item value="num_of"/>
-			<item value="T"/>
-			<item value="update_vis"/>
-			<item value="Boxpl"/>
-			<item value="reduction"/>
-			<item value="dstF"/>
-			<item value="run2"/>
-			<item value="contains"/>
 		</list>
 		<list key="replacehistory">
 			<item value="T"/>

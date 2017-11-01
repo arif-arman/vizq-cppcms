@@ -84,7 +84,7 @@ namespace my_index {
 				"\t<div id=\"sidebar-wrapper\">\n"
 				"\t\t<ul class=\"sidebar-nav\">\n"
 				"\t\t\t<li class=\"sidebar-brand\">\n"
-				"\t\t\t\t<a href=\"\">VizQ (3D)</a>\n"
+				"\t\t\t\t<a href=\"\">VizQ3D</a>\n"
 				"\t\t\t</li>\n"
 				"\t\t</ul>\n"
 				"        <div class=\"container-fluid settings\" style=\"margin-top: 70px;\">\n"

@@ -5,6 +5,7 @@
 #define __RTREE
 
 #define PI 3.14159265
+#define MIN_LIMIT_OF_VISION 5
 //------------------------------------------------------------
 #include "../func/gendef.h"
 #include "../heap/heap.h"
@@ -257,14 +258,23 @@ class QueryPoint3D {
 public:
 	Point3D position;
 	float total_visibility;
+	float total_visibility_dist;
 	Heap *obstacleList; //obstacles that affects visiblilty, according to their mindist
 	vector<VisibleRegion3D> visiblePlanes;
 	vector<double> factor;	// area reduce factor of corresponding plane
+	vector<Point3D> midpoints_vr;
 	float init_visibility(Box2 Target, Point3D cornerPoints[]);	//considering no obstacle
 	bool IsInsideVisibleRegion(Box2 T, Box2 obj);
 	void update_visibilityRegion(Box2 obstacle, Box2 target);
 	double r = rand() % 255, g = rand() % 255, b = rand() % 255;
 	//float update_naiveVisibility(Box obj,Box T);
+	float euclid_dist(Point3D p) {
+		return sqrt(pow(position.x-p.x, 2) + pow(position.y-p.y, 2) + pow(position.z-p.z,2));
+	}
+
+	float factoredVisibility(float visibility, float dist) {
+		return 2 * (atan(visibility / dist) * 180 / PI);
+	}
 
 	// for JSON
 	string getPosition() {

@@ -3640,6 +3640,7 @@ float QueryPoint3D::init_visibility(Box2 t, Point3D cornerPoints[]) {
 
 	//check which planes of target are visible
 	total_visibility = 0.0;
+	total_visibility_dist = 0.0;
 	for (int j = 0; j < 6; j++) {
 		if (visible[bp[j].a[0]] == true && visible[bp[j].a[1]] == true
 				&& visible[bp[j].a[2]] == true && visible[bp[j].a[3]] == true) {
@@ -3660,18 +3661,32 @@ float QueryPoint3D::init_visibility(Box2 t, Point3D cornerPoints[]) {
 					cornerPoints[bp[j].a[3]]);
 
 			float area = h * w;
-			float partial_visibility = area * areaReduceFactor;
-			total_visibility += partial_visibility;
+			float distFactor = euclid_dist(midP);
 
-			//construct the visiblePlanes
-			VisibleRegion3D temp;
-			temp.planeId = j;
-			temp.boundary = Rectangle3D(cornerPoints[bp[j].a[0]],
-					cornerPoints[bp[j].a[1]], cornerPoints[bp[j].a[2]],
-					cornerPoints[bp[j].a[3]]);
-			temp.partial_visibility = partial_visibility;
-			visiblePlanes.push_back(temp);
-			factor.push_back(areaReduceFactor);
+			//float partial_visibility = area * areaReduceFactor * (1/distFactor);
+			float partial_visibility = 0.0;
+
+			//if (distFactor >= MIN_LIMIT_OF_VISION) {
+				float reduceFactor = areaReduceFactor / distFactor;
+				//partial_visibility = 2 * atan(area * reduceFactor) * 180 / PI;
+				//partial_visibility = factoredVisibility(area, reduceFactor);
+				partial_visibility = area * areaReduceFactor;
+				total_visibility += partial_visibility;
+
+				//total_visibility_dist += partial_visibility * (1/distFactor);
+
+				//construct the visiblePlanes
+				VisibleRegion3D temp;
+				temp.planeId = j;
+				temp.boundary = Rectangle3D(cornerPoints[bp[j].a[0]],
+						cornerPoints[bp[j].a[1]], cornerPoints[bp[j].a[2]],
+						cornerPoints[bp[j].a[3]]);
+				temp.partial_visibility = partial_visibility;
+				visiblePlanes.push_back(temp);
+				factor.push_back(areaReduceFactor);
+				midpoints_vr.push_back(midP);
+			//}
+
 		}
 	}
 
@@ -4711,6 +4726,7 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 								float newarea = -abs(newRect.Polyarea)
 										+ abs(commonArea);
 								newarea *= factor[i];
+								//newarea = factoredVisibility(newarea, factor[i]);
 								/*total_visibility -= abs(newRect.Polyarea);
 								 total_visibility += abs(commonArea);*/
 								total_visibility += newarea;	// debug zitu
@@ -4891,6 +4907,7 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 								newarea = -abs(commonPolygon.Polyarea);
 							}
 							newarea *= factor[i];
+							//newarea = factoredVisibility(newarea, factor[i]);
 
 							/*total_visibility -= abs(unionPolygon.Polyarea);
 							 total_visibility += abs((*itr).Polyarea);*/
@@ -4940,17 +4957,27 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 					}					//end of for
 					if (becameInvisible) continue;
 					if (intersectsInvisibleR == false)//a new invisible region of that visible plane
-							{
+					{
 						polygon newRect(rect);
 						newRect.Polyarea = PolygonArea(newRect);
 						float newarea = -abs(newRect.Polyarea);
 						newarea *= factor[i];
+						//newarea = factoredVisibility(newarea, factor[i]);
 						// total_visibility -= abs(newRect.Polyarea);	// debug zitu
 						//visiblePlanes[i].partial_visibility -= abs(newRect.Polyarea);	// angle reduce factor??
+						//if (total_visibility > 0)
 						total_visibility += newarea;
-						visiblePlanes[i].partial_visibility += newarea;
-						visiblePlanes[i].invisible_parts.push_back(newRect);
+						//if (abs(total_visibility-0) <= 0.0001 || total_visibility < 0) {
+//							becameInvisible = true;
+//							total_visibility = 0;
+//						}
+						//if (visiblePlanes[i].partial_visibility > 0) {
+							visiblePlanes[i].partial_visibility += newarea;
+							visiblePlanes[i].invisible_parts.push_back(newRect);
+						//}
+
 					}
+					//if (becameInvisible) continue;
 
 				}				//end of else
 				tempVisibleRegion.push_back(visiblePlanes[i]);// visible plane not affected by obstacle
@@ -5689,18 +5716,67 @@ bool shadow(Point3D q, Box2 obstacle, Rectangle3D T, Rectangle3D& shadowOfObs) {
 				delete he;
 			}
 			delete heap;
+			priority_queue<QueryPoint3D, vector<QueryPoint3D>,
+								CompareVisibility3D> dist_k_ans;
 			// debug zitu
 			q.clear();
 			k_answers.clear();
 			for (; !k_ans.empty();) {
 				//printf("%d ", k_ans.top());
-				k_answers.push_back(k_ans.top());
-				q.push_back(k_ans.top());
+				QueryPoint3D cur_q = k_ans.top();
+				vector<VisibleRegion3D> tempVisibleRegion;
+
+				printf("Visibility before: %f\n", cur_q.total_visibility);
+
+				cur_q.total_visibility = 0;
+				for (int ind = 0; ind < cur_q.visiblePlanes.size(); ++ind) {
+					float d = cur_q.euclid_dist(cur_q.midpoints_vr[ind]);
+					float fac_vis = cur_q.factoredVisibility(cur_q.visiblePlanes[ind].partial_visibility, d);
+					if (fac_vis > 0) {
+						cur_q.total_visibility += fac_vis;
+						cur_q.visiblePlanes[ind].partial_visibility = fac_vis;
+						tempVisibleRegion.push_back(cur_q.visiblePlanes[ind]);
+					}
+				}
+				cur_q.visiblePlanes = tempVisibleRegion;
+
+				printf("Visibility after: %f\n", cur_q.total_visibility);
+				//k_answers.push_back(k_ans.top());
+				//k_answers.push_back(cur_q);
+				//q.push_back(cur_q);
+				dist_k_ans.push(cur_q);
 				k_ans.pop();
 			}
 			while (!qp_priority_queue.empty()) {
-				q.push_back(qp_priority_queue.top());
+				QueryPoint3D cur_q = qp_priority_queue.top();
+				vector<VisibleRegion3D> tempVisibleRegion;
+
+				printf("Visibility before: %f\n", cur_q.total_visibility);
+
+				cur_q.total_visibility = 0;
+				for (int ind = 0; ind < cur_q.visiblePlanes.size(); ++ind) {
+					float d = cur_q.euclid_dist(cur_q.midpoints_vr[ind]);
+					float fac_vis = cur_q.factoredVisibility(cur_q.visiblePlanes[ind].partial_visibility, d);
+					if (fac_vis > 0) {
+						cur_q.total_visibility += fac_vis;
+						cur_q.visiblePlanes[ind].partial_visibility = fac_vis;
+						tempVisibleRegion.push_back(cur_q.visiblePlanes[ind]);
+					}
+				}
+				cur_q.visiblePlanes = tempVisibleRegion;
+
+				printf("Visibility after: %f\n", cur_q.total_visibility);
+				dist_k_ans.push(cur_q);
+				//q.push_back(cur_q);
 				qp_priority_queue.pop();
+			}
+			int ind = 0;
+			while(!dist_k_ans.empty()) {
+				if (ind++ < k)
+					k_answers.push_back(dist_k_ans.top());
+				q.push_back(dist_k_ans.top());
+				dist_k_ans.pop();
+
 			}
 		}
 

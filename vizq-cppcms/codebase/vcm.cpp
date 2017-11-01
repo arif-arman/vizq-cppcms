@@ -3234,6 +3234,10 @@ void VCM::setTarget(Box &b) {
 	isTargetSet = true;
 	console_index = TARGETSET;
 	curSegId = 0;
+
+	printf("Set target to: \n");
+	printf("%f %f %f %f %f %f\n", b.x[0], b.y[0], b.z[0], b.x[1], b.y[1], b.z[1]);
+
 }
 
 void VCM::run(char *f)
