@@ -1738,164 +1738,164 @@ double Distance(Pointlocation p1, Pointlocation p2) {
 	return sqrt(
 			((p1.x - p2.x) * (p1.x - p2.x)) + ((p1.y - p2.y) * (p1.y - p2.y)));
 }
-
-double QueryPoint::init_visibility(Rectangle2 Target) //considering no obstacle
-		{
-	Pointlocation p1 = Target.upper_left;
-	Pointlocation p2(Target.upper_left.x, Target.lower_right.y);
-	Pointlocation p3(Target.lower_right.x, Target.upper_left.y);
-	Pointlocation p4 = Target.lower_right;
-
-	bool p1_seen, p2_seen, p3_seen, p4_seen;
-	p1_seen = p2_seen = p3_seen = p4_seen = false;
-
-	total_visibility = 0.0;
-	//initially kon kon side dekhte pay seta check korte hobe
-
-	//check for line SEGMENT intersect 
-	if (intersect(position, p1, p2, p4) == false
-			&& intersect(position, p1, p3, p4) == false)
-		p1_seen = true;
-	if (intersect(position, p4, p1, p2) == false
-			&& intersect(position, p4, p1, p3) == false)
-		p4_seen = true;
-
-	if (intersect(position, p2, p3, p4) == false
-			&& intersect(position, p2, p1, p3) == false)
-		p2_seen = true;
-	if (intersect(position, p3, p1, p2) == false
-			&& intersect(position, p3, p2, p4) == false)
-		p3_seen = true;
-
-	Pointlocation mid1, point1, point2;
-
-	double angle_with_rect = 0.0;
-	double visibility_reduce_factor = 1.0;
-	double partial_visibility = 0.0;
-
-	if ((p1_seen == true && p2_seen == true)
-			|| (p3_seen == true && p4_seen == true)) {
-		if (p1_seen == true && p2_seen == true) {
-			point1 = p1;
-			point2 = p2;
-		} else {		// if p1,p2 is seen, p3,p4 cannot be seen
-			point1 = p3;
-			point2 = p4;
-		}
-
-		mid1 = mid_of_line_segment(point1, point2); //rectangle target, so p1,p2 length == p3,p4 length
-		angle_with_rect = angle_between_2_lines(mid1.x, mid1.y, position.x,
-				position.y, point1.x, point1.y, point2.x, point2.y); //angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
-		visibility_reduce_factor = reduced_visibility_factor4angle(
-				angle_with_rect);
-
-		partial_visibility = Distance(point1, point2)
-				* visibility_reduce_factor;
-		total_visibility += partial_visibility;
-
-		//construct the visible region list
-		Pointlocation a;
-		struct VisibleRegionOverT segment;
-		segment.p1_overT = point1;
-		segment.p2_overT = point2;
-		segment.partial_visibility = partial_visibility;
-		VisibleRegion.push_back(segment);
-	}
-
-	if ((p1_seen == true && p3_seen == true)
-			|| (p2_seen == true && p4_seen == true)) {
-		if (p1_seen == true && p3_seen == true) {
-			point1 = p1;
-			point2 = p3;
-		} else {		// if p1,p3 is seen, p2,p4 cannot be seen
-			point1 = p2;
-			point2 = p4;
-		}
-
-		mid1 = mid_of_line_segment(point1, point2); //rectangle target, so p1,p2 length == p3,p4 length
-		angle_with_rect = angle_between_2_lines(mid1.x, mid1.y, position.x,
-				position.y, point1.x, point1.y, point2.x, point2.y); //angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
-		visibility_reduce_factor = reduced_visibility_factor4angle(
-				angle_with_rect);
-
-		partial_visibility = Distance(point1, point2)
-				* visibility_reduce_factor;
-		total_visibility += partial_visibility;
-
-		//construct the visible region list
-		Pointlocation a;
-		struct VisibleRegionOverT segment;
-		segment.p1_overT = point1;
-		segment.p2_overT = point2;
-		segment.partial_visibility = partial_visibility;
-		VisibleRegion.push_back(segment);
-	}
-
-	return total_visibility;
-}
-
-//visible region is the list of triangles where a triangle is formed of the query point and 2 points over the target
-bool QueryPoint::IsInVisibleRegion(Rectangle2 rect) {
-	//check if rect intersects with any of the items in VisibleRegion list
-	Pointlocation p1 = rect.upper_left;
-	Pointlocation p2;
-	p2.x = rect.upper_left.x;
-	p2.y = rect.lower_right.y;
-	Pointlocation p3;
-	p3.x = rect.lower_right.x;
-	p3.y = rect.upper_left.y;
-	Pointlocation p4 = rect.lower_right;
-
-	int itr;
-
-	for (itr = 0; itr < VisibleRegion.size(); itr++) {
-		//if rect is in the region (fully or partially) of triangle formed by querypoint, VisibleRegion.p1,VisibleRegion.p2 
-		//return true
-
-		if (intersect(position, VisibleRegion[itr].p1_overT, p1, p2))
-			return true;
-		else if (intersect(position, VisibleRegion[itr].p1_overT, p1, p3))
-			return true;
-		else if (intersect(position, VisibleRegion[itr].p1_overT, p2, p4))
-			return true;
-		else if (intersect(position, VisibleRegion[itr].p1_overT, p3, p4))
-			return true;
-
-		else if (intersect(position, VisibleRegion[itr].p2_overT, p1, p2))
-			return true;
-		else if (intersect(position, VisibleRegion[itr].p2_overT, p1, p3))
-			return true;
-		else if (intersect(position, VisibleRegion[itr].p2_overT, p2, p4))
-			return true;
-		else if (intersect(position, VisibleRegion[itr].p2_overT, p3, p4))
-			return true;
-
-		else if (intersect(VisibleRegion[itr].p2_overT,
-				VisibleRegion[itr].p1_overT, p1, p2))
-			return true;
-		else if (intersect(VisibleRegion[itr].p2_overT,
-				VisibleRegion[itr].p1_overT, p1, p3))
-			return true;
-		else if (intersect(VisibleRegion[itr].p2_overT,
-				VisibleRegion[itr].p1_overT, p2, p4))
-			return true;
-		else if (intersect(VisibleRegion[itr].p2_overT,
-				VisibleRegion[itr].p1_overT, p3, p4))
-			return true;
-
-		//is rect fully inside the visible region
-		//else if 
-		else if (IsPointInsideTriangle(position, VisibleRegion[itr].p1_overT,
-				VisibleRegion[itr].p2_overT, p1) == true)//rect er jeno ekta point (p1 here) check korlei hobe, jehetu ager else if gula check kora ache
-				{
-			return true;
-		} else
-			return false;
-
-	}
-	return false;
-
-}
+//
+//double QueryPoint::init_visibility(Rectangle2 Target) //considering no obstacle
+//		{
+//	Pointlocation p1 = Target.upper_left;
+//	Pointlocation p2(Target.upper_left.x, Target.lower_right.y);
+//	Pointlocation p3(Target.lower_right.x, Target.upper_left.y);
+//	Pointlocation p4 = Target.lower_right;
+//
+//	bool p1_seen, p2_seen, p3_seen, p4_seen;
+//	p1_seen = p2_seen = p3_seen = p4_seen = false;
+//
+//	total_visibility = 0.0;
+//	//initially kon kon side dekhte pay seta check korte hobe
+//
+//	//check for line SEGMENT intersect
+//	if (intersect(position, p1, p2, p4) == false
+//			&& intersect(position, p1, p3, p4) == false)
+//		p1_seen = true;
+//	if (intersect(position, p4, p1, p2) == false
+//			&& intersect(position, p4, p1, p3) == false)
+//		p4_seen = true;
+//
+//	if (intersect(position, p2, p3, p4) == false
+//			&& intersect(position, p2, p1, p3) == false)
+//		p2_seen = true;
+//	if (intersect(position, p3, p1, p2) == false
+//			&& intersect(position, p3, p2, p4) == false)
+//		p3_seen = true;
+//
+//	Pointlocation mid1, point1, point2;
+//
+//	double angle_with_rect = 0.0;
+//	double visibility_reduce_factor = 1.0;
+//	double partial_visibility = 0.0;
+//
+//	if ((p1_seen == true && p2_seen == true)
+//			|| (p3_seen == true && p4_seen == true)) {
+//		if (p1_seen == true && p2_seen == true) {
+//			point1 = p1;
+//			point2 = p2;
+//		} else {		// if p1,p2 is seen, p3,p4 cannot be seen
+//			point1 = p3;
+//			point2 = p4;
+//		}
+//
+//		mid1 = mid_of_line_segment(point1, point2); //rectangle target, so p1,p2 length == p3,p4 length
+//		angle_with_rect = angle_between_2_lines(mid1.x, mid1.y, position.x,
+//				position.y, point1.x, point1.y, point2.x, point2.y); //angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
+//		visibility_reduce_factor = reduced_visibility_factor4angle(
+//				angle_with_rect);
+//
+//		partial_visibility = Distance(point1, point2)
+//				* visibility_reduce_factor;
+//		total_visibility += partial_visibility;
+//
+//		//construct the visible region list
+//		Pointlocation a;
+//		struct VisibleRegionOverT segment;
+//		segment.p1_overT = point1;
+//		segment.p2_overT = point2;
+//		segment.partial_visibility = partial_visibility;
+//		VisibleRegion.push_back(segment);
+//	}
+//
+//	if ((p1_seen == true && p3_seen == true)
+//			|| (p2_seen == true && p4_seen == true)) {
+//		if (p1_seen == true && p3_seen == true) {
+//			point1 = p1;
+//			point2 = p3;
+//		} else {		// if p1,p3 is seen, p2,p4 cannot be seen
+//			point1 = p2;
+//			point2 = p4;
+//		}
+//
+//		mid1 = mid_of_line_segment(point1, point2); //rectangle target, so p1,p2 length == p3,p4 length
+//		angle_with_rect = angle_between_2_lines(mid1.x, mid1.y, position.x,
+//				position.y, point1.x, point1.y, point2.x, point2.y); //angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
+//		visibility_reduce_factor = reduced_visibility_factor4angle(
+//				angle_with_rect);
+//
+//		partial_visibility = Distance(point1, point2)
+//				* visibility_reduce_factor;
+//		total_visibility += partial_visibility;
+//
+//		//construct the visible region list
+//		Pointlocation a;
+//		struct VisibleRegionOverT segment;
+//		segment.p1_overT = point1;
+//		segment.p2_overT = point2;
+//		segment.partial_visibility = partial_visibility;
+//		VisibleRegion.push_back(segment);
+//	}
+//
+//	return total_visibility;
+//}
+//
+////visible region is the list of triangles where a triangle is formed of the query point and 2 points over the target
+//bool QueryPoint::IsInVisibleRegion(Rectangle2 rect) {
+//	//check if rect intersects with any of the items in VisibleRegion list
+//	Pointlocation p1 = rect.upper_left;
+//	Pointlocation p2;
+//	p2.x = rect.upper_left.x;
+//	p2.y = rect.lower_right.y;
+//	Pointlocation p3;
+//	p3.x = rect.lower_right.x;
+//	p3.y = rect.upper_left.y;
+//	Pointlocation p4 = rect.lower_right;
+//
+//	int itr;
+//
+//	for (itr = 0; itr < VisibleRegion.size(); itr++) {
+//		//if rect is in the region (fully or partially) of triangle formed by querypoint, VisibleRegion.p1,VisibleRegion.p2
+//		//return true
+//
+//		if (intersect(position, VisibleRegion[itr].p1_overT, p1, p2))
+//			return true;
+//		else if (intersect(position, VisibleRegion[itr].p1_overT, p1, p3))
+//			return true;
+//		else if (intersect(position, VisibleRegion[itr].p1_overT, p2, p4))
+//			return true;
+//		else if (intersect(position, VisibleRegion[itr].p1_overT, p3, p4))
+//			return true;
+//
+//		else if (intersect(position, VisibleRegion[itr].p2_overT, p1, p2))
+//			return true;
+//		else if (intersect(position, VisibleRegion[itr].p2_overT, p1, p3))
+//			return true;
+//		else if (intersect(position, VisibleRegion[itr].p2_overT, p2, p4))
+//			return true;
+//		else if (intersect(position, VisibleRegion[itr].p2_overT, p3, p4))
+//			return true;
+//
+//		else if (intersect(VisibleRegion[itr].p2_overT,
+//				VisibleRegion[itr].p1_overT, p1, p2))
+//			return true;
+//		else if (intersect(VisibleRegion[itr].p2_overT,
+//				VisibleRegion[itr].p1_overT, p1, p3))
+//			return true;
+//		else if (intersect(VisibleRegion[itr].p2_overT,
+//				VisibleRegion[itr].p1_overT, p2, p4))
+//			return true;
+//		else if (intersect(VisibleRegion[itr].p2_overT,
+//				VisibleRegion[itr].p1_overT, p3, p4))
+//			return true;
+//
+//		//is rect fully inside the visible region
+//		//else if
+//		else if (IsPointInsideTriangle(position, VisibleRegion[itr].p1_overT,
+//				VisibleRegion[itr].p2_overT, p1) == true)//rect er jeno ekta point (p1 here) check korlei hobe, jehetu ager else if gula check kora ache
+//				{
+//			return true;
+//		} else
+//			return false;
+//
+//	}
+//	return false;
+//
+//}
 
 bool if_intersects_target(Pointlocation position, Pointlocation obstacle_p,
 		Rectangle2 target, Pointlocation& intersectPoint, Pointlocation p1,
@@ -1973,410 +1973,410 @@ bool isPointOf_VR_changed(Pointlocation p1_overT, Pointlocation position,
 
 	return false;
 }
-
-void QueryPoint::update_visibliliyRegion(Rectangle2 obstacle,
-		Rectangle2 target) {
-	Pointlocation obstacle_p1 = obstacle.upper_left;
-	Pointlocation obstacle_p2(obstacle.upper_left.x, obstacle.lower_right.y);
-	Pointlocation obstacle_p3(obstacle.lower_right.x, obstacle.upper_left.y);
-	Pointlocation obstacle_p4 = obstacle.lower_right;
-
-	Pointlocation target_p1 = target.upper_left;
-	Pointlocation target_p2(target.upper_left.x, target.lower_right.y);
-	Pointlocation target_p3(target.lower_right.x, target.upper_left.y);
-	Pointlocation target_p4 = target.lower_right;
-
-	bool p1_seen, p2_seen, p3_seen, p4_seen, p1_overT_changed, p2_overT_changed;
-	p1_seen = p2_seen = p3_seen = p4_seen = p1_overT_changed =
-			p2_overT_changed = false;
-
-	int itr;
-	Pointlocation temp_p;
-	Pointlocation& intersectPoint = temp_p;
-
-	Pointlocation& intersectPoint1 = temp_p;
-	Pointlocation& intersectPoint2 = temp_p;
-
-	//construct temp with the changed v. regions. finally make visibleRegion=temp
-	vector<VisibleRegionOverT> temp;
-
-	for (itr = 0; itr < VisibleRegion.size(); itr++) {
-		//which part of the v.region is changed
-		p1_overT_changed = isPointOf_VR_changed((VisibleRegion[itr]).p1_overT,
-				position, obstacle_p1, obstacle_p2, obstacle_p3, obstacle_p4);
-		p2_overT_changed = isPointOf_VR_changed((VisibleRegion[itr]).p2_overT,
-				position, obstacle_p1, obstacle_p2, obstacle_p3, obstacle_p4);
-
-		bool entirely_inside_region = false;
-		if (p2_overT_changed == false && p1_overT_changed == false
-				&& IsPointInsideTriangle(position,
-						(VisibleRegion[itr]).p1_overT,
-						(VisibleRegion[itr]).p2_overT, obstacle_p1) == true)//rect er jeno ekta point (p1 here) check korlei hobe, jehetu ager else if gula check kora ache
-						{
-			entirely_inside_region = true;
-		}
-
-		bool one_side_changed = false;
-		Pointlocation unchanged_side_val;
-		Pointlocation changed_side_val;
-		bool insert_this_segment = true;
-
-		if (p1_overT_changed == true && p2_overT_changed == true)//totally blocked this visibilitysegment
-				{
-			insert_this_segment = false;
-			total_visibility -= VisibleRegion[itr].partial_visibility;
-		}
-
-		else if (entirely_inside_region == true) {
-			bool intersectPoint1_found, intersectPoint2_found;
-			intersectPoint1_found = intersectPoint2_found = false;
-
-			//split the region
-
-			if (intersect(position, obstacle_p1, obstacle_p3, obstacle_p4)
-					== false
-					&& intersect(position, obstacle_p1, obstacle_p2,
-							obstacle_p4) == false)//doesn't intersect with own arm, for point obstacle_p1
-							{
-				bool check = if_intersects_target(position, obstacle_p1, target,
-						intersectPoint1, (VisibleRegion[itr]).p1_overT,
-						(VisibleRegion[itr]).p2_overT);
-				if (check == true) {
-					intersectPoint1_found = true;
-				}
-
-			}
-
-			if (intersect(position, obstacle_p2, obstacle_p1, obstacle_p3)
-					== false
-					&& intersect(position, obstacle_p2, obstacle_p3,
-							obstacle_p4) == false)//doesn't intersect with own arm, for point obstacle_p2
-							{
-				bool check;
-				if (intersectPoint1_found == false) {
-					check = if_intersects_target(position, obstacle_p2, target,
-							intersectPoint1, (VisibleRegion[itr]).p1_overT,
-							(VisibleRegion[itr]).p2_overT);
-					if (check == true) {
-						intersectPoint1_found = true;
-					}
-				}
-
-				else {
-					check = if_intersects_target(position, obstacle_p2, target,
-							intersectPoint2, (VisibleRegion[itr]).p1_overT,
-							(VisibleRegion[itr]).p2_overT);
-					if (check == true) {
-						intersectPoint2_found = true;
-					}
-				}
-
-			}
-
-			if (intersect(position, obstacle_p3, obstacle_p2, obstacle_p4)
-					== false
-					&& intersect(position, obstacle_p3, obstacle_p1,
-							obstacle_p2) == false)//doesn't intersect with own arm, for point obstacle_p3
-							{
-				bool check;
-				if (intersectPoint1_found == false) {
-					check = if_intersects_target(position, obstacle_p3, target,
-							intersectPoint1, (VisibleRegion[itr]).p1_overT,
-							(VisibleRegion[itr]).p2_overT);
-					if (check == true) {
-						intersectPoint1_found = true;
-					}
-				}
-
-				else if (intersectPoint2_found == false) {
-					check = if_intersects_target(position, obstacle_p3, target,
-							intersectPoint2, (VisibleRegion[itr]).p1_overT,
-							(VisibleRegion[itr]).p2_overT);
-					if (check == true) {
-						intersectPoint2_found = true;
-					}
-				}
-
-			}
-
-			if (intersect(position, obstacle_p4, obstacle_p1, obstacle_p2)
-					== false
-					&& intersect(position, obstacle_p4, obstacle_p1,
-							obstacle_p3) == false)//doesn't intersect with own arm, for point obstacle_p4
-							{
-				bool check;
-				if (intersectPoint1_found == false) {
-					check = if_intersects_target(position, obstacle_p4, target,
-							intersectPoint1, (VisibleRegion[itr]).p1_overT,
-							(VisibleRegion[itr]).p2_overT);
-					if (check == true) {
-						intersectPoint1_found = true;
-					}
-				}
-
-				else if (intersectPoint2_found == false) {
-					check = if_intersects_target(position, obstacle_p4, target,
-							intersectPoint2, (VisibleRegion[itr]).p1_overT,
-							(VisibleRegion[itr]).p2_overT);
-					if (check == true) {
-						intersectPoint2_found = true;
-					}
-				}
-			}
-
-			VisibleRegionOverT v;
-			if (Distance(VisibleRegion[itr].p1_overT, intersectPoint1)
-					< Distance(VisibleRegion[itr].p1_overT, intersectPoint2)) {
-				// edit visibility and construct new segments
-				total_visibility -= VisibleRegion[itr].partial_visibility;
-				Pointlocation mid1;
-				double angle_with_rect;
-				double visibility_reduce_factor;
-				if (intersectPoint1_found == true) {
-					v.p1_overT = VisibleRegion[itr].p1_overT;
-					v.p2_overT = intersectPoint1;
-
-					mid1 = mid_of_line_segment(v.p1_overT, v.p2_overT); //rectangle target, so p1,p2 length == p3,p4 length
-					angle_with_rect = angle_between_2_lines(mid1.x, mid1.y,
-							position.x, position.y, v.p1_overT.x, v.p1_overT.y,
-							v.p2_overT.x, v.p2_overT.y); //angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
-					visibility_reduce_factor = reduced_visibility_factor4angle(
-							angle_with_rect);
-
-					v.partial_visibility = Distance(VisibleRegion[itr].p1_overT,
-							intersectPoint1) * visibility_reduce_factor;
-					total_visibility += v.partial_visibility;
-					temp.push_back(v);
-				}
-				if (intersectPoint2_found == true) {
-					v.p1_overT = VisibleRegion[itr].p2_overT;
-					v.p2_overT = intersectPoint2;
-
-					mid1 = mid_of_line_segment(v.p1_overT, v.p2_overT);
-					angle_with_rect = angle_between_2_lines(mid1.x, mid1.y,
-							position.x, position.y, v.p1_overT.x, v.p1_overT.y,
-							v.p2_overT.x, v.p2_overT.y); //angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
-					visibility_reduce_factor = reduced_visibility_factor4angle(
-							angle_with_rect);
-
-					v.partial_visibility = Distance(VisibleRegion[itr].p2_overT,
-							intersectPoint2) * visibility_reduce_factor;
-
-					total_visibility += v.partial_visibility;
-					temp.push_back(v);
-				}
-			}
-
-			else {
-				// edit visibility and construct new segments
-				total_visibility -= VisibleRegion[itr].partial_visibility;
-				Pointlocation mid1;
-				double angle_with_rect;
-				double visibility_reduce_factor;
-				if (intersectPoint1_found == true) {
-					v.p1_overT = VisibleRegion[itr].p1_overT;
-					v.p2_overT = intersectPoint2;
-
-					mid1 = mid_of_line_segment(v.p1_overT, v.p2_overT); //rectangle target, so p1,p2 length == p3,p4 length
-					angle_with_rect = angle_between_2_lines(mid1.x, mid1.y,
-							position.x, position.y, v.p1_overT.x, v.p1_overT.y,
-							v.p2_overT.x, v.p2_overT.y); //angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
-					visibility_reduce_factor = reduced_visibility_factor4angle(
-							angle_with_rect);
-
-					v.partial_visibility = Distance(VisibleRegion[itr].p1_overT,
-							intersectPoint2) * visibility_reduce_factor;
-
-					total_visibility += v.partial_visibility;
-
-					temp.push_back(v);
-				}
-				if (intersectPoint1_found == true) {
-					v.p1_overT = VisibleRegion[itr].p2_overT;
-					v.p2_overT = intersectPoint1;
-					mid1 = mid_of_line_segment(v.p1_overT, v.p2_overT); //rectangle target, so p1,p2 length == p3,p4 length
-					angle_with_rect = angle_between_2_lines(mid1.x, mid1.y,
-							position.x, position.y, v.p1_overT.x, v.p1_overT.y,
-							v.p2_overT.x, v.p2_overT.y); //angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
-					visibility_reduce_factor = reduced_visibility_factor4angle(
-							angle_with_rect);
-
-					v.partial_visibility = Distance(VisibleRegion[itr].p2_overT,
-							intersectPoint1) * visibility_reduce_factor;
-
-					total_visibility += v.partial_visibility;
-					temp.push_back(v);
-				}
-			}
-
-			insert_this_segment = false;
-
-		} //end of inside_region elseif
-
-		//one value change
-
-		else if (p1_overT_changed == true && p2_overT_changed == false) {
-			one_side_changed = true;
-			unchanged_side_val = (VisibleRegion[itr]).p2_overT;
-			changed_side_val = (VisibleRegion[itr]).p1_overT;
-		}
-
-		else if (p2_overT_changed == true && p1_overT_changed == false) {
-			one_side_changed = true;
-			unchanged_side_val = (VisibleRegion[itr]).p1_overT;
-			changed_side_val = (VisibleRegion[itr]).p2_overT;
-		}
-
-		if (one_side_changed == true) {
-			//intersectPoint is initialized in change_vRegion_one_side(...) function
-			if (intersect(position, obstacle_p1, obstacle_p3, obstacle_p4)
-					== false
-					&& intersect(position, obstacle_p1, obstacle_p2,
-							obstacle_p4) == false) //doesn't intersect with own arm, for point obstacle_p1
-							{
-				// is position-obstacle_p1 line intersects target? 
-				//if so, is the point nearer the unchanged_side_val than the changed_side_val?
-
-				p1_seen = change_vRegion_one_side(position, obstacle_p1, target,
-						unchanged_side_val, changed_side_val, intersectPoint,
-						VisibleRegion[itr]);
-				//if so, then change the value of the v.region
-				if (p1_seen) {
-					VisibleRegion[itr].p1_overT = unchanged_side_val;
-					VisibleRegion[itr].p2_overT = intersectPoint;
-					insert_this_segment = true;
-
-					total_visibility -= VisibleRegion[itr].partial_visibility;
-
-					Pointlocation mid1 = mid_of_line_segment(
-							VisibleRegion[itr].p1_overT,
-							VisibleRegion[itr].p2_overT);
-					double angle_with_rect = angle_between_2_lines(mid1.x,
-							mid1.y, position.x, position.y,
-							VisibleRegion[itr].p1_overT.x,
-							VisibleRegion[itr].p1_overT.y,
-							VisibleRegion[itr].p2_overT.x,
-							VisibleRegion[itr].p2_overT.y);	//angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
-					double visibility_reduce_factor =
-							reduced_visibility_factor4angle(angle_with_rect);
-
-					VisibleRegion[itr].partial_visibility = Distance(
-							unchanged_side_val, intersectPoint)
-							* visibility_reduce_factor;
-					total_visibility += VisibleRegion[itr].partial_visibility;
-				}
-
-			}
-
-			if (p1_seen == false
-					&& intersect(position, obstacle_p2, obstacle_p1,
-							obstacle_p3) == false
-					&& intersect(position, obstacle_p2, obstacle_p3,
-							obstacle_p4) == false)//doesn't intersect with own arm, for point obstacle_p2
-							{
-				p2_seen = change_vRegion_one_side(position, obstacle_p2, target,
-						unchanged_side_val, changed_side_val, intersectPoint,
-						VisibleRegion[itr]);
-				if (p2_seen) {
-					VisibleRegion[itr].p1_overT = unchanged_side_val;
-					VisibleRegion[itr].p2_overT = intersectPoint;
-					insert_this_segment = true;
-
-					total_visibility -= VisibleRegion[itr].partial_visibility;
-					Pointlocation mid1 = mid_of_line_segment(
-							VisibleRegion[itr].p1_overT,
-							VisibleRegion[itr].p2_overT);
-					double angle_with_rect = angle_between_2_lines(mid1.x,
-							mid1.y, position.x, position.y,
-							VisibleRegion[itr].p1_overT.x,
-							VisibleRegion[itr].p1_overT.y,
-							VisibleRegion[itr].p2_overT.x,
-							VisibleRegion[itr].p2_overT.y);	//angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
-					double visibility_reduce_factor =
-							reduced_visibility_factor4angle(angle_with_rect);
-
-					VisibleRegion[itr].partial_visibility = Distance(
-							unchanged_side_val, intersectPoint)
-							* visibility_reduce_factor;
-					total_visibility += VisibleRegion[itr].partial_visibility;
-				}
-
-			}
-
-			if (p1_seen == false && p2_seen == false
-					&& intersect(position, obstacle_p3, obstacle_p2,
-							obstacle_p4) == false
-					&& intersect(position, obstacle_p3, obstacle_p1,
-							obstacle_p2) == false)//doesn't intersect with own arm, for point obstacle_p3
-							{
-				p3_seen = change_vRegion_one_side(position, obstacle_p3, target,
-						unchanged_side_val, changed_side_val, intersectPoint,
-						VisibleRegion[itr]);
-				if (p3_seen) {
-					VisibleRegion[itr].p1_overT = unchanged_side_val;
-					VisibleRegion[itr].p2_overT = intersectPoint;
-					insert_this_segment = true;
-
-					total_visibility -= VisibleRegion[itr].partial_visibility;
-					Pointlocation mid1 = mid_of_line_segment(
-							VisibleRegion[itr].p1_overT,
-							VisibleRegion[itr].p2_overT);
-					double angle_with_rect = angle_between_2_lines(mid1.x,
-							mid1.y, position.x, position.y,
-							VisibleRegion[itr].p1_overT.x,
-							VisibleRegion[itr].p1_overT.y,
-							VisibleRegion[itr].p2_overT.x,
-							VisibleRegion[itr].p2_overT.y);	//angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
-					double visibility_reduce_factor =
-							reduced_visibility_factor4angle(angle_with_rect);
-
-					VisibleRegion[itr].partial_visibility = Distance(
-							unchanged_side_val, intersectPoint)
-							* visibility_reduce_factor;
-					total_visibility += VisibleRegion[itr].partial_visibility;
-				}
-			}
-
-			if (p1_seen == false && p2_seen == false && p3_seen == false
-					&& intersect(position, obstacle_p4, obstacle_p1,
-							obstacle_p2) == false
-					&& intersect(position, obstacle_p4, obstacle_p1,
-							obstacle_p3) == false)//doesn't intersect with own arm, for point obstacle_p4
-							{
-				p4_seen = change_vRegion_one_side(position, obstacle_p4, target,
-						unchanged_side_val, changed_side_val, intersectPoint,
-						VisibleRegion[itr]);
-				if (p4_seen) {
-					VisibleRegion[itr].p1_overT = unchanged_side_val;
-					VisibleRegion[itr].p2_overT = intersectPoint;
-					insert_this_segment = true;
-
-					total_visibility -= VisibleRegion[itr].partial_visibility;
-					Pointlocation mid1 = mid_of_line_segment(
-							VisibleRegion[itr].p1_overT,
-							VisibleRegion[itr].p2_overT);
-					double angle_with_rect = angle_between_2_lines(mid1.x,
-							mid1.y, position.x, position.y,
-							VisibleRegion[itr].p1_overT.x,
-							VisibleRegion[itr].p1_overT.y,
-							VisibleRegion[itr].p2_overT.x,
-							VisibleRegion[itr].p2_overT.y);	//angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
-					double visibility_reduce_factor =
-							reduced_visibility_factor4angle(angle_with_rect);
-
-					VisibleRegion[itr].partial_visibility = Distance(
-							unchanged_side_val, intersectPoint)
-							* visibility_reduce_factor;
-					total_visibility += VisibleRegion[itr].partial_visibility;
-				}
-			}
-		}				//end of if one side
-
-		if (insert_this_segment == true)
-			temp.push_back(VisibleRegion[itr]);
-	}
-	VisibleRegion = temp;
-}
+//
+//void QueryPoint::update_visibliliyRegion(Rectangle2 obstacle,
+//		Rectangle2 target) {
+//	Pointlocation obstacle_p1 = obstacle.upper_left;
+//	Pointlocation obstacle_p2(obstacle.upper_left.x, obstacle.lower_right.y);
+//	Pointlocation obstacle_p3(obstacle.lower_right.x, obstacle.upper_left.y);
+//	Pointlocation obstacle_p4 = obstacle.lower_right;
+//
+//	Pointlocation target_p1 = target.upper_left;
+//	Pointlocation target_p2(target.upper_left.x, target.lower_right.y);
+//	Pointlocation target_p3(target.lower_right.x, target.upper_left.y);
+//	Pointlocation target_p4 = target.lower_right;
+//
+//	bool p1_seen, p2_seen, p3_seen, p4_seen, p1_overT_changed, p2_overT_changed;
+//	p1_seen = p2_seen = p3_seen = p4_seen = p1_overT_changed =
+//			p2_overT_changed = false;
+//
+//	int itr;
+//	Pointlocation temp_p;
+//	Pointlocation& intersectPoint = temp_p;
+//
+//	Pointlocation& intersectPoint1 = temp_p;
+//	Pointlocation& intersectPoint2 = temp_p;
+//
+//	//construct temp with the changed v. regions. finally make visibleRegion=temp
+//	vector<VisibleRegionOverT> temp;
+//
+//	for (itr = 0; itr < VisibleRegion.size(); itr++) {
+//		//which part of the v.region is changed
+//		p1_overT_changed = isPointOf_VR_changed((VisibleRegion[itr]).p1_overT,
+//				position, obstacle_p1, obstacle_p2, obstacle_p3, obstacle_p4);
+//		p2_overT_changed = isPointOf_VR_changed((VisibleRegion[itr]).p2_overT,
+//				position, obstacle_p1, obstacle_p2, obstacle_p3, obstacle_p4);
+//
+//		bool entirely_inside_region = false;
+//		if (p2_overT_changed == false && p1_overT_changed == false
+//				&& IsPointInsideTriangle(position,
+//						(VisibleRegion[itr]).p1_overT,
+//						(VisibleRegion[itr]).p2_overT, obstacle_p1) == true)//rect er jeno ekta point (p1 here) check korlei hobe, jehetu ager else if gula check kora ache
+//						{
+//			entirely_inside_region = true;
+//		}
+//
+//		bool one_side_changed = false;
+//		Pointlocation unchanged_side_val;
+//		Pointlocation changed_side_val;
+//		bool insert_this_segment = true;
+//
+//		if (p1_overT_changed == true && p2_overT_changed == true)//totally blocked this visibilitysegment
+//				{
+//			insert_this_segment = false;
+//			total_visibility -= VisibleRegion[itr].partial_visibility;
+//		}
+//
+//		else if (entirely_inside_region == true) {
+//			bool intersectPoint1_found, intersectPoint2_found;
+//			intersectPoint1_found = intersectPoint2_found = false;
+//
+//			//split the region
+//
+//			if (intersect(position, obstacle_p1, obstacle_p3, obstacle_p4)
+//					== false
+//					&& intersect(position, obstacle_p1, obstacle_p2,
+//							obstacle_p4) == false)//doesn't intersect with own arm, for point obstacle_p1
+//							{
+//				bool check = if_intersects_target(position, obstacle_p1, target,
+//						intersectPoint1, (VisibleRegion[itr]).p1_overT,
+//						(VisibleRegion[itr]).p2_overT);
+//				if (check == true) {
+//					intersectPoint1_found = true;
+//				}
+//
+//			}
+//
+//			if (intersect(position, obstacle_p2, obstacle_p1, obstacle_p3)
+//					== false
+//					&& intersect(position, obstacle_p2, obstacle_p3,
+//							obstacle_p4) == false)//doesn't intersect with own arm, for point obstacle_p2
+//							{
+//				bool check;
+//				if (intersectPoint1_found == false) {
+//					check = if_intersects_target(position, obstacle_p2, target,
+//							intersectPoint1, (VisibleRegion[itr]).p1_overT,
+//							(VisibleRegion[itr]).p2_overT);
+//					if (check == true) {
+//						intersectPoint1_found = true;
+//					}
+//				}
+//
+//				else {
+//					check = if_intersects_target(position, obstacle_p2, target,
+//							intersectPoint2, (VisibleRegion[itr]).p1_overT,
+//							(VisibleRegion[itr]).p2_overT);
+//					if (check == true) {
+//						intersectPoint2_found = true;
+//					}
+//				}
+//
+//			}
+//
+//			if (intersect(position, obstacle_p3, obstacle_p2, obstacle_p4)
+//					== false
+//					&& intersect(position, obstacle_p3, obstacle_p1,
+//							obstacle_p2) == false)//doesn't intersect with own arm, for point obstacle_p3
+//							{
+//				bool check;
+//				if (intersectPoint1_found == false) {
+//					check = if_intersects_target(position, obstacle_p3, target,
+//							intersectPoint1, (VisibleRegion[itr]).p1_overT,
+//							(VisibleRegion[itr]).p2_overT);
+//					if (check == true) {
+//						intersectPoint1_found = true;
+//					}
+//				}
+//
+//				else if (intersectPoint2_found == false) {
+//					check = if_intersects_target(position, obstacle_p3, target,
+//							intersectPoint2, (VisibleRegion[itr]).p1_overT,
+//							(VisibleRegion[itr]).p2_overT);
+//					if (check == true) {
+//						intersectPoint2_found = true;
+//					}
+//				}
+//
+//			}
+//
+//			if (intersect(position, obstacle_p4, obstacle_p1, obstacle_p2)
+//					== false
+//					&& intersect(position, obstacle_p4, obstacle_p1,
+//							obstacle_p3) == false)//doesn't intersect with own arm, for point obstacle_p4
+//							{
+//				bool check;
+//				if (intersectPoint1_found == false) {
+//					check = if_intersects_target(position, obstacle_p4, target,
+//							intersectPoint1, (VisibleRegion[itr]).p1_overT,
+//							(VisibleRegion[itr]).p2_overT);
+//					if (check == true) {
+//						intersectPoint1_found = true;
+//					}
+//				}
+//
+//				else if (intersectPoint2_found == false) {
+//					check = if_intersects_target(position, obstacle_p4, target,
+//							intersectPoint2, (VisibleRegion[itr]).p1_overT,
+//							(VisibleRegion[itr]).p2_overT);
+//					if (check == true) {
+//						intersectPoint2_found = true;
+//					}
+//				}
+//			}
+//
+//			VisibleRegionOverT v;
+//			if (Distance(VisibleRegion[itr].p1_overT, intersectPoint1)
+//					< Distance(VisibleRegion[itr].p1_overT, intersectPoint2)) {
+//				// edit visibility and construct new segments
+//				total_visibility -= VisibleRegion[itr].partial_visibility;
+//				Pointlocation mid1;
+//				double angle_with_rect;
+//				double visibility_reduce_factor;
+//				if (intersectPoint1_found == true) {
+//					v.p1_overT = VisibleRegion[itr].p1_overT;
+//					v.p2_overT = intersectPoint1;
+//
+//					mid1 = mid_of_line_segment(v.p1_overT, v.p2_overT); //rectangle target, so p1,p2 length == p3,p4 length
+//					angle_with_rect = angle_between_2_lines(mid1.x, mid1.y,
+//							position.x, position.y, v.p1_overT.x, v.p1_overT.y,
+//							v.p2_overT.x, v.p2_overT.y); //angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
+//					visibility_reduce_factor = reduced_visibility_factor4angle(
+//							angle_with_rect);
+//
+//					v.partial_visibility = Distance(VisibleRegion[itr].p1_overT,
+//							intersectPoint1) * visibility_reduce_factor;
+//					total_visibility += v.partial_visibility;
+//					temp.push_back(v);
+//				}
+//				if (intersectPoint2_found == true) {
+//					v.p1_overT = VisibleRegion[itr].p2_overT;
+//					v.p2_overT = intersectPoint2;
+//
+//					mid1 = mid_of_line_segment(v.p1_overT, v.p2_overT);
+//					angle_with_rect = angle_between_2_lines(mid1.x, mid1.y,
+//							position.x, position.y, v.p1_overT.x, v.p1_overT.y,
+//							v.p2_overT.x, v.p2_overT.y); //angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
+//					visibility_reduce_factor = reduced_visibility_factor4angle(
+//							angle_with_rect);
+//
+//					v.partial_visibility = Distance(VisibleRegion[itr].p2_overT,
+//							intersectPoint2) * visibility_reduce_factor;
+//
+//					total_visibility += v.partial_visibility;
+//					temp.push_back(v);
+//				}
+//			}
+//
+//			else {
+//				// edit visibility and construct new segments
+//				total_visibility -= VisibleRegion[itr].partial_visibility;
+//				Pointlocation mid1;
+//				double angle_with_rect;
+//				double visibility_reduce_factor;
+//				if (intersectPoint1_found == true) {
+//					v.p1_overT = VisibleRegion[itr].p1_overT;
+//					v.p2_overT = intersectPoint2;
+//
+//					mid1 = mid_of_line_segment(v.p1_overT, v.p2_overT); //rectangle target, so p1,p2 length == p3,p4 length
+//					angle_with_rect = angle_between_2_lines(mid1.x, mid1.y,
+//							position.x, position.y, v.p1_overT.x, v.p1_overT.y,
+//							v.p2_overT.x, v.p2_overT.y); //angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
+//					visibility_reduce_factor = reduced_visibility_factor4angle(
+//							angle_with_rect);
+//
+//					v.partial_visibility = Distance(VisibleRegion[itr].p1_overT,
+//							intersectPoint2) * visibility_reduce_factor;
+//
+//					total_visibility += v.partial_visibility;
+//
+//					temp.push_back(v);
+//				}
+//				if (intersectPoint1_found == true) {
+//					v.p1_overT = VisibleRegion[itr].p2_overT;
+//					v.p2_overT = intersectPoint1;
+//					mid1 = mid_of_line_segment(v.p1_overT, v.p2_overT); //rectangle target, so p1,p2 length == p3,p4 length
+//					angle_with_rect = angle_between_2_lines(mid1.x, mid1.y,
+//							position.x, position.y, v.p1_overT.x, v.p1_overT.y,
+//							v.p2_overT.x, v.p2_overT.y); //angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
+//					visibility_reduce_factor = reduced_visibility_factor4angle(
+//							angle_with_rect);
+//
+//					v.partial_visibility = Distance(VisibleRegion[itr].p2_overT,
+//							intersectPoint1) * visibility_reduce_factor;
+//
+//					total_visibility += v.partial_visibility;
+//					temp.push_back(v);
+//				}
+//			}
+//
+//			insert_this_segment = false;
+//
+//		} //end of inside_region elseif
+//
+//		//one value change
+//
+//		else if (p1_overT_changed == true && p2_overT_changed == false) {
+//			one_side_changed = true;
+//			unchanged_side_val = (VisibleRegion[itr]).p2_overT;
+//			changed_side_val = (VisibleRegion[itr]).p1_overT;
+//		}
+//
+//		else if (p2_overT_changed == true && p1_overT_changed == false) {
+//			one_side_changed = true;
+//			unchanged_side_val = (VisibleRegion[itr]).p1_overT;
+//			changed_side_val = (VisibleRegion[itr]).p2_overT;
+//		}
+//
+//		if (one_side_changed == true) {
+//			//intersectPoint is initialized in change_vRegion_one_side(...) function
+//			if (intersect(position, obstacle_p1, obstacle_p3, obstacle_p4)
+//					== false
+//					&& intersect(position, obstacle_p1, obstacle_p2,
+//							obstacle_p4) == false) //doesn't intersect with own arm, for point obstacle_p1
+//							{
+//				// is position-obstacle_p1 line intersects target?
+//				//if so, is the point nearer the unchanged_side_val than the changed_side_val?
+//
+//				p1_seen = change_vRegion_one_side(position, obstacle_p1, target,
+//						unchanged_side_val, changed_side_val, intersectPoint,
+//						VisibleRegion[itr]);
+//				//if so, then change the value of the v.region
+//				if (p1_seen) {
+//					VisibleRegion[itr].p1_overT = unchanged_side_val;
+//					VisibleRegion[itr].p2_overT = intersectPoint;
+//					insert_this_segment = true;
+//
+//					total_visibility -= VisibleRegion[itr].partial_visibility;
+//
+//					Pointlocation mid1 = mid_of_line_segment(
+//							VisibleRegion[itr].p1_overT,
+//							VisibleRegion[itr].p2_overT);
+//					double angle_with_rect = angle_between_2_lines(mid1.x,
+//							mid1.y, position.x, position.y,
+//							VisibleRegion[itr].p1_overT.x,
+//							VisibleRegion[itr].p1_overT.y,
+//							VisibleRegion[itr].p2_overT.x,
+//							VisibleRegion[itr].p2_overT.y);	//angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
+//					double visibility_reduce_factor =
+//							reduced_visibility_factor4angle(angle_with_rect);
+//
+//					VisibleRegion[itr].partial_visibility = Distance(
+//							unchanged_side_val, intersectPoint)
+//							* visibility_reduce_factor;
+//					total_visibility += VisibleRegion[itr].partial_visibility;
+//				}
+//
+//			}
+//
+//			if (p1_seen == false
+//					&& intersect(position, obstacle_p2, obstacle_p1,
+//							obstacle_p3) == false
+//					&& intersect(position, obstacle_p2, obstacle_p3,
+//							obstacle_p4) == false)//doesn't intersect with own arm, for point obstacle_p2
+//							{
+//				p2_seen = change_vRegion_one_side(position, obstacle_p2, target,
+//						unchanged_side_val, changed_side_val, intersectPoint,
+//						VisibleRegion[itr]);
+//				if (p2_seen) {
+//					VisibleRegion[itr].p1_overT = unchanged_side_val;
+//					VisibleRegion[itr].p2_overT = intersectPoint;
+//					insert_this_segment = true;
+//
+//					total_visibility -= VisibleRegion[itr].partial_visibility;
+//					Pointlocation mid1 = mid_of_line_segment(
+//							VisibleRegion[itr].p1_overT,
+//							VisibleRegion[itr].p2_overT);
+//					double angle_with_rect = angle_between_2_lines(mid1.x,
+//							mid1.y, position.x, position.y,
+//							VisibleRegion[itr].p1_overT.x,
+//							VisibleRegion[itr].p1_overT.y,
+//							VisibleRegion[itr].p2_overT.x,
+//							VisibleRegion[itr].p2_overT.y);	//angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
+//					double visibility_reduce_factor =
+//							reduced_visibility_factor4angle(angle_with_rect);
+//
+//					VisibleRegion[itr].partial_visibility = Distance(
+//							unchanged_side_val, intersectPoint)
+//							* visibility_reduce_factor;
+//					total_visibility += VisibleRegion[itr].partial_visibility;
+//				}
+//
+//			}
+//
+//			if (p1_seen == false && p2_seen == false
+//					&& intersect(position, obstacle_p3, obstacle_p2,
+//							obstacle_p4) == false
+//					&& intersect(position, obstacle_p3, obstacle_p1,
+//							obstacle_p2) == false)//doesn't intersect with own arm, for point obstacle_p3
+//							{
+//				p3_seen = change_vRegion_one_side(position, obstacle_p3, target,
+//						unchanged_side_val, changed_side_val, intersectPoint,
+//						VisibleRegion[itr]);
+//				if (p3_seen) {
+//					VisibleRegion[itr].p1_overT = unchanged_side_val;
+//					VisibleRegion[itr].p2_overT = intersectPoint;
+//					insert_this_segment = true;
+//
+//					total_visibility -= VisibleRegion[itr].partial_visibility;
+//					Pointlocation mid1 = mid_of_line_segment(
+//							VisibleRegion[itr].p1_overT,
+//							VisibleRegion[itr].p2_overT);
+//					double angle_with_rect = angle_between_2_lines(mid1.x,
+//							mid1.y, position.x, position.y,
+//							VisibleRegion[itr].p1_overT.x,
+//							VisibleRegion[itr].p1_overT.y,
+//							VisibleRegion[itr].p2_overT.x,
+//							VisibleRegion[itr].p2_overT.y);	//angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
+//					double visibility_reduce_factor =
+//							reduced_visibility_factor4angle(angle_with_rect);
+//
+//					VisibleRegion[itr].partial_visibility = Distance(
+//							unchanged_side_val, intersectPoint)
+//							* visibility_reduce_factor;
+//					total_visibility += VisibleRegion[itr].partial_visibility;
+//				}
+//			}
+//
+//			if (p1_seen == false && p2_seen == false && p3_seen == false
+//					&& intersect(position, obstacle_p4, obstacle_p1,
+//							obstacle_p2) == false
+//					&& intersect(position, obstacle_p4, obstacle_p1,
+//							obstacle_p3) == false)//doesn't intersect with own arm, for point obstacle_p4
+//							{
+//				p4_seen = change_vRegion_one_side(position, obstacle_p4, target,
+//						unchanged_side_val, changed_side_val, intersectPoint,
+//						VisibleRegion[itr]);
+//				if (p4_seen) {
+//					VisibleRegion[itr].p1_overT = unchanged_side_val;
+//					VisibleRegion[itr].p2_overT = intersectPoint;
+//					insert_this_segment = true;
+//
+//					total_visibility -= VisibleRegion[itr].partial_visibility;
+//					Pointlocation mid1 = mid_of_line_segment(
+//							VisibleRegion[itr].p1_overT,
+//							VisibleRegion[itr].p2_overT);
+//					double angle_with_rect = angle_between_2_lines(mid1.x,
+//							mid1.y, position.x, position.y,
+//							VisibleRegion[itr].p1_overT.x,
+//							VisibleRegion[itr].p1_overT.y,
+//							VisibleRegion[itr].p2_overT.x,
+//							VisibleRegion[itr].p2_overT.y);	//angle between the line connecting query point and mid of the p1,p2 and the line p1,p2
+//					double visibility_reduce_factor =
+//							reduced_visibility_factor4angle(angle_with_rect);
+//
+//					VisibleRegion[itr].partial_visibility = Distance(
+//							unchanged_side_val, intersectPoint)
+//							* visibility_reduce_factor;
+//					total_visibility += VisibleRegion[itr].partial_visibility;
+//				}
+//			}
+//		}				//end of if one side
+//
+//		if (insert_this_segment == true)
+//			temp.push_back(VisibleRegion[itr]);
+//	}
+//	VisibleRegion = temp;
+//}
 
 class CompareRect {
 public:
@@ -2395,16 +2395,16 @@ public:
 		return t1.a < t2.a && t1.b < t2.b;
 	}
 };
-
-class CompareVisibility {
-public:
-	bool operator()(QueryPoint& t1, QueryPoint& t2) // descending order
-			{
-		if (t2.total_visibility <= t1.total_visibility)
-			return false;
-		return true;
-	}
-};
+//
+//class CompareVisibility {
+//public:
+//	bool operator()(QueryPoint& t1, QueryPoint& t2) // descending order
+//			{
+//		if (t2.total_visibility <= t1.total_visibility)
+//			return false;
+//		return true;
+//	}
+//};
 
 class CompareVisibility3D {
 public:
@@ -2567,21 +2567,21 @@ double MinDistBetweenRect(Rectangle2 a, Rectangle2 b) {
 	 }
 	 */
 }
-
-float RTree::VCM_visibility(QueryPoint q, Rectangle2 T) {
-	Rectangle2 temp_rect;
-	temp_rect.upper_left = temp_rect.lower_right = q.position;
-	float edist1 = MinDistBetweenRect(temp_rect, T); // mindist from querypoint to node
-	Pointlocation midpoint;
-	midpoint.x = (T.lower_right.x + T.upper_left.x) / 2.0;
-	midpoint.y = (T.lower_right.y + T.upper_left.y) / 2.0;
-	float angle = angle_between_2_lines(q.position.x, q.position.y, midpoint.x,
-			midpoint.y, T.upper_left.x, T.upper_left.y, T.lower_right.x,
-			T.lower_right.y);
-	float visibility = (angle / 90.0) * (T.lower_right.x - T.upper_left.x);
-	visibility = (2 * atan(visibility / (float) (2 * edist1))) * (180.0 / PI); //in degree
-	return visibility;
-}
+//
+//float RTree::VCM_visibility(QueryPoint q, Rectangle2 T) {
+//	Rectangle2 temp_rect;
+//	temp_rect.upper_left = temp_rect.lower_right = q.position;
+//	float edist1 = MinDistBetweenRect(temp_rect, T); // mindist from querypoint to node
+//	Pointlocation midpoint;
+//	midpoint.x = (T.lower_right.x + T.upper_left.x) / 2.0;
+//	midpoint.y = (T.lower_right.y + T.upper_left.y) / 2.0;
+//	float angle = angle_between_2_lines(q.position.x, q.position.y, midpoint.x,
+//			midpoint.y, T.upper_left.x, T.upper_left.y, T.lower_right.x,
+//			T.lower_right.y);
+//	float visibility = (angle / 90.0) * (T.lower_right.x - T.upper_left.x);
+//	visibility = (2 * atan(visibility / (float) (2 * edist1))) * (180.0 / PI); //in degree
+//	return visibility;
+//}
 
 float MindistBetweenBox(Box2 T, Box2 obj);
 float RTree::VCM_visibility3D(QueryPoint3D q, Box2 T) {
@@ -2598,611 +2598,611 @@ float RTree::VCM_visibility3D(QueryPoint3D q, Box2 T) {
 	visibility = (2 * atan(visibility / (float) (2 * edist1))) * (180.0 / PI); //in degree
 	return visibility;
 }
-
-void RTree::MOV(QueryPoint q[], int num_of_query_points, Rectangle2 T, int k,
-		QueryPoint k_answers[], int& page, int& obstacle_considered) {
-	int k_position = 0;
-	int k_original = k;
-	if (k <= 0)
-		return;
-
-	int end = 0;
-	int i, j;
-	map<Rectangle2, bool, CompareRect> obstacle_checked;
-	priority_queue<QueryPoint, vector<QueryPoint>, CompareVisibility> k_ans;
-
-	map<int, bool> rnodeTraversed;
-	//init a heap that stores the non-leaf entries to be accessed-
-	Heap *heap = new Heap();
-	heap->init(dimension);
-
-	//priority queue of query points according to their visibility metric val
-	priority_queue<QueryPoint, vector<QueryPoint>, CompareVisibility> qp_priority_queue;
-
-	//initially, the visibility is calculated without considering the obstacles
-	//init the priority queue
-	for (i = 0; i < num_of_query_points; i++) {
-		q[i].init_visibility(T);
-		qp_priority_queue.push(q[i]);
-		//q[i].obstacleList = new Heap();
-		//q[i].obstacleList->init(dimension);
-	}
-
-	//------------------------------------------------------------
-
-	int son = root; //this entry is to be visited next
-	float leftx, topy, rightx, lowy;
-	//son == -1 means empty && end = 0 means exit
-
-	while (son != -1 && end == 0) {
-		map<int, bool>::iterator rnodeMapItr;
-		rnodeMapItr = rnodeTraversed.find(son);
-		if (rnodeMapItr != rnodeTraversed.end()
-				&& rnodeTraversed.find(son)->second == true) {
-			//traversed before,so do nothing
-		} else {
-			RTNode *rtn = new RTNode(this, son);
-			rnodeTraversed[son] = true;
-			page++;
-			for (i = 0; i < rtn->num_entries; i++) {
-				Rectangle2 nd;
-
-				leftx = min(rtn->entries[i].bounces[0],
-						rtn->entries[i].bounces[1]);
-				lowy = min(rtn->entries[i].bounces[2],
-						rtn->entries[i].bounces[3]);
-				rightx = max(rtn->entries[i].bounces[0],
-						rtn->entries[i].bounces[1]);
-				topy = max(rtn->entries[i].bounces[2],
-						rtn->entries[i].bounces[3]);
-
-				Rectangle1 nd_1;
-
-				nd_1.x1 = nd.upper_left.x = leftx;
-				nd_1.x2 = nd.upper_left.y = topy;
-				nd_1.y1 = nd.lower_right.x = rightx;
-				nd_1.y2 = nd.lower_right.y = lowy;
-
-				double edist1;
-				//check for all query points, if nd is in the visibility region of any q, insert than into corresponding qp_heap
-				for (j = 0; j < num_of_query_points; j++) {
-
-					Rectangle2 temp_rect;
-					temp_rect.upper_left = temp_rect.lower_right =
-							q[j].position;
-					edist1 = MinDistBetweenRect(temp_rect, nd); // mindist from querypoint to node
-					float dist2 = MinDistBetweenRect(T, nd);
-					if ((edist1 < 0.000001 && dist2 < 0.000001)
-							|| (q[j].IsInVisibleRegion(nd) == true)) {
-						//q and target are inside that mbr, or mbr is inside the visible region
-						HeapEntry *h = new HeapEntry();
-						h->key = edist1; //sort the obs_heap according to mindist of obstacle from that qp
-						h->level = rtn->level;
-						h->son1 = rtn->entries[i].son;
-						h->x1 = nd.upper_left.x;
-						h->x2 = nd.lower_right.x;
-						h->y1 = nd.upper_left.y;
-						h->y2 = nd.lower_right.y;
-						(q[j]).obstacleList->insert(h);
-
-						delete h;
-
-					}
-				}
-
-			} // end of num_entries's for
-			delete rtn;
-		}
-
-		//get next entry from the heap of the top query point--------------------------
-
-		if (qp_priority_queue.empty() == true) {
-			end = 1;
-			break;
-		}
-
-		QueryPoint current_best_point; // = qp_priority_queue.top();
-		//qp_priority_queue.pop();//visibility value change kore abar pore push korte hobe 
-
-		HeapEntry *he = new HeapEntry();
-		bool again = true;
-		while (again) {
-			again = false;
-			current_best_point = qp_priority_queue.top();
-			qp_priority_queue.pop();
-			bool isempty = !current_best_point.obstacleList->remove(he);
-			Rectangle2 obj;
-			if (isempty)  //heap is empty, current_best_point is the answer
-			{
-				k_ans.push(current_best_point);
-				k--;
-				//k_answers[k_position]=current_best_point;
-				//k_position++;
-				//k--;
-
-				if (k == 0)
-					end = 1; //end;
-
-				else {
-					//qp_priority_queue theke best point already popped, so go for the next best point
-					again = true;
-					//break;
-				}
-
-			}
-			//else if, check end condition, if reached the target
-			////////////////////////////////////////////
-			else if ((obj = HeapEntry_to_rectangle(he)).equals_to(T)) {
-				//end = 1; 
-				k_ans.push(current_best_point);
-				k--;
-				//k_answers[k_position]=current_best_point;
-				//k_position++;
-				//k--;
-
-				if (k == 0)
-					end = 1; //end;
-
-				else {
-					//qp_priority_queue theke best point already popped, so go for the next best point
-					again = true;
-					//break;
-				}
-			} else {
-				Rectangle1 p;
-				p.x1 = he->x1;
-				p.y1 = he->y1;
-				p.x2 = he->x2;
-				p.y2 = he->y2;
-
-				obj = HeapEntry_to_rectangle(he);
-				//check if obj is already been considered, if yes, don't consider it again;
-
-				if (he->level == 0) //p is an object ; code for data object
-						{
-
-					map<Rectangle2, bool, CompareRect>::iterator mapItr;
-					mapItr = obstacle_checked.find(obj);
-					if (mapItr != obstacle_checked.end()) {
-						if (obstacle_checked.find(obj)->second == true) {
-							again = true;
-							qp_priority_queue.push(current_best_point);
-							continue;
-						}
-
-					} else
-						obstacle_considered++;
-					//calculate visibility for current_best_point
-
-					//change visibility region of current_best_point
-
-					if (current_best_point.IsInVisibleRegion(obj) == true)
-						current_best_point.update_visibliliyRegion(obj, T);
-					//check for all query points, if obj is in visibility region of q[p], 
-					//pop q[p],calculate visibility for q[p] and then insert into the priority queue
-
-					//change visibility region of q[p]
-
-					int size1 = qp_priority_queue.size();
-					priority_queue<QueryPoint, vector<QueryPoint>,
-							CompareVisibility> qp_temp;
-					for (int x = 0; x < size1; x++) {
-						QueryPoint qp_check = qp_priority_queue.top();
-						qp_priority_queue.pop();
-						if (qp_check.IsInVisibleRegion(obj) == true) {
-							qp_check.update_visibliliyRegion(obj, T);
-						}
-						qp_temp.push(qp_check);
-					}
-					qp_priority_queue = qp_temp;
-
-					//mark obj has been checked
-					obstacle_checked[obj] = true;
-
-					//get next data  from heap
-					again = true;
-					qp_priority_queue.push(current_best_point);
-				} else //not leaf node
-				{
-					qp_priority_queue.push(current_best_point);
-					son = he->son1;
-				}
-			}
-		}
-
-		delete he;
-	}
-	delete heap;
-	/*for(int l=0;l<k_original;l++)
-	 {
-	 k_answers[l]=k_ans.top();
-	 k_ans.pop();
-	 }*/
-}
+//
+//void RTree::MOV(QueryPoint q[], int num_of_query_points, Rectangle2 T, int k,
+//		QueryPoint k_answers[], int& page, int& obstacle_considered) {
+//	int k_position = 0;
+//	int k_original = k;
+//	if (k <= 0)
+//		return;
+//
+//	int end = 0;
+//	int i, j;
+//	map<Rectangle2, bool, CompareRect> obstacle_checked;
+//	priority_queue<QueryPoint, vector<QueryPoint>, CompareVisibility> k_ans;
+//
+//	map<int, bool> rnodeTraversed;
+//	//init a heap that stores the non-leaf entries to be accessed-
+//	Heap *heap = new Heap();
+//	heap->init(dimension);
+//
+//	//priority queue of query points according to their visibility metric val
+//	priority_queue<QueryPoint, vector<QueryPoint>, CompareVisibility> qp_priority_queue;
+//
+//	//initially, the visibility is calculated without considering the obstacles
+//	//init the priority queue
+//	for (i = 0; i < num_of_query_points; i++) {
+//		q[i].init_visibility(T);
+//		qp_priority_queue.push(q[i]);
+//		//q[i].obstacleList = new Heap();
+//		//q[i].obstacleList->init(dimension);
+//	}
+//
+//	//------------------------------------------------------------
+//
+//	int son = root; //this entry is to be visited next
+//	float leftx, topy, rightx, lowy;
+//	//son == -1 means empty && end = 0 means exit
+//
+//	while (son != -1 && end == 0) {
+//		map<int, bool>::iterator rnodeMapItr;
+//		rnodeMapItr = rnodeTraversed.find(son);
+//		if (rnodeMapItr != rnodeTraversed.end()
+//				&& rnodeTraversed.find(son)->second == true) {
+//			//traversed before,so do nothing
+//		} else {
+//			RTNode *rtn = new RTNode(this, son);
+//			rnodeTraversed[son] = true;
+//			page++;
+//			for (i = 0; i < rtn->num_entries; i++) {
+//				Rectangle2 nd;
+//
+//				leftx = min(rtn->entries[i].bounces[0],
+//						rtn->entries[i].bounces[1]);
+//				lowy = min(rtn->entries[i].bounces[2],
+//						rtn->entries[i].bounces[3]);
+//				rightx = max(rtn->entries[i].bounces[0],
+//						rtn->entries[i].bounces[1]);
+//				topy = max(rtn->entries[i].bounces[2],
+//						rtn->entries[i].bounces[3]);
+//
+//				Rectangle1 nd_1;
+//
+//				nd_1.x1 = nd.upper_left.x = leftx;
+//				nd_1.x2 = nd.upper_left.y = topy;
+//				nd_1.y1 = nd.lower_right.x = rightx;
+//				nd_1.y2 = nd.lower_right.y = lowy;
+//
+//				double edist1;
+//				//check for all query points, if nd is in the visibility region of any q, insert than into corresponding qp_heap
+//				for (j = 0; j < num_of_query_points; j++) {
+//
+//					Rectangle2 temp_rect;
+//					temp_rect.upper_left = temp_rect.lower_right =
+//							q[j].position;
+//					edist1 = MinDistBetweenRect(temp_rect, nd); // mindist from querypoint to node
+//					float dist2 = MinDistBetweenRect(T, nd);
+//					if ((edist1 < 0.000001 && dist2 < 0.000001)
+//							|| (q[j].IsInVisibleRegion(nd) == true)) {
+//						//q and target are inside that mbr, or mbr is inside the visible region
+//						HeapEntry *h = new HeapEntry();
+//						h->key = edist1; //sort the obs_heap according to mindist of obstacle from that qp
+//						h->level = rtn->level;
+//						h->son1 = rtn->entries[i].son;
+//						h->x1 = nd.upper_left.x;
+//						h->x2 = nd.lower_right.x;
+//						h->y1 = nd.upper_left.y;
+//						h->y2 = nd.lower_right.y;
+//						(q[j]).obstacleList->insert(h);
+//
+//						delete h;
+//
+//					}
+//				}
+//
+//			} // end of num_entries's for
+//			delete rtn;
+//		}
+//
+//		//get next entry from the heap of the top query point--------------------------
+//
+//		if (qp_priority_queue.empty() == true) {
+//			end = 1;
+//			break;
+//		}
+//
+//		QueryPoint current_best_point; // = qp_priority_queue.top();
+//		//qp_priority_queue.pop();//visibility value change kore abar pore push korte hobe
+//
+//		HeapEntry *he = new HeapEntry();
+//		bool again = true;
+//		while (again) {
+//			again = false;
+//			current_best_point = qp_priority_queue.top();
+//			qp_priority_queue.pop();
+//			bool isempty = !current_best_point.obstacleList->remove(he);
+//			Rectangle2 obj;
+//			if (isempty)  //heap is empty, current_best_point is the answer
+//			{
+//				k_ans.push(current_best_point);
+//				k--;
+//				//k_answers[k_position]=current_best_point;
+//				//k_position++;
+//				//k--;
+//
+//				if (k == 0)
+//					end = 1; //end;
+//
+//				else {
+//					//qp_priority_queue theke best point already popped, so go for the next best point
+//					again = true;
+//					//break;
+//				}
+//
+//			}
+//			//else if, check end condition, if reached the target
+//			////////////////////////////////////////////
+//			else if ((obj = HeapEntry_to_rectangle(he)).equals_to(T)) {
+//				//end = 1;
+//				k_ans.push(current_best_point);
+//				k--;
+//				//k_answers[k_position]=current_best_point;
+//				//k_position++;
+//				//k--;
+//
+//				if (k == 0)
+//					end = 1; //end;
+//
+//				else {
+//					//qp_priority_queue theke best point already popped, so go for the next best point
+//					again = true;
+//					//break;
+//				}
+//			} else {
+//				Rectangle1 p;
+//				p.x1 = he->x1;
+//				p.y1 = he->y1;
+//				p.x2 = he->x2;
+//				p.y2 = he->y2;
+//
+//				obj = HeapEntry_to_rectangle(he);
+//				//check if obj is already been considered, if yes, don't consider it again;
+//
+//				if (he->level == 0) //p is an object ; code for data object
+//						{
+//
+//					map<Rectangle2, bool, CompareRect>::iterator mapItr;
+//					mapItr = obstacle_checked.find(obj);
+//					if (mapItr != obstacle_checked.end()) {
+//						if (obstacle_checked.find(obj)->second == true) {
+//							again = true;
+//							qp_priority_queue.push(current_best_point);
+//							continue;
+//						}
+//
+//					} else
+//						obstacle_considered++;
+//					//calculate visibility for current_best_point
+//
+//					//change visibility region of current_best_point
+//
+//					if (current_best_point.IsInVisibleRegion(obj) == true)
+//						current_best_point.update_visibliliyRegion(obj, T);
+//					//check for all query points, if obj is in visibility region of q[p],
+//					//pop q[p],calculate visibility for q[p] and then insert into the priority queue
+//
+//					//change visibility region of q[p]
+//
+//					int size1 = qp_priority_queue.size();
+//					priority_queue<QueryPoint, vector<QueryPoint>,
+//							CompareVisibility> qp_temp;
+//					for (int x = 0; x < size1; x++) {
+//						QueryPoint qp_check = qp_priority_queue.top();
+//						qp_priority_queue.pop();
+//						if (qp_check.IsInVisibleRegion(obj) == true) {
+//							qp_check.update_visibliliyRegion(obj, T);
+//						}
+//						qp_temp.push(qp_check);
+//					}
+//					qp_priority_queue = qp_temp;
+//
+//					//mark obj has been checked
+//					obstacle_checked[obj] = true;
+//
+//					//get next data  from heap
+//					again = true;
+//					qp_priority_queue.push(current_best_point);
+//				} else //not leaf node
+//				{
+//					qp_priority_queue.push(current_best_point);
+//					son = he->son1;
+//				}
+//			}
+//		}
+//
+//		delete he;
+//	}
+//	delete heap;
+//	/*for(int l=0;l<k_original;l++)
+//	 {
+//	 k_answers[l]=k_ans.top();
+//	 k_ans.pop();
+//	 }*/
+//}
 
 //alternate approach
-
-bool IsObstacleOutsideQPoint(QueryPoint qp_check, Rectangle2 obj,
-		Rectangle2 T) {
-	Rectangle2 qp_check_rect;
-	qp_check_rect.upper_left = qp_check.position;
-	qp_check_rect.lower_right = qp_check.position;
-
-	if (MinDistBetweenRect(T, obj) > MinDistBetweenRect(qp_check_rect, T)) {
-		return true;
-	}
-	return false;
-}
-
-void RTree::Alternate_approach(QueryPoint q[], int num_of_query_points,
-		Rectangle2 T, int k, QueryPoint k_answers[], int& page,
-		int& obstacle_considered) {
-	int k_position = 0;
-	int k_original = k;
-	if (k <= 0)
-		return;
-
-	int end = 0;
-	int i, j;
-	//init a heap that stores the non-leaf entries to be accessed-
-	Heap *heap = new Heap();
-	heap->init(dimension);
-
-	//priority queue of query points according to their visibility metric val
-	priority_queue<QueryPoint, vector<QueryPoint>, CompareVisibility> qp_priority_queue;
-	priority_queue<QueryPoint, vector<QueryPoint>, CompareVisibility> k_ans;
-	//initially, the visibility is calculated without considering the obstacles
-	//init the priority queue
-	for (i = 0; i < num_of_query_points; i++) {
-		q[i].init_visibility(T);
-		qp_priority_queue.push(q[i]);
-	}
-
-	//------------------------------------------------------------
-
-	int son = root; //this entry is to be visited next
-	float leftx, topy, rightx, lowy;
-	//son == -1 means empty && end = 0 means exit
-
-	while (son != -1 && end == 0) {
-		RTNode *rtn = new RTNode(this, son);
-		page++;
-		for (i = 0; i < rtn->num_entries; i++) {
-			Rectangle2 nd;
-			nd.upper_left.x = leftx = min(rtn->entries[i].bounces[0],
-					rtn->entries[i].bounces[1]);
-			nd.lower_right.y = lowy = min(rtn->entries[i].bounces[2],
-					rtn->entries[i].bounces[3]);
-			nd.lower_right.x = rightx = max(rtn->entries[i].bounces[0],
-					rtn->entries[i].bounces[1]);
-			nd.upper_left.y = topy = max(rtn->entries[i].bounces[2],
-					rtn->entries[i].bounces[3]);
-
-			double edist1 = 0.0;
-			edist1 = MinDistBetweenRect(T, nd); // mindist from target to node
-			HeapEntry *h = new HeapEntry();
-			h->key = edist1; //sort the obs_heap according to mindist of obstacle from that qp
-			h->level = rtn->level;
-			h->son1 = rtn->entries[i].son;
-
-			h->x1 = nd.upper_left.x;
-			h->x2 = nd.lower_right.x;
-			h->y1 = nd.upper_left.y;
-			h->y2 = nd.lower_right.y;
-			heap->insert(h);
-			delete h;
-
-		} // end of num_entries's for
-
-		delete rtn;
-
-		//get next entry from the heap 
-
-		HeapEntry *he = new HeapEntry();
-		bool again = true;
-		while (again) {
-			again = false;
-
-			bool isempty = !heap->remove(he);
-			Rectangle2 obj;
-			if (isempty)  //heap is empty, no  obstacles left
-			{
-				while (k > 0) {
-					k_ans.push(qp_priority_queue.top());
-					qp_priority_queue.pop();
-					k--;
-					//k_answers[k_position]=qp_priority_queue.top();
-					//qp_priority_queue.pop();
-					//k_position++;
-					//k--;
-				}
-				if (k == 0)
-					end = 1; //end;
-				break;
-
-			}
-			////////////////////////////////////////////
-			if (k == 0) {
-				end = 1;
-				break;
-			} else {
-
-				obj = HeapEntry_to_rectangle(he);
-
-				if (he->level == 0) //p is an object ; code for data object
-						{
-
-					//check for all query points, if obj is in visibility region of q[p], 
-					//pop q[p],calculate visibility for q[p] and then insert into the priority queue
-
-					//change visibility region of q[p]
-					obstacle_considered++;
-					int size1 = qp_priority_queue.size();
-					priority_queue<QueryPoint, vector<QueryPoint>,
-							CompareVisibility> qp_temp;
-					int Topflag = 0;
-					for (int x = 0; x < size1; x++) {
-						QueryPoint qp_check = qp_priority_queue.top();
-						qp_priority_queue.pop();
-
-						bool AllObsCheckedForQ = IsObstacleOutsideQPoint(
-								qp_check, obj, T);
-						if (AllObsCheckedForQ == true && Topflag == 0) {
-							k_ans.push(qp_check);
-							k--;
-							//k_answers[k_position]=qp_check;
-							//k_position++;
-							//k--;
-
-							if (k == 0) {
-								end = 1; //end;
-								break;
-							}
-							continue; //don't push back in qp_priority_queue
-						}
-
-						else {
-							Topflag = 1;
-							if (AllObsCheckedForQ == false
-									&& qp_check.IsInVisibleRegion(obj)
-											== true) {
-								qp_check.update_visibliliyRegion(obj, T);
-								//		printf("visibility region changed for (%f,%f), (%f,%f) ",obj.upper_left.x,obj.upper_left.y,obj.lower_right.x,obj.lower_right.y);
-							}
-						}
-
-						qp_temp.push(qp_check);
-					}
-
-					qp_priority_queue = qp_temp;
-					//get next data  from heap
-					again = true;
-
-				} else //not leaf node
-				{
-					son = he->son1;
-				}
-			}
-		}
-
-		delete he;
-	}
-	delete heap;
-
-	/*for(int l=0;l<k_original;l++)
-	 {
-	 k_answers[l]=k_ans.top();
-	 k_ans.pop();
-	 }*/
-}
-
-//obstacle centric
-float obstacleAffectsRegion_val(QueryPoint q, Rectangle2 obs,
-		Rectangle2 target) {
-	QueryPoint temp = q;
-	temp.update_visibliliyRegion(obs, target);
-	return temp.total_visibility - q.total_visibility; //order is important, for ascending order, the returned value should be -ve
-}
-
-void RTree::MOV_obs(QueryPoint q[], int num_of_query_points, Rectangle2 T,
-		int k, QueryPoint k_answers[], int& page, int& obstacle_considered) {
-	int k_position = 0;
-	int k_original = k;
-	if (k <= 0)
-		return;
-
-	int end = 0;
-	int i, j;
-	map<Rectangle2, bool, CompareRect> obstacle_checked;
-	priority_queue<QueryPoint, vector<QueryPoint>, CompareVisibility> k_ans;
-
-	map<int, bool> rnodeTraversed;
-	//init a heap that stores the non-leaf entries to be accessed-
-	Heap *heap = new Heap();
-	heap->init(dimension);
-
-	//priority queue of query points according to their visibility metric val
-	priority_queue<QueryPoint, vector<QueryPoint>, CompareVisibility> qp_priority_queue;
-
-	//initially, the visibility is calculated without considering the obstacles
-	//init the priority queue
-	for (i = 0; i < num_of_query_points; i++) {
-		q[i].init_visibility(T);
-		qp_priority_queue.push(q[i]);
-	}
-
-	//------------------------------------------------------------
-
-	int son = root; //this entry is to be visited next
-	float leftx, topy, rightx, lowy;
-	//son == -1 means empty && end = 0 means exit
-
-	while (son != -1 && end == 0) {
-		map<int, bool>::iterator rnodeMapItr;
-		rnodeMapItr = rnodeTraversed.find(son);
-		if (rnodeMapItr != rnodeTraversed.end()
-				&& rnodeTraversed.find(son)->second == true) {
-			//traversed before,so do nothing
-		} else {
-			RTNode *rtn = new RTNode(this, son);
-			rnodeTraversed[son] = true;
-			page++;
-			for (i = 0; i < rtn->num_entries; i++) {
-				Rectangle2 nd;
-				Rectangle1 nd_1;
-
-				nd_1.x1 = nd.upper_left.x = leftx = min(
-						rtn->entries[i].bounces[0], rtn->entries[i].bounces[1]);
-				nd_1.y2 = nd.lower_right.y = lowy = min(
-						rtn->entries[i].bounces[2], rtn->entries[i].bounces[3]);
-				nd_1.y1 = nd.lower_right.x = rightx = max(
-						rtn->entries[i].bounces[0], rtn->entries[i].bounces[1]);
-				nd_1.x2 = nd.upper_left.y = topy = max(
-						rtn->entries[i].bounces[2], rtn->entries[i].bounces[3]);
-
-				double affectAmount, edist1;
-				//check for all query points, if nd is in the visibility region of any q, insert than into corresponding qp_heap
-				for (j = 0; j < num_of_query_points; j++) {
-					Rectangle2 temp_rect;
-					temp_rect.upper_left = temp_rect.lower_right =
-							q[j].position;
-					edist1 = MinDistBetweenRect(temp_rect, nd); // mindist from querypoint to node
-					float dist2 = MinDistBetweenRect(T, nd);
-
-					affectAmount = obstacleAffectsRegion_val(q[j], nd, T);
-
-					if ((edist1 < 0.0001 && dist2 < 0.0001)
-							|| (q[j].IsInVisibleRegion(nd) == true)) {
-						//q and target are inside that mbr, or mbr is inside the visible region
-						HeapEntry *h = new HeapEntry();
-						h->key = affectAmount; //sort the obs_heap according to the amount of visibility affected by that mbr, high to low val
-						h->level = rtn->level;
-						h->son1 = rtn->entries[i].son;
-						h->x1 = nd.upper_left.x;
-						h->x2 = nd.lower_right.x;
-						h->y1 = nd.upper_left.y;
-						h->y2 = nd.lower_right.y;
-						(q[j]).obstacleList->insert(h);
-
-						delete h;
-
-					}
-				}
-
-			} // end of num_entries's for
-			delete rtn;
-		}
-
-		//get next entry from the heap of the top query point--------------------------
-
-		if (qp_priority_queue.empty() == true) {
-			end = 1;
-			break;
-		}
-
-		QueryPoint current_best_point; // = qp_priority_queue.top();
-
-		HeapEntry *he = new HeapEntry();
-		bool again = true;
-		while (again) {
-			again = false;
-			current_best_point = qp_priority_queue.top();
-			qp_priority_queue.pop();
-			bool isempty = !current_best_point.obstacleList->remove(he);
-			Rectangle2 obj;
-			if (isempty)  //heap is empty, current_best_point is the answer
-			{
-				k_ans.push(current_best_point);
-				k--;
-
-				if (k == 0)
-					end = 1; //end;
-
-				else {
-					//qp_priority_queue theke best point already popped, so go for the next best point
-					again = true;
-					//break;
-				}
-
-			}
-			//else if, check end condition, if reached the target
-			else if ((obj = HeapEntry_to_rectangle(he)).equals_to(T)) {
-				k_ans.push(current_best_point);
-				k--;
-
-				if (k == 0)
-					end = 1; //end;
-				else {
-					//qp_priority_queue theke best point already popped, so go for the next best point
-					again = true;
-					//break;
-				}
-			} else {
-				Rectangle1 p;
-				p.x1 = he->x1;
-				p.y1 = he->y1;
-				p.x2 = he->x2;
-				p.y2 = he->y2;
-
-				obj = HeapEntry_to_rectangle(he);
-				//check if obj is already been considered, if yes, don't consider it again;
-
-				if (he->level == 0) //p is an object ; code for data object
-						{
-					map<Rectangle2, bool, CompareRect>::iterator mapItr;
-					mapItr = obstacle_checked.find(obj);
-					if (mapItr != obstacle_checked.end()) {
-						if (obstacle_checked.find(obj)->second == true) {
-							again = true;
-							qp_priority_queue.push(current_best_point);
-							continue;
-						}
-
-					} else
-						obstacle_considered++;
-					//calculate visibility for current_best_point
-
-					//change visibility region of current_best_point
-
-					if (current_best_point.IsInVisibleRegion(obj) == true)
-						current_best_point.update_visibliliyRegion(obj, T);
-					//check for all query points, if obj is in visibility region of q[p], 
-					//pop q[p],calculate visibility for q[p] and then insert into the priority queue
-
-					//change visibility region of q[p]
-
-					int size1 = qp_priority_queue.size();
-					priority_queue<QueryPoint, vector<QueryPoint>,
-							CompareVisibility> qp_temp;
-					for (int x = 0; x < size1; x++) {
-						QueryPoint qp_check = qp_priority_queue.top();
-						qp_priority_queue.pop();
-						if (qp_check.IsInVisibleRegion(obj) == true) {
-							qp_check.update_visibliliyRegion(obj, T);
-						}
-						qp_temp.push(qp_check);
-					}
-					qp_priority_queue = qp_temp;
-
-					//mark obj has been checked
-					obstacle_checked[obj] = true;
-
-					//get next data  from heap
-					again = true;
-					qp_priority_queue.push(current_best_point);
-				} else //not leaf node
-				{
-					qp_priority_queue.push(current_best_point);
-					son = he->son1;
-				}
-			}
-		}
-
-		delete he;
-	}
-	delete heap;
-
-}
+//
+//bool IsObstacleOutsideQPoint(QueryPoint qp_check, Rectangle2 obj,
+//		Rectangle2 T) {
+//	Rectangle2 qp_check_rect;
+//	qp_check_rect.upper_left = qp_check.position;
+//	qp_check_rect.lower_right = qp_check.position;
+//
+//	if (MinDistBetweenRect(T, obj) > MinDistBetweenRect(qp_check_rect, T)) {
+//		return true;
+//	}
+//	return false;
+//}
+//
+//void RTree::Alternate_approach(QueryPoint q[], int num_of_query_points,
+//		Rectangle2 T, int k, QueryPoint k_answers[], int& page,
+//		int& obstacle_considered) {
+//	int k_position = 0;
+//	int k_original = k;
+//	if (k <= 0)
+//		return;
+//
+//	int end = 0;
+//	int i, j;
+//	//init a heap that stores the non-leaf entries to be accessed-
+//	Heap *heap = new Heap();
+//	heap->init(dimension);
+//
+//	//priority queue of query points according to their visibility metric val
+//	priority_queue<QueryPoint, vector<QueryPoint>, CompareVisibility> qp_priority_queue;
+//	priority_queue<QueryPoint, vector<QueryPoint>, CompareVisibility> k_ans;
+//	//initially, the visibility is calculated without considering the obstacles
+//	//init the priority queue
+//	for (i = 0; i < num_of_query_points; i++) {
+//		q[i].init_visibility(T);
+//		qp_priority_queue.push(q[i]);
+//	}
+//
+//	//------------------------------------------------------------
+//
+//	int son = root; //this entry is to be visited next
+//	float leftx, topy, rightx, lowy;
+//	//son == -1 means empty && end = 0 means exit
+//
+//	while (son != -1 && end == 0) {
+//		RTNode *rtn = new RTNode(this, son);
+//		page++;
+//		for (i = 0; i < rtn->num_entries; i++) {
+//			Rectangle2 nd;
+//			nd.upper_left.x = leftx = min(rtn->entries[i].bounces[0],
+//					rtn->entries[i].bounces[1]);
+//			nd.lower_right.y = lowy = min(rtn->entries[i].bounces[2],
+//					rtn->entries[i].bounces[3]);
+//			nd.lower_right.x = rightx = max(rtn->entries[i].bounces[0],
+//					rtn->entries[i].bounces[1]);
+//			nd.upper_left.y = topy = max(rtn->entries[i].bounces[2],
+//					rtn->entries[i].bounces[3]);
+//
+//			double edist1 = 0.0;
+//			edist1 = MinDistBetweenRect(T, nd); // mindist from target to node
+//			HeapEntry *h = new HeapEntry();
+//			h->key = edist1; //sort the obs_heap according to mindist of obstacle from that qp
+//			h->level = rtn->level;
+//			h->son1 = rtn->entries[i].son;
+//
+//			h->x1 = nd.upper_left.x;
+//			h->x2 = nd.lower_right.x;
+//			h->y1 = nd.upper_left.y;
+//			h->y2 = nd.lower_right.y;
+//			heap->insert(h);
+//			delete h;
+//
+//		} // end of num_entries's for
+//
+//		delete rtn;
+//
+//		//get next entry from the heap
+//
+//		HeapEntry *he = new HeapEntry();
+//		bool again = true;
+//		while (again) {
+//			again = false;
+//
+//			bool isempty = !heap->remove(he);
+//			Rectangle2 obj;
+//			if (isempty)  //heap is empty, no  obstacles left
+//			{
+//				while (k > 0) {
+//					k_ans.push(qp_priority_queue.top());
+//					qp_priority_queue.pop();
+//					k--;
+//					//k_answers[k_position]=qp_priority_queue.top();
+//					//qp_priority_queue.pop();
+//					//k_position++;
+//					//k--;
+//				}
+//				if (k == 0)
+//					end = 1; //end;
+//				break;
+//
+//			}
+//			////////////////////////////////////////////
+//			if (k == 0) {
+//				end = 1;
+//				break;
+//			} else {
+//
+//				obj = HeapEntry_to_rectangle(he);
+//
+//				if (he->level == 0) //p is an object ; code for data object
+//						{
+//
+//					//check for all query points, if obj is in visibility region of q[p],
+//					//pop q[p],calculate visibility for q[p] and then insert into the priority queue
+//
+//					//change visibility region of q[p]
+//					obstacle_considered++;
+//					int size1 = qp_priority_queue.size();
+//					priority_queue<QueryPoint, vector<QueryPoint>,
+//							CompareVisibility> qp_temp;
+//					int Topflag = 0;
+//					for (int x = 0; x < size1; x++) {
+//						QueryPoint qp_check = qp_priority_queue.top();
+//						qp_priority_queue.pop();
+//
+//						bool AllObsCheckedForQ = IsObstacleOutsideQPoint(
+//								qp_check, obj, T);
+//						if (AllObsCheckedForQ == true && Topflag == 0) {
+//							k_ans.push(qp_check);
+//							k--;
+//							//k_answers[k_position]=qp_check;
+//							//k_position++;
+//							//k--;
+//
+//							if (k == 0) {
+//								end = 1; //end;
+//								break;
+//							}
+//							continue; //don't push back in qp_priority_queue
+//						}
+//
+//						else {
+//							Topflag = 1;
+//							if (AllObsCheckedForQ == false
+//									&& qp_check.IsInVisibleRegion(obj)
+//											== true) {
+//								qp_check.update_visibliliyRegion(obj, T);
+//								//		printf("visibility region changed for (%f,%f), (%f,%f) ",obj.upper_left.x,obj.upper_left.y,obj.lower_right.x,obj.lower_right.y);
+//							}
+//						}
+//
+//						qp_temp.push(qp_check);
+//					}
+//
+//					qp_priority_queue = qp_temp;
+//					//get next data  from heap
+//					again = true;
+//
+//				} else //not leaf node
+//				{
+//					son = he->son1;
+//				}
+//			}
+//		}
+//
+//		delete he;
+//	}
+//	delete heap;
+//
+//	/*for(int l=0;l<k_original;l++)
+//	 {
+//	 k_answers[l]=k_ans.top();
+//	 k_ans.pop();
+//	 }*/
+//}
+//
+////obstacle centric
+//float obstacleAffectsRegion_val(QueryPoint q, Rectangle2 obs,
+//		Rectangle2 target) {
+//	QueryPoint temp = q;
+//	temp.update_visibliliyRegion(obs, target);
+//	return temp.total_visibility - q.total_visibility; //order is important, for ascending order, the returned value should be -ve
+//}
+//
+//void RTree::MOV_obs(QueryPoint q[], int num_of_query_points, Rectangle2 T,
+//		int k, QueryPoint k_answers[], int& page, int& obstacle_considered) {
+//	int k_position = 0;
+//	int k_original = k;
+//	if (k <= 0)
+//		return;
+//
+//	int end = 0;
+//	int i, j;
+//	map<Rectangle2, bool, CompareRect> obstacle_checked;
+//	priority_queue<QueryPoint, vector<QueryPoint>, CompareVisibility> k_ans;
+//
+//	map<int, bool> rnodeTraversed;
+//	//init a heap that stores the non-leaf entries to be accessed-
+//	Heap *heap = new Heap();
+//	heap->init(dimension);
+//
+//	//priority queue of query points according to their visibility metric val
+//	priority_queue<QueryPoint, vector<QueryPoint>, CompareVisibility> qp_priority_queue;
+//
+//	//initially, the visibility is calculated without considering the obstacles
+//	//init the priority queue
+//	for (i = 0; i < num_of_query_points; i++) {
+//		q[i].init_visibility(T);
+//		qp_priority_queue.push(q[i]);
+//	}
+//
+//	//------------------------------------------------------------
+//
+//	int son = root; //this entry is to be visited next
+//	float leftx, topy, rightx, lowy;
+//	//son == -1 means empty && end = 0 means exit
+//
+//	while (son != -1 && end == 0) {
+//		map<int, bool>::iterator rnodeMapItr;
+//		rnodeMapItr = rnodeTraversed.find(son);
+//		if (rnodeMapItr != rnodeTraversed.end()
+//				&& rnodeTraversed.find(son)->second == true) {
+//			//traversed before,so do nothing
+//		} else {
+//			RTNode *rtn = new RTNode(this, son);
+//			rnodeTraversed[son] = true;
+//			page++;
+//			for (i = 0; i < rtn->num_entries; i++) {
+//				Rectangle2 nd;
+//				Rectangle1 nd_1;
+//
+//				nd_1.x1 = nd.upper_left.x = leftx = min(
+//						rtn->entries[i].bounces[0], rtn->entries[i].bounces[1]);
+//				nd_1.y2 = nd.lower_right.y = lowy = min(
+//						rtn->entries[i].bounces[2], rtn->entries[i].bounces[3]);
+//				nd_1.y1 = nd.lower_right.x = rightx = max(
+//						rtn->entries[i].bounces[0], rtn->entries[i].bounces[1]);
+//				nd_1.x2 = nd.upper_left.y = topy = max(
+//						rtn->entries[i].bounces[2], rtn->entries[i].bounces[3]);
+//
+//				double affectAmount, edist1;
+//				//check for all query points, if nd is in the visibility region of any q, insert than into corresponding qp_heap
+//				for (j = 0; j < num_of_query_points; j++) {
+//					Rectangle2 temp_rect;
+//					temp_rect.upper_left = temp_rect.lower_right =
+//							q[j].position;
+//					edist1 = MinDistBetweenRect(temp_rect, nd); // mindist from querypoint to node
+//					float dist2 = MinDistBetweenRect(T, nd);
+//
+//					affectAmount = obstacleAffectsRegion_val(q[j], nd, T);
+//
+//					if ((edist1 < 0.0001 && dist2 < 0.0001)
+//							|| (q[j].IsInVisibleRegion(nd) == true)) {
+//						//q and target are inside that mbr, or mbr is inside the visible region
+//						HeapEntry *h = new HeapEntry();
+//						h->key = affectAmount; //sort the obs_heap according to the amount of visibility affected by that mbr, high to low val
+//						h->level = rtn->level;
+//						h->son1 = rtn->entries[i].son;
+//						h->x1 = nd.upper_left.x;
+//						h->x2 = nd.lower_right.x;
+//						h->y1 = nd.upper_left.y;
+//						h->y2 = nd.lower_right.y;
+//						(q[j]).obstacleList->insert(h);
+//
+//						delete h;
+//
+//					}
+//				}
+//
+//			} // end of num_entries's for
+//			delete rtn;
+//		}
+//
+//		//get next entry from the heap of the top query point--------------------------
+//
+//		if (qp_priority_queue.empty() == true) {
+//			end = 1;
+//			break;
+//		}
+//
+//		QueryPoint current_best_point; // = qp_priority_queue.top();
+//
+//		HeapEntry *he = new HeapEntry();
+//		bool again = true;
+//		while (again) {
+//			again = false;
+//			current_best_point = qp_priority_queue.top();
+//			qp_priority_queue.pop();
+//			bool isempty = !current_best_point.obstacleList->remove(he);
+//			Rectangle2 obj;
+//			if (isempty)  //heap is empty, current_best_point is the answer
+//			{
+//				k_ans.push(current_best_point);
+//				k--;
+//
+//				if (k == 0)
+//					end = 1; //end;
+//
+//				else {
+//					//qp_priority_queue theke best point already popped, so go for the next best point
+//					again = true;
+//					//break;
+//				}
+//
+//			}
+//			//else if, check end condition, if reached the target
+//			else if ((obj = HeapEntry_to_rectangle(he)).equals_to(T)) {
+//				k_ans.push(current_best_point);
+//				k--;
+//
+//				if (k == 0)
+//					end = 1; //end;
+//				else {
+//					//qp_priority_queue theke best point already popped, so go for the next best point
+//					again = true;
+//					//break;
+//				}
+//			} else {
+//				Rectangle1 p;
+//				p.x1 = he->x1;
+//				p.y1 = he->y1;
+//				p.x2 = he->x2;
+//				p.y2 = he->y2;
+//
+//				obj = HeapEntry_to_rectangle(he);
+//				//check if obj is already been considered, if yes, don't consider it again;
+//
+//				if (he->level == 0) //p is an object ; code for data object
+//						{
+//					map<Rectangle2, bool, CompareRect>::iterator mapItr;
+//					mapItr = obstacle_checked.find(obj);
+//					if (mapItr != obstacle_checked.end()) {
+//						if (obstacle_checked.find(obj)->second == true) {
+//							again = true;
+//							qp_priority_queue.push(current_best_point);
+//							continue;
+//						}
+//
+//					} else
+//						obstacle_considered++;
+//					//calculate visibility for current_best_point
+//
+//					//change visibility region of current_best_point
+//
+//					if (current_best_point.IsInVisibleRegion(obj) == true)
+//						current_best_point.update_visibliliyRegion(obj, T);
+//					//check for all query points, if obj is in visibility region of q[p],
+//					//pop q[p],calculate visibility for q[p] and then insert into the priority queue
+//
+//					//change visibility region of q[p]
+//
+//					int size1 = qp_priority_queue.size();
+//					priority_queue<QueryPoint, vector<QueryPoint>,
+//							CompareVisibility> qp_temp;
+//					for (int x = 0; x < size1; x++) {
+//						QueryPoint qp_check = qp_priority_queue.top();
+//						qp_priority_queue.pop();
+//						if (qp_check.IsInVisibleRegion(obj) == true) {
+//							qp_check.update_visibliliyRegion(obj, T);
+//						}
+//						qp_temp.push(qp_check);
+//					}
+//					qp_priority_queue = qp_temp;
+//
+//					//mark obj has been checked
+//					obstacle_checked[obj] = true;
+//
+//					//get next data  from heap
+//					again = true;
+//					qp_priority_queue.push(current_best_point);
+//				} else //not leaf node
+//				{
+//					qp_priority_queue.push(current_best_point);
+//					son = he->son1;
+//				}
+//			}
+//		}
+//
+//		delete he;
+//	}
+//	delete heap;
+//
+//}
 
 //3D MOv
 //3D

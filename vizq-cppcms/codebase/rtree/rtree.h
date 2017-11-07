@@ -387,27 +387,27 @@ public:
 	 }
 	 */
 };
-
-class QueryPoint {
-public:
-
-	Pointlocation position;
-
-	double total_visibility; //for this query_point only
-
-	Heap *obstacleList; //obstacles that affects visiblilty, according to their mindist
-	vector<VisibleRegionOverT> VisibleRegion; //segments over Target object T, that are visible from this query point
-	// list <Rectangle2> ObstacleList;
-	bool IsInVisibleRegion(Rectangle2 rect);
-
-	bool del_from_ObstacleList(Rectangle2 rect);
-
-	void update_visibliliyRegion(Rectangle2 obstacle, Rectangle2 target); //IsInVisibleRegion true hole oi obstacle er jonno update korte hobe
-	double visibiliy(Rectangle2 Target);
-
-	double init_visibility(Rectangle2 Target); //jokhon kono obstacle nai consider kore
-
-};
+//
+//class QueryPoint {
+//public:
+//
+//	Pointlocation position;
+//
+//	double total_visibility; //for this query_point only
+//
+//	Heap *obstacleList; //obstacles that affects visiblilty, according to their mindist
+//	vector<VisibleRegionOverT> VisibleRegion; //segments over Target object T, that are visible from this query point
+//	// list <Rectangle2> ObstacleList;
+//	bool IsInVisibleRegion(Rectangle2 rect);
+//
+//	bool del_from_ObstacleList(Rectangle2 rect);
+//
+//	void update_visibliliyRegion(Rectangle2 obstacle, Rectangle2 target); //IsInVisibleRegion true hole oi obstacle er jonno update korte hobe
+//	double visibiliy(Rectangle2 Target);
+//
+//	double init_visibility(Rectangle2 Target); //jokhon kono obstacle nai consider kore
+//
+//};
 
 //-------------------------------------------------------------
 class RTree: public Cacheable {
