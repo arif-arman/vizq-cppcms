@@ -24,11 +24,11 @@ C_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 codebase/blockfile \
+codebase \
 codebase/func \
 codebase/gpc \
 codebase/heap \
 codebase/his \
 codebase/linlist \
-codebase \
 codebase/rtree \
 

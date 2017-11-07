@@ -114,6 +114,7 @@ int main(int argc, char **argv) {
 		vcm.run2(atoi(argv[3]));	// direction
 	} else if (strcmp(argv[1], "cmvq") == 0) {
 		puts("CMVQ running");
+		puts(argv[2]);
 	}
 
 	return 0;

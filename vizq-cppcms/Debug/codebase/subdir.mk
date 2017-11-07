@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../codebase/cmvq.cpp \
 ../codebase/mian.cpp \
 ../codebase/monotone.cpp \
 ../codebase/mvq.cpp \
@@ -15,6 +16,7 @@ C_SRCS += \
 ../codebase/tinyfiledialogs.c 
 
 OBJS += \
+./codebase/cmvq.o \
 ./codebase/mian.o \
 ./codebase/monotone.o \
 ./codebase/mvq.o \
@@ -24,6 +26,7 @@ OBJS += \
 ./codebase/vector3.o 
 
 CPP_DEPS += \
+./codebase/cmvq.d \
 ./codebase/mian.d \
 ./codebase/monotone.d \
 ./codebase/mvq.d \

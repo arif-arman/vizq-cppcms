@@ -2,27 +2,27 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="init_vis" key="selection"/>
+		<item value="gpc" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="gpc"/>
+			<item value="contour"/>
+			<item value="setup"/>
+			<item value="SomeRandomRectangle"/>
+			<item value="somerandom"/>
+			<item value="someran"/>
+			<item value="string."/>
+			<item value="string.h"/>
+			<item value="VisibleRegion"/>
+			<item value="querypoint3d"/>
 			<item value="init_vis"/>
 			<item value="gpc.h"/>
-			<item value="gpc"/>
 			<item value="buildT"/>
 			<item value="build"/>
 			<item value="buildtree"/>
-			<item value="strcpy"/>
-			<item value="k_ans"/>
-			<item value="update_visi"/>
-			<item value="update_vis"/>
-			<item value="updaet_vis"/>
-			<item value="VisibleRe"/>
-			<item value="mov_obs3"/>
-			<item value="mov_obs3d"/>
-			<item value="update"/>
 		</list>
 		<list key="replacehistory">
 			<item value="T"/>

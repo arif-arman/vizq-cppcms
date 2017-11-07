@@ -317,7 +317,7 @@ void CMVQ::computeVisibility(MBR mbr, int k){
 	priority_queue<int, vector<int>, decltype(&comparatorForPQ)> pq(&comparatorForPQ);
 
 
-	SomeRandomRectangle targetRect = mbr.getRectFromMBR();;
+	SomeRandomRectangle targetRect = mbr.getRectFromMBR();
 	int size = currentPVQS.size();
 	set<int>::iterator setIt;
 	int i = 0;
@@ -1324,68 +1324,68 @@ void CMVQ::readAVRDB() {
 }
 
 
-
-int main(int argc, char **argv){
-
-	if (argc < 2) {
-		printf("Too few arguments\nOption 1: precomputation? obstacle set? query points? \nOption 2: precomputation? target pos?\n");
-		return 1;
-	}
-
-	if (!strcmp("precompute", argv[1])) {
-		//if (argc < 4) return 1;
-		char obsset[1000] = "ob\\";
-		strcat(obsset, argv[2]);
-		//strcat(obsset, "dataset");
-		strcat(obsset, ".txt");
-		//strcat(obsset, "dataset.txt");
-		readObstacles(obsset);
-		createRtreeFromData(argv[2], 1);
-
-		// precomputation part begins
-		char qset[1000] = "qp\\";
-		strcat(qset, argv[3]);
-		strcat(qset, ".txt");
-		//strcat(qset, "querypoints.txt");
-		readQueryPoints(qset);
-		//printf("Query points: %d\n", queryPoints.size());
-
-		generateVRMBRFile();
-		createRtreeFromData("VRMBR", 2);
-
-		createAVR();
-		//printAVRlist();
-		makeAVRFile();
-		createRtreeFromData("AVRMBR", 3);
-		writeAVRDB();
-
-		computeBS();
-	}
-
-	else {
-		if (argc < 6) return 1;
-		// cmvq dataset queryset targetx targety
-		strcat(obsset_tree, argv[2]);
-		midx = atof(argv[3]);
-		midy = atof(argv[4]);
-		readBlockingSetDB(argv[2]);
-		readAVRDB();
-		char qset[1000] = "qp\\";
-		strcat(qset, argv[3]);
-		strcat(qset, ".txt");
-		readQueryPoints(qset);
-		//strcpy(targetPathString, "tp\\");
-		//strcat(targetPathString, "targetpath.txt");
-		incrementalAVRBSApproach();
-
-	}
-
-
-
-
-
-	return 0;
-}
+//
+//int main(int argc, char **argv){
+//
+//	if (argc < 2) {
+//		printf("Too few arguments\nOption 1: precomputation? obstacle set? query points? \nOption 2: precomputation? target pos?\n");
+//		return 1;
+//	}
+//
+//	if (!strcmp("precompute", argv[1])) {
+//		//if (argc < 4) return 1;
+//		char obsset[1000] = "ob\\";
+//		strcat(obsset, argv[2]);
+//		//strcat(obsset, "dataset");
+//		strcat(obsset, ".txt");
+//		//strcat(obsset, "dataset.txt");
+//		readObstacles(obsset);
+//		createRtreeFromData(argv[2], 1);
+//
+//		// precomputation part begins
+//		char qset[1000] = "qp\\";
+//		strcat(qset, argv[3]);
+//		strcat(qset, ".txt");
+//		//strcat(qset, "querypoints.txt");
+//		readQueryPoints(qset);
+//		//printf("Query points: %d\n", queryPoints.size());
+//
+//		generateVRMBRFile();
+//		createRtreeFromData("VRMBR", 2);
+//
+//		createAVR();
+//		//printAVRlist();
+//		makeAVRFile();
+//		createRtreeFromData("AVRMBR", 3);
+//		writeAVRDB();
+//
+//		computeBS();
+//	}
+//
+//	else {
+//		if (argc < 6) return 1;
+//		// cmvq dataset queryset targetx targety
+//		strcat(obsset_tree, argv[2]);
+//		midx = atof(argv[3]);
+//		midy = atof(argv[4]);
+//		readBlockingSetDB(argv[2]);
+//		readAVRDB();
+//		char qset[1000] = "qp\\";
+//		strcat(qset, argv[3]);
+//		strcat(qset, ".txt");
+//		readQueryPoints(qset);
+//		//strcpy(targetPathString, "tp\\");
+//		//strcat(targetPathString, "targetpath.txt");
+//		incrementalAVRBSApproach();
+//
+//	}
+//
+//
+//
+//
+//
+//	return 0;
+//}
 
 void CMVQ::precompute(char *ob, char *qp) {
 	char obsset[1000];

@@ -483,26 +483,26 @@ public:
 			SG L[][32], Pointlocation rslt[], int *num_of_data);
 
 	//fa
-	void MOV(QueryPoint q[], int num_of_query_points, Rectangle2 T, int k,
-			QueryPoint k_answers[], int& page, int& obstacle_considered);
-	void Alternate_approach(QueryPoint q[], int num_of_query_points,
-			Rectangle2 T, int k, QueryPoint k_answers[], int& page,
-			int& obstacle_considered);
-
-	void MOV3D(QueryPoint3D q[], int num_of_query_points, Box2 T, int k,
-			QueryPoint3D k_answers[], int& page, int& obstacle_considered, Point3D cornerPoints[]);
-	void Alternate_approach3D(QueryPoint3D q[], int num_of_query_points, Box2 T,
-			int k, QueryPoint3D k_answers[], int& page,
-			int& obstacle_considered, Point3D cornerPoints[]);
-	void MOV_obs(QueryPoint q[], int num_of_query_points, Rectangle2 T, int k,
-			QueryPoint k_answers[], int& page, int& obstacle_considered);
+//	void MOV(QueryPoint q[], int num_of_query_points, Rectangle2 T, int k,
+//			QueryPoint k_answers[], int& page, int& obstacle_considered);
+//	void Alternate_approach(QueryPoint q[], int num_of_query_points,
+//			Rectangle2 T, int k, QueryPoint k_answers[], int& page,
+//			int& obstacle_considered);
+//
+//	void MOV3D(QueryPoint3D q[], int num_of_query_points, Box2 T, int k,
+//			QueryPoint3D k_answers[], int& page, int& obstacle_considered, Point3D cornerPoints[]);
+//	void Alternate_approach3D(QueryPoint3D q[], int num_of_query_points, Box2 T,
+//			int k, QueryPoint3D k_answers[], int& page,
+//			int& obstacle_considered, Point3D cornerPoints[]);
+//	void MOV_obs(QueryPoint q[], int num_of_query_points, Rectangle2 T, int k,
+//			QueryPoint k_answers[], int& page, int& obstacle_considered);
 	// edit by zitu
 	void MOV_obs3D(vector<QueryPoint3D> &qu, int num_of_query_points, Box2 T,
 			int k, vector<QueryPoint3D> &k_answers, int& page,
 			int& obstacle_considered, Point3D cornerPoints[]);
 	void naiveMOV3D(QueryPoint3D q[], int num_of_query_points, Box2 T, int k,
 			QueryPoint3D k_answers[], int& page, int& obstacle_considered, Point3D cornerPoints[]);
-	float VCM_visibility(QueryPoint q, Rectangle2 T);
+	//float VCM_visibility(QueryPoint q, Rectangle2 T);
 	float VCM_visibility3D(QueryPoint3D q, Box2 T);
 
 	void rtreeVcmAlgo1(char *path);
