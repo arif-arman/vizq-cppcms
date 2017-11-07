@@ -1220,6 +1220,8 @@ function runVCM() {
 			//console.log(vcmArray);
 			//console.log(json_obj);
 			console.log(nseg + " " + totp);
+			curseg = 0;
+			console.log("curseg: " + curseg);
 			$('#logger').html("VCM generated");
 		}
 		else console.log("test");

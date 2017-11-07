@@ -112,6 +112,8 @@ int main(int argc, char **argv) {
 		//vcm.target.setPlanes();
 
 		vcm.run2(atoi(argv[3]));	// direction
+	} else if (strcmp(argv[1], "cmvq") == 0) {
+		puts("CMVQ running");
 	}
 
 	return 0;
